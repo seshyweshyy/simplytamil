@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tamil — Learn the Language</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;700&family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0d12;
+  --surface:#16161f;
+  --surface2:#1e1e2a;
+  --surface3:#252535;
+  --border:#2a2a3d;
+  --border2:#383850;
+  --text:#f0eef8;
+  --text2:#a09cbb;
+  --text3:#6a667d;
+  --accent:#c084fc;
+  --accent2:#a855f7;
+  --accent-bg:#1f1130;
+  --gold:#fbbf24;
+  --gold-bg:#1c1505;
+  --green:#34d399;
+  --green-bg:#052016;
+  --red:#f87171;
+  --red-bg:#1f0505;
+  --blue:#60a5fa;
+  --blue-bg:#05102a;
+  --teal:#2dd4bf;
+  --teal-bg:#031a18;
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+h1,h2,h3{font-family:'DM Serif Display',serif}
+
+/* NAV */
+nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100}
+.logo{font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--text);letter-spacing:-0.02em}
+.logo span{color:var(--accent)}
+.nav-tabs{display:flex;gap:0.25rem}
+.nav-tab{background:none;border:none;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:0.5rem 0.9rem;border-radius:8px;cursor:pointer;transition:all 0.15s}
+.nav-tab:hover{color:var(--text);background:var(--surface2)}
+.nav-tab.active{color:var(--accent);background:var(--accent-bg)}
+.xp-badge{background:var(--gold-bg);border:1px solid var(--gold);color:var(--gold);font-size:0.8rem;font-weight:500;padding:0.3rem 0.8rem;border-radius:20px}
+
+/* MAIN */
+main{flex:1;padding:2rem;max-width:960px;margin:0 auto;width:100%}
+
+/* SECTION */
+.section{display:none}
+.section.active{display:block}
+
+/* HERO */
+.hero{text-align:center;padding:3rem 1rem 2rem}
+.hero h1{font-size:2.8rem;margin-bottom:0.5rem;color:var(--text)}
+.hero p{color:var(--text2);font-size:1.1rem;margin-bottom:2.5rem}
+.hero-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem}
+.hero-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;cursor:pointer;transition:all 0.2s;text-align:left}
+.hero-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.hero-card-icon{font-size:1.8rem;margin-bottom:0.75rem}
+.hero-card h3{font-size:1rem;font-family:'DM Sans',sans-serif;font-weight:600;color:var(--text);margin-bottom:0.25rem}
+.hero-card p{font-size:0.82rem;color:var(--text2)}
+.progress-bar-wrap{background:var(--surface2);border-radius:999px;height:6px;margin-top:0.75rem;overflow:hidden}
+.progress-bar{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--teal))}
+
+/* ALPHABET GRID */
+.section-header{margin-bottom:1.5rem}
+.section-header h2{font-size:1.8rem;margin-bottom:0.25rem}
+.section-header p{color:var(--text2);font-size:0.9rem}
+.tabs{display:flex;gap:0.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.tab-btn{background:var(--surface);border:1px solid var(--border);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;transition:all 0.15s}
+.tab-btn.active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent)}
+.letter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:0.75rem}
+.letter-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center;cursor:pointer;transition:all 0.2s;position:relative}
+.letter-card:hover{border-color:var(--accent);background:var(--accent-bg)}
+.letter-card.learned{border-color:var(--green);opacity:0.7}
+.letter-card.learned::after{content:'✓';position:absolute;top:6px;right:8px;font-size:0.7rem;color:var(--green)}
+.letter-tamil{font-family:'Noto Sans Tamil',sans-serif;font-size:2rem;font-weight:400;color:var(--text);line-height:1.2;display:block;margin-bottom:0.3rem}
+.letter-roman{font-size:0.8rem;color:var(--text2);font-weight:500}
+.letter-name{font-size:0.72rem;color:var(--text3)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:2rem;max-width:480px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-close{float:right;background:none;border:none;color:var(--text2);font-size:1.4rem;cursor:pointer;line-height:1}
+.modal-tamil{font-family:'Noto Sans Tamil',sans-serif;font-size:5rem;text-align:center;margin:1rem 0;color:var(--accent)}
+.modal-roman{text-align:center;font-size:1.3rem;color:var(--text);font-weight:500;margin-bottom:0.25rem}
+.modal-type{text-align:center;font-size:0.85rem;color:var(--text3);margin-bottom:1.5rem}
+.modal-section{margin-top:1.25rem}
+.modal-section h4{font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);font-family:'DM Sans',sans-serif;font-weight:500;margin-bottom:0.6rem}
+.word-examples{display:flex;flex-direction:column;gap:0.5rem}
+.word-ex{display:flex;justify-content:space-between;align-items:center;background:var(--surface2);border-radius:8px;padding:0.5rem 0.75rem}
+.word-ex-tamil{font-family:'Noto Sans Tamil',sans-serif;font-size:1.1rem;color:var(--text)}
+.word-ex-right{text-align:right}
+.word-ex-roman{font-size:0.82rem;color:var(--text2)}
+.word-ex-en{font-size:0.8rem;color:var(--text3)}
+.mark-learned-btn{width:100%;margin-top:1.5rem;background:var(--green-bg);border:1px solid var(--green);color:var(--green);font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;padding:0.7rem;border-radius:10px;cursor:pointer;transition:all 0.15s}
+.mark-learned-btn:hover{background:var(--green);color:#000}
+
+/* VOCAB */
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.75rem}
+.vocab-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;cursor:pointer;transition:all 0.2s}
+.vocab-card:hover{border-color:var(--teal);transform:translateY(-1px)}
+.vocab-card.flipped .vocab-front{display:none}
+.vocab-card.flipped .vocab-back{display:flex}
+.vocab-front,.vocab-back{flex-direction:column}
+.vocab-back{display:none;align-items:center;justify-content:center;min-height:80px}
+.vocab-tamil{font-family:'Noto Sans Tamil',sans-serif;font-size:1.5rem;color:var(--text);margin-bottom:0.2rem}
+.vocab-cat{font-size:0.72rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem}
+.vocab-english{font-size:1rem;font-weight:600;color:var(--teal);text-align:center}
+.vocab-roman-back{font-size:0.85rem;color:var(--text2);text-align:center;margin-top:0.25rem}
+
+/* PHRASES */
+.phrase-list{display:flex;flex-direction:column;gap:0.75rem}
+.phrase-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem}
+.phrase-tamil{font-family:'Noto Sans Tamil',sans-serif;font-size:1.3rem;color:var(--text);margin-bottom:0.3rem}
+.phrase-roman{font-size:0.9rem;color:var(--text2);margin-bottom:0.2rem;font-style:italic}
+.phrase-english{font-size:0.95rem;color:var(--teal);font-weight:500}
+.phrase-context{font-size:0.78rem;color:var(--text3);margin-top:0.4rem}
+.phrase-cat-label{display:inline-block;font-size:0.7rem;background:var(--surface3);border:1px solid var(--border);color:var(--text3);padding:0.15rem 0.5rem;border-radius:6px;margin-bottom:0.6rem}
+
+/* GRAMMAR */
+.grammar-section{margin-bottom:2rem}
+.grammar-section h3{font-family:'DM Sans',sans-serif;font-weight:600;font-size:1rem;color:var(--accent);margin-bottom:0.75rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border)}
+.grammar-rule{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:0.5rem}
+.grammar-rule h4{font-size:0.9rem;font-family:'DM Sans',sans-serif;font-weight:500;color:var(--text);margin-bottom:0.5rem}
+.grammar-rule p{font-size:0.85rem;color:var(--text2);line-height:1.6}
+.grammar-example{background:var(--surface2);border-radius:8px;padding:0.75rem;margin-top:0.6rem}
+.grammar-ex-tamil{font-family:'Noto Sans Tamil',sans-serif;font-size:1.1rem;color:var(--text)}
+.grammar-ex-roman{font-size:0.82rem;color:var(--text2);font-style:italic}
+.grammar-ex-en{font-size:0.82rem;color:var(--teal)}
+
+/* QUIZ */
+.quiz-wrap{max-width:600px;margin:0 auto}
+.quiz-progress{display:flex;gap:0.3rem;margin-bottom:1.5rem}
+.quiz-prog-dot{flex:1;height:4px;border-radius:99px;background:var(--border)}
+.quiz-prog-dot.done{background:var(--accent)}
+.quiz-prog-dot.current{background:var(--accent);opacity:0.5}
+.quiz-q{font-size:1.1rem;font-weight:500;color:var(--text);margin-bottom:0.5rem}
+.quiz-q-sub{font-size:0.85rem;color:var(--text2);margin-bottom:1.5rem}
+.quiz-big-tamil{font-family:'Noto Sans Tamil',sans-serif;font-size:4rem;text-align:center;color:var(--accent);margin:1rem 0}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1.5rem}
+.quiz-opt{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:0.9rem;font-family:'DM Sans',sans-serif;font-size:0.95rem;color:var(--text);cursor:pointer;transition:all 0.15s;text-align:left}
+.quiz-opt:hover:not(:disabled){border-color:var(--accent);background:var(--accent-bg)}
+.quiz-opt.correct{border-color:var(--green)!important;background:var(--green-bg)!important;color:var(--green)!important}
+.quiz-opt.wrong{border-color:var(--red)!important;background:var(--red-bg)!important;color:var(--red)!important}
+.quiz-opt.reveal{border-color:var(--green);background:var(--green-bg);color:var(--green)}
+.quiz-input{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:0.8rem 1rem;font-family:'Noto Sans Tamil',sans-serif;font-size:1.3rem;color:var(--text);outline:none;margin-bottom:0.75rem}
+.quiz-input:focus{border-color:var(--accent)}
+.quiz-btn{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:0.75rem 1.5rem;font-family:'DM Sans',sans-serif;font-size:0.95rem;font-weight:500;cursor:pointer;transition:all 0.15s}
+.quiz-btn:hover{background:var(--accent2)}
+.quiz-btn.secondary{background:var(--surface2);border:1px solid var(--border2);color:var(--text2)}
+.quiz-btn.secondary:hover{color:var(--text);border-color:var(--border)}
+.quiz-feedback{border-radius:12px;padding:1rem;margin-bottom:1rem;font-size:0.9rem}
+.quiz-feedback.correct{background:var(--green-bg);border:1px solid var(--green);color:var(--green)}
+.quiz-feedback.wrong{background:var(--red-bg);border:1px solid var(--red);color:var(--red)}
+.quiz-score{text-align:center;padding:2rem}
+.quiz-score h2{font-size:2rem;margin-bottom:0.5rem}
+.quiz-score p{color:var(--text2);font-size:1rem;margin-bottom:1.5rem}
+.score-circle{width:100px;height:100px;border-radius:50%;border:3px solid var(--accent);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.8rem;font-family:'DM Serif Display',serif;color:var(--accent)}
+.quiz-type-select{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:2rem}
+.quiz-type-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;cursor:pointer;transition:all 0.2s}
+.quiz-type-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.quiz-type-card h4{font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.95rem;margin-bottom:0.25rem}
+.quiz-type-card p{font-size:0.8rem;color:var(--text2)}
+
+/* AI TUTOR */
+.tutor-wrap{display:flex;flex-direction:column;height:calc(100vh - 160px);max-width:700px;margin:0 auto}
+.chat-msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:0.75rem;padding-bottom:1rem}
+.chat-msg{max-width:80%;padding:0.8rem 1rem;border-radius:14px;font-size:0.9rem;line-height:1.6}
+.chat-msg.ai{background:var(--surface);border:1px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px}
+.chat-msg.user{background:var(--accent-bg);border:1px solid var(--accent);color:var(--text);align-self:flex-end;border-bottom-right-radius:4px}
+.chat-msg .tamil-inline{font-family:'Noto Sans Tamil',sans-serif;font-size:1.1em;color:var(--accent)}
+.chat-typing{align-self:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:14px;border-bottom-left-radius:4px;padding:0.8rem 1rem;color:var(--text2);font-size:0.85rem}
+.chat-input-row{display:flex;gap:0.5rem;padding-top:0.75rem;border-top:1px solid var(--border)}
+.chat-input{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:0.7rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;color:var(--text);outline:none}
+.chat-input:focus{border-color:var(--accent)}
+.chat-send{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:0.7rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;cursor:pointer}
+.chat-send:disabled{opacity:0.5;cursor:not-allowed}
+.quick-prompts{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.75rem}
+.quick-prompt-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:0.78rem;padding:0.35rem 0.75rem;border-radius:8px;cursor:pointer;transition:all 0.15s}
+.quick-prompt-btn:hover{border-color:var(--accent);color:var(--accent)}
+.xp-toast{position:fixed;bottom:2rem;right:2rem;background:var(--gold-bg);border:1px solid var(--gold);color:var(--gold);padding:0.6rem 1.1rem;border-radius:10px;font-size:0.85rem;font-weight:500;z-index:9999;animation:toastIn 0.3s ease;display:none}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.filter-row{display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
+.filter-label{font-size:0.8rem;color:var(--text3)}
+.badge{display:inline-block;font-size:0.7rem;padding:0.2rem 0.5rem;border-radius:6px;font-weight:500}
+.badge-new{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">தமிழ் <span>Learn</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('home')">Home</button>
+    <button class="nav-tab" onclick="showSection('alphabet')">Script</button>
+    <button class="nav-tab" onclick="showSection('vocab')">Vocab</button>
+    <button class="nav-tab" onclick="showSection('phrases')">Phrases</button>
+    <button class="nav-tab" onclick="showSection('grammar')">Grammar</button>
+    <button class="nav-tab" onclick="showSection('quiz')">Quiz</button>
+    <button class="nav-tab" onclick="showSection('tutor')">AI Tutor</button>
+  </div>
+  <div class="xp-badge" id="xp-display">0 XP</div>
+</nav>
+
+<main>
+
+<!-- HOME -->
+<div class="section active" id="section-home">
+  <div class="hero">
+    <h1>Learn Tamil</h1>
+    <p>Master the script, vocabulary, phrases & grammar — with an AI tutor by your side.</p>
+    <div class="hero-grid">
+      <div class="hero-card" onclick="showSection('alphabet')">
+        <div class="hero-card-icon">அ</div>
+        <h3>Script & Letters</h3>
+        <p>247 characters — vowels, consonants & compound letters</p>
+        <div class="progress-bar-wrap"><div class="progress-bar" id="pb-alpha" style="width:0%"></div></div>
+      </div>
+      <div class="hero-card" onclick="showSection('vocab')">
+        <div class="hero-card-icon">📖</div>
+        <h3>Vocabulary</h3>
+        <p>200+ words across 10 categories with flashcard mode</p>
+        <div class="progress-bar-wrap"><div class="progress-bar" id="pb-vocab" style="width:0%"></div></div>
+      </div>
+      <div class="hero-card" onclick="showSection('phrases')">
+        <div class="hero-card-icon">💬</div>
+        <h3>Phrases</h3>
+        <p>Real conversation phrases — greetings, shopping, travel & more</p>
+        <div class="progress-bar-wrap"><div class="progress-bar" id="pb-phrases" style="width:10%"></div></div>
+      </div>
+      <div class="hero-card" onclick="showSection('grammar')">
+        <div class="hero-card-icon">⚙️</div>
+        <h3>Grammar</h3>
+        <p>SOV structure, agglutination, postpositions & verb conjugation</p>
+        <div class="progress-bar-wrap"><div class="progress-bar" id="pb-grammar" style="width:5%"></div></div>
+      </div>
+      <div class="hero-card" onclick="showSection('quiz')">
+        <div class="hero-card-icon">🎯</div>
+        <h3>Quiz</h3>
+        <p>Test yourself with multiple choice, matching & fill-in</p>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:0%"></div></div>
+      </div>
+      <div class="hero-card" onclick="showSection('tutor')">
+        <div class="hero-card-icon">🤖</div>
+        <h3>AI Tutor</h3>
+        <p>Ask anything — powered by Claude AI, always in context</p>
+        <div class="progress-bar-wrap"><div class="progress-bar" style="width:100%;background:linear-gradient(90deg,var(--accent),var(--teal))"></div></div>
+      </div>
+    </div>
+    <p style="font-size:0.82rem;color:var(--text3)">Click any card to begin. Your progress is saved automatically.</p>
+  </div>
+</div>
+
+<!-- ALPHABET -->
+<div class="section" id="section-alphabet">
+  <div class="section-header">
+    <h2>Tamil Script</h2>
+    <p>Tamil has 12 vowels (உயிர்), 18 consonants (மெய்), and 216 compound letters (உயிர்மெய்). Click any letter to learn more.</p>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showLetterTab('vowels',this)">Vowels (12)</button>
+    <button class="tab-btn" onclick="showLetterTab('consonants',this)">Consonants (18)</button>
+    <button class="tab-btn" onclick="showLetterTab('compounds',this)">Compounds (216)</button>
+    <button class="tab-btn" onclick="showLetterTab('numbers',this)">Numbers</button>
+  </div>
+  <div id="letter-grid" class="letter-grid"></div>
+</div>
+
+<!-- VOCAB -->
+<div class="section" id="section-vocab">
+  <div class="section-header">
+    <h2>Vocabulary</h2>
+    <p>Click a card to flip it and see the meaning. 200+ essential words.</p>
+  </div>
+  <div class="filter-row">
+    <span class="filter-label">Category:</span>
+    <div class="tabs" style="margin:0" id="vocab-cats"></div>
+  </div>
+  <div id="vocab-grid" class="vocab-grid"></div>
+</div>
+
+<!-- PHRASES -->
+<div class="section" id="section-phrases">
+  <div class="section-header">
+    <h2>Phrases & Conversations</h2>
+    <p>Real phrases used in everyday Tamil speech.</p>
+  </div>
+  <div class="tabs" id="phrase-cats"></div>
+  <div id="phrase-list" class="phrase-list"></div>
+</div>
+
+<!-- GRAMMAR -->
+<div class="section" id="section-grammar">
+  <div class="section-header">
+    <h2>Grammar</h2>
+    <p>How Tamil works — structure, suffixes and conjugations.</p>
+  </div>
+  <div id="grammar-content"></div>
+</div>
+
+<!-- QUIZ -->
+<div class="section" id="section-quiz">
+  <div class="quiz-wrap">
+    <div id="quiz-start">
+      <div class="section-header"><h2>Quiz Yourself</h2><p>Choose a quiz type to get started.</p></div>
+      <div class="quiz-type-select">
+        <div class="quiz-type-card" onclick="startQuiz('letter-id')">
+          <h4>Letter ID</h4>
+          <p>See a Tamil letter, choose what it sounds like</p>
+        </div>
+        <div class="quiz-type-card" onclick="startQuiz('word-match')">
+          <h4>Word Match</h4>
+          <p>Match Tamil words to their English meaning</p>
+        </div>
+        <div class="quiz-type-card" onclick="startQuiz('phrase-fill')">
+          <h4>Phrase Fill</h4>
+          <p>Complete the phrase in Tamil or English</p>
+        </div>
+        <div class="quiz-type-card" onclick="startQuiz('mixed')">
+          <h4>Mixed Review</h4>
+          <p>Random questions across all categories</p>
+        </div>
+      </div>
+    </div>
+    <div id="quiz-main" style="display:none"></div>
+  </div>
+</div>
+
+<!-- AI TUTOR -->
+<div class="section" id="section-tutor">
+  <div class="tutor-wrap">
+    <div class="section-header" style="margin-bottom:0.75rem">
+      <h2>AI Tamil Tutor</h2>
+      <p style="font-size:0.82rem">Powered by Claude — ask anything about Tamil language, script, pronunciation or grammar.</p>
+    </div>
+    <div class="quick-prompts">
+      <button class="quick-prompt-btn" onclick="sendQuick('How do I pronounce ழ?')">How to pronounce ழ?</button>
+      <button class="quick-prompt-btn" onclick="sendQuick('Explain the Tamil verb conjugation system')">Verb conjugation</button>
+      <button class="quick-prompt-btn" onclick="sendQuick('What is the difference between formal and informal Tamil?')">Formal vs informal</button>
+      <button class="quick-prompt-btn" onclick="sendQuick('Teach me how to count to 100 in Tamil')">Count to 100</button>
+      <button class="quick-prompt-btn" onclick="sendQuick('Give me 5 common Tamil idioms with meanings')">Tamil idioms</button>
+      <button class="quick-prompt-btn" onclick="sendQuick('How do postpositions work in Tamil?')">Postpositions</button>
+    </div>
+    <div class="chat-msgs" id="chat-msgs">
+      <div class="chat-msg ai">வணக்கம்! (Vanakkam!) 👋 I'm your Tamil tutor. I know you have some basics already — so ask me anything. You can ask about letters, words, grammar rules, pronunciation tips, or just practice a conversation. What would you like to explore today?</div>
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="chat-input" placeholder="Ask your Tamil tutor anything..." onkeydown="if(event.key==='Enter')sendChat()">
+      <button class="chat-send" id="chat-send" onclick="sendChat()">Send</button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- LETTER MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-tamil" id="modal-tamil"></div>
+    <div class="modal-roman" id="modal-roman"></div>
+    <div class="modal-type" id="modal-type"></div>
+    <div class="modal-section">
+      <h4>How to say it</h4>
+      <div id="modal-guide" style="font-size:0.88rem;color:var(--text2);line-height:1.7"></div>
+    </div>
+    <div class="modal-section" id="modal-words-section">
+      <h4>Words using this letter</h4>
+      <div class="word-examples" id="modal-words"></div>
+    </div>
+    <button class="mark-learned-btn" id="mark-btn" onclick="markLearned()">Mark as learned</button>
+  </div>
+</div>
+
+<div class="xp-toast" id="xp-toast"></div>
+
+<script>
+var XP=parseInt(localStorage.getItem('tamil_xp')||0);
+var learnedLetters=JSON.parse(localStorage.getItem('tamil_learned')||'[]');
+var currentLetter=null;
+
+function saveXP(){localStorage.setItem('tamil_xp',XP);document.getElementById('xp-display').textContent=XP+' XP';}
+function addXP(n){XP+=n;saveXP();showToast('+'+n+' XP');}
+function showToast(msg){var t=document.getElementById('xp-toast');t.textContent=msg;t.style.display='block';setTimeout(function(){t.style.display='none'},2000);}
+document.getElementById('xp-display').textContent=XP+' XP';
+
+var VOWELS=[
+  {t:'அ',r:'a',name:'short a',guide:'Like the "a" in "about". Short and quick.',words:[{t:'அம்மா',r:'ammā',e:'mother'},{t:'அன்பு',r:'anbu',e:'love'}]},
+  {t:'ஆ',r:'ā',name:'long a',guide:'Like "ah" — held longer. The mouth opens wide.',words:[{t:'ஆமா',r:'āmā',e:'yes (informal)'},{t:'ஆகாயம்',r:'ākāyam',e:'sky'}]},
+  {t:'இ',r:'i',name:'short i',guide:'Like "i" in "bit". Short, front of mouth.',words:[{t:'இல்லை',r:'illai',e:'no'},{t:'இந்தியா',r:'Indhiyā',e:'India'}]},
+  {t:'ஈ',r:'ī',name:'long i',guide:'Like "ee" in "feet". Held longer.',words:[{t:'ஈ',r:'ī',e:'fly (insect)'},{t:'ஈர்ப்பு',r:'īrppu',e:'gravity'}]},
+  {t:'உ',r:'u',name:'short u',guide:'Like "u" in "put". Lips rounded, short.',words:[{t:'உணவு',r:'uṇavu',e:'food'},{t:'உடல்',r:'uḍal',e:'body'}]},
+  {t:'ஊ',r:'ū',name:'long u',guide:'Like "oo" in "food". Held longer.',words:[{t:'ஊர்',r:'ūr',e:'village/town'},{t:'ஊசி',r:'ūci',e:'needle'}]},
+  {t:'எ',r:'e',name:'short e',guide:'Like "e" in "pet". Short and crisp.',words:[{t:'எலி',r:'eli',e:'rat'},{t:'எங்கே',r:'eṅkē',e:'where'}]},
+  {t:'ஏ',r:'ē',name:'long e',guide:'Like "ay" in "say". Held longer.',words:[{t:'ஏன்',r:'ēn',e:'why'},{t:'ஏணி',r:'ēṇi',e:'ladder'}]},
+  {t:'ஐ',r:'ai',name:'ai diphthong',guide:'Like "ai" in "aisle". Two vowel sounds blended.',words:[{t:'ஐந்து',r:'aindu',e:'five'},{t:'ஐயம்',r:'aiyam',e:'doubt'}]},
+  {t:'ஒ',r:'o',name:'short o',guide:'Like "o" in "got" (British). Short and round.',words:[{t:'ஒன்று',r:'ondru',e:'one'},{t:'ஒளி',r:'oḷi',e:'light'}]},
+  {t:'ஓ',r:'ō',name:'long o',guide:'Like "o" in "go". Held longer.',words:[{t:'ஓடு',r:'ōḍu',e:'run (verb)'},{t:'ஓவியம்',r:'ōviyam',e:'painting'}]},
+  {t:'ஔ',r:'au',name:'au diphthong',guide:'Like "ow" in "cow". Two sounds blended. Rare in modern Tamil.',words:[{t:'ஔவியர்',r:'auviyar',e:'Auviyar (classical poet)'}]},
+];
+
+var CONSONANTS=[
+  {t:'க',r:'k/g',name:'ka',guide:'Hard "k" at start, softer "g" between vowels. Very common letter.',words:[{t:'கை',r:'kai',e:'hand'},{t:'கல்',r:'kal',e:'stone'},{t:'காட்டு',r:'kāṭṭu',e:'forest'}]},
+  {t:'ங',r:'ng',name:'nga',guide:'Like "ng" in "ring". Only appears after க sounds. Rare at word start.',words:[{t:'அங்கே',r:'aṅkē',e:'there'},{t:'சங்கம்',r:'caṅkam',e:'assembly'}]},
+  {t:'ச',r:'ch/s/j',name:'ca',guide:'Sounds like "ch", "s", or "j" depending on position. Versatile consonant.',words:[{t:'சாப்பிடு',r:'cāppiḍu',e:'eat'},{t:'சூரியன்',r:'cūriyaṉ',e:'sun'},{t:'செல்',r:'cel',e:'go'}]},
+  {t:'ஞ',r:'ny',name:'nya',guide:'Like "ny" in Spanish "mañana". Nasal + palatal sound.',words:[{t:'ஞாயிறு',r:'ñāyiṟu',e:'Sunday/sun'},{t:'ஞானம்',r:'ñāṉam',e:'wisdom'}]},
+  {t:'ட',r:'ṭ/ḍ',name:'ṭa',guide:'Retroflex "t" — tongue curls back to touch the roof of the mouth. Hard at start, soft between vowels.',words:[{t:'டீ',r:'ṭī',e:'tea'},{t:'கோடி',r:'kōḍi',e:'crore/flag'}]},
+  {t:'ண',r:'ṇ',name:'ṇa',guide:'Retroflex nasal — tongue curls back. Like "n" but with tongue curled back.',words:[{t:'வண்ணம்',r:'vaṇṇam',e:'colour'},{t:'மண்',r:'maṇ',e:'soil/earth'}]},
+  {t:'த',r:'th/dh',name:'ta',guide:'Dental "t" — tongue touches back of top teeth. Like a soft "th" in "the".',words:[{t:'தண்ணீர்',r:'taṇṇīr',e:'water'},{t:'தாய்',r:'tāy',e:'mother'},{t:'தமிழ்',r:'tamiḻ',e:'Tamil'}]},
+  {t:'ந',r:'n',name:'na',guide:'Dental nasal — like "n" but with tongue against the teeth. Slightly different from English "n".',words:[{t:'நான்',r:'nāṉ',e:'I/me'},{t:'நாடு',r:'nāḍu',e:'country'},{t:'நல்ல',r:'nalla',e:'good'}]},
+  {t:'ப',r:'p/b',name:'pa',guide:'Hard "p" at start, softer "b" between vowels.',words:[{t:'பால்',r:'pāl',e:'milk'},{t:'பூ',r:'pū',e:'flower'},{t:'படம்',r:'paḍam',e:'picture/film'}]},
+  {t:'ம',r:'m',name:'ma',guide:'Exactly like English "m". One of the most common Tamil letters.',words:[{t:'மனிதன்',r:'maṉitaṉ',e:'human/man'},{t:'மழை',r:'maḻai',e:'rain'},{t:'மரம்',r:'maram',e:'tree'}]},
+  {t:'ய',r:'y',name:'ya',guide:'Like English "y" in "yes". Glide consonant.',words:[{t:'யார்',r:'yār',e:'who'},{t:'யானை',r:'yāṉai',e:'elephant'}]},
+  {t:'ர',r:'r',name:'ra',guide:'Flap "r" — tongue briefly touches the ridge behind teeth. Softer than English "r".',words:[{t:'ரோடு',r:'rōḍu',e:'road'},{t:'ரத்தம்',r:'rattam',e:'blood'}]},
+  {t:'ல',r:'l',name:'la',guide:'Dental "l" — tongue touches back of teeth. Similar to English "l" but more forward.',words:[{t:'லட்சணம்',r:'laṭcaṇam',e:'character'},{t:'லோக்கல்',r:'lōkkal',e:'local'}]},
+  {t:'வ',r:'v/w',name:'va',guide:'Like English "v" but softer — sometimes almost like "w". Very common.',words:[{t:'வீடு',r:'vīḍu',e:'house'},{t:'வாழ்க',r:'vāḻka',e:'long live!'},{t:'வா',r:'vā',e:'come'}]},
+  {t:'ழ',r:'ḻ',name:'ḻa (unique!)',guide:'🌟 UNIQUE TO TAMIL! No equivalent in any other language. Tongue curls far back, then flips forward. This is what makes Tamil special. Often romanised as "zh" or "ḻ".',words:[{t:'தமிழ்',r:'tamiḻ',e:'Tamil (the language)'},{t:'வாழை',r:'vāḻai',e:'banana'},{t:'மழை',r:'maḻai',e:'rain'}]},
+  {t:'ள',r:'ḷ',name:'ḷa',guide:'Retroflex "l" — tongue curls back. Different from regular ல. Think of it as a "l" made from the back of the mouth.',words:[{t:'ஆள்',r:'āḷ',e:'person/man'},{t:'தமிழ்நாடு',r:'tamiḻnāḍu',e:'Tamil Nadu'}]},
+  {t:'ற',r:'ṟ',name:'ṟa',guide:'Trill "r" — a rolled "r" similar to Spanish "rr". Strong and distinct from ர.',words:[{t:'வீற்றிருக்க',r:'vīṟṟirukka',e:'to be seated (royal)'},{t:'நாற்று',r:'nāṟṟu',e:'seedling'}]},
+  {t:'ன',r:'ṉ',name:'ṉa',guide:'Alveolar nasal — tongue tip touches the ridge. Similar to English "n" but more precise. Different from dental ந.',words:[{t:'தன்',r:'taṉ',e:'self/oneself'},{t:'இன்று',r:'iṉṟu',e:'today'}]},
+];
+
+var NUMBERS=[
+  {t:'௧',r:'1',name:'one',guide:'Tamil numeral 1. Pronounced "ondru" (ஒன்று)',words:[{t:'ஒன்று',r:'ondru',e:'one'}]},
+  {t:'௨',r:'2',name:'two',guide:'Tamil numeral 2. Pronounced "iraṇḍu" (இரண்டு)',words:[{t:'இரண்டு',r:'iraṇḍu',e:'two'}]},
+  {t:'௩',r:'3',name:'three',guide:'Tamil numeral 3. Pronounced "mūnṟu" (மூன்று)',words:[{t:'மூன்று',r:'mūnṟu',e:'three'}]},
+  {t:'௪',r:'4',name:'four',guide:'Tamil numeral 4. Pronounced "nāṉku" (நான்கு)',words:[{t:'நான்கு',r:'nāṉku',e:'four'}]},
+  {t:'௫',r:'5',name:'five',guide:'Tamil numeral 5. Pronounced "aindu" (ஐந்து)',words:[{t:'ஐந்து',r:'aindu',e:'five'}]},
+  {t:'௬',r:'6',name:'six',guide:'Tamil numeral 6. Pronounced "āru" (ஆறு)',words:[{t:'ஆறு',r:'āru',e:'six'}]},
+  {t:'௭',r:'7',name:'seven',guide:'Tamil numeral 7. Pronounced "ēḻu" (ஏழு)',words:[{t:'ஏழு',r:'ēḻu',e:'seven'}]},
+  {t:'௮',r:'8',name:'eight',guide:'Tamil numeral 8. Pronounced "eṭṭu" (எட்டு)',words:[{t:'எட்டு',r:'eṭṭu',e:'eight'}]},
+  {t:'௯',r:'9',name:'nine',guide:'Tamil numeral 9. Pronounced "oṉpatu" (ஒன்பது)',words:[{t:'ஒன்பது',r:'oṉpatu',e:'nine'}]},
+  {t:'௰',r:'10',name:'ten',guide:'Tamil numeral 10. Pronounced "pattu" (பத்து)',words:[{t:'பத்து',r:'pattu',e:'ten'}]},
+  {t:'௱',r:'100',name:'hundred',guide:'Tamil numeral 100. Pronounced "nūṟu" (நூறு)',words:[{t:'நூறு',r:'nūṟu',e:'hundred'}]},
+  {t:'௲',r:'1000',name:'thousand',guide:'Tamil numeral 1000. Pronounced "āyiram" (ஆயிரம்)',words:[{t:'ஆயிரம்',r:'āyiram',e:'thousand'}]},
+];
+
+// Build compound letters
+var COMPOUNDS=[];
+CONSONANTS.slice(0,6).forEach(function(c){
+  VOWELS.forEach(function(v,vi){
+    // simplified approximation for display
+    COMPOUNDS.push({t:c.t+(vi<2?'า':''),r:c.r+v.r,name:c.name+'+'+v.name,guide:'Compound: '+c.t+' ('+c.r+') + '+v.t+' ('+v.r+'). The vowel marker modifies the base consonant.',words:[]});
+  });
+});
+// Use proper compounds for display
+var PROPER_COMPOUNDS=[
+  {t:'கா',r:'kā',name:'ka+ā',guide:'க + ா = கா. The vowel marker ா (long a) is added to the right of க.',words:[{t:'காடு',r:'kāḍu',e:'forest'},{t:'கால்',r:'kāl',e:'leg/foot'}]},
+  {t:'கி',r:'ki',name:'ka+i',guide:'க + ி = கி. The vowel marker ி (short i) is added to the right of க.',words:[{t:'கிடை',r:'kiḍai',e:'to get/receive'}]},
+  {t:'கீ',r:'kī',name:'ka+ī',guide:'க + ீ = கீ. Long i marker.',words:[{t:'கீழ்',r:'kīḻ',e:'below/down'},{t:'கீரை',r:'kīrai',e:'spinach/greens'}]},
+  {t:'கு',r:'ku',name:'ka+u',guide:'க + ு = கு. Short u marker curls under the consonant.',words:[{t:'குழந்தை',r:'kuḻandai',e:'child'},{t:'குட்டி',r:'kuṭṭi',e:'small/little'}]},
+  {t:'கூ',r:'kū',name:'ka+ū',guide:'க + ூ = கூ. Long u marker.',words:[{t:'கூட',r:'kūḍa',e:'together/also'},{t:'கூந்தல்',r:'kūndal',e:'hair'}]},
+  {t:'கெ',r:'ke',name:'ka+e',guide:'க + ெ = கெ. Short e marker.',words:[{t:'கெட்ட',r:'keṭṭa',e:'bad/spoiled'}]},
+  {t:'கே',r:'kē',name:'ka+ē',guide:'க + ே = கே. Long e marker.',words:[{t:'கேள்',r:'kēḷ',e:'ask/listen'},{t:'கேரட்',r:'kēraṭ',e:'carrot'}]},
+  {t:'கை',r:'kai',name:'ka+ai',guide:'க + ை = கை. The ai diphthong marker.',words:[{t:'கை',r:'kai',e:'hand'}]},
+  {t:'கொ',r:'ko',name:'ka+o',guide:'க + ொ = கொ. Short o marker.',words:[{t:'கொண்டு',r:'koṇḍu',e:'having/with'},{t:'கொடு',r:'koḍu',e:'give'}]},
+  {t:'கோ',r:'kō',name:'ka+ō',guide:'க + ோ = கோ. Long o marker.',words:[{t:'கோயில்',r:'kōyil',e:'temple'},{t:'கோழி',r:'kōḻi',e:'chicken'}]},
+  {t:'கௌ',r:'kau',name:'ka+au',guide:'க + ௌ = கௌ. The au diphthong marker. Rare.',words:[]},
+  {t:'சா',r:'cā',name:'ca+ā',guide:'ச + ா = சா. ca with long a.',words:[{t:'சாப்பாடு',r:'cāppāḍu',e:'food/meal'},{t:'சாலை',r:'cālai',e:'road'}]},
+  {t:'சி',r:'ci',name:'ca+i',guide:'ச + ி = சி. ca with short i.',words:[{t:'சின்னம்',r:'ciṉṉam',e:'small/symbol'}]},
+  {t:'சீ',r:'cī',name:'ca+ī',guide:'ச + ீ = சீ. ca with long i.',words:[{t:'சீரு',r:'cīru',e:'order/neatness'}]},
+  {t:'சு',r:'cu',name:'ca+u',guide:'ச + ு = சு. ca with short u.',words:[{t:'சுகம்',r:'cukam',e:'comfort/well-being'}]},
+  {t:'நா',r:'nā',name:'na+ā',guide:'ந + ா = நா. na with long a.',words:[{t:'நாடு',r:'nāḍu',e:'country'},{t:'நாய்',r:'nāy',e:'dog'}]},
+  {t:'நி',r:'ni',name:'na+i',guide:'ந + ி = நி. na with short i.',words:[{t:'நிலம்',r:'nilam',e:'land/soil'}]},
+  {t:'தா',r:'tā',name:'ta+ā',guide:'த + ா = தா. ta with long a.',words:[{t:'தாய்',r:'tāy',e:'mother'},{t:'தாமரை',r:'tāmarai',e:'lotus'}]},
+  {t:'வா',r:'vā',name:'va+ā',guide:'வ + ா = வா. va with long a.',words:[{t:'வாழ்க',r:'vāḻka',e:'long live!'},{t:'வாழை',r:'vāḻai',e:'banana'}]},
+  {t:'மா',r:'mā',name:'ma+ā',guide:'ம + ா = மா. ma with long a.',words:[{t:'மாம்பழம்',r:'māmpaḻam',e:'mango'},{t:'மாடு',r:'māḍu',e:'cattle/ox'}]},
+  {t:'பா',r:'pā',name:'pa+ā',guide:'ப + ா = பா. pa with long a.',words:[{t:'பாடல்',r:'pāḍal',e:'song'},{t:'பால்',r:'pāl',e:'milk'}]},
+];
+
+var currentLetterTab='vowels';
+
+function showLetterTab(tab,btn){
+  currentLetterTab=tab;
+  document.querySelectorAll('#section-alphabet .tab-btn').forEach(function(b){b.classList.remove('active')});
+  if(btn)btn.classList.add('active');
+  renderLetters();
+}
+
+function renderLetters(){
+  var grid=document.getElementById('letter-grid');
+  var data=currentLetterTab==='vowels'?VOWELS:currentLetterTab==='consonants'?CONSONANTS:currentLetterTab==='numbers'?NUMBERS:PROPER_COMPOUNDS;
+  grid.innerHTML=data.map(function(l,i){
+    var learned=learnedLetters.indexOf(l.t)>=0;
+    return '<div class="letter-card'+(learned?' learned':'')+'" onclick="openModal('+JSON.stringify(JSON.stringify(l))+')">'
+      +'<span class="letter-tamil">'+l.t+'</span>'
+      +'<div class="letter-roman">'+l.r+'</div>'
+      +'<div class="letter-name">'+l.name+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function openModal(lStr){
+  var l=JSON.parse(lStr);
+  currentLetter=l;
+  document.getElementById('modal-tamil').textContent=l.t;
+  document.getElementById('modal-roman').textContent=l.r;
+  document.getElementById('modal-type').textContent=l.name;
+  document.getElementById('modal-guide').textContent=l.guide;
+  var ws=l.words||[];
+  document.getElementById('modal-words-section').style.display=ws.length?'block':'none';
+  document.getElementById('modal-words').innerHTML=ws.map(function(w){
+    return '<div class="word-ex"><span class="word-ex-tamil">'+w.t+'</span><div class="word-ex-right"><div class="word-ex-roman">'+w.r+'</div><div class="word-ex-en">'+w.e+'</div></div></div>';
+  }).join('');
+  var learned=learnedLetters.indexOf(l.t)>=0;
+  document.getElementById('mark-btn').textContent=learned?'Learned ✓':'Mark as learned';
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+function markLearned(){
+  if(!currentLetter)return;
+  if(learnedLetters.indexOf(currentLetter.t)<0){
+    learnedLetters.push(currentLetter.t);
+    localStorage.setItem('tamil_learned',JSON.stringify(learnedLetters));
+    addXP(5);
+    document.getElementById('mark-btn').textContent='Learned ✓';
+    renderLetters();
+    updateProgress();
+  }
+}
+function updateProgress(){
+  var total=VOWELS.length+CONSONANTS.length;
+  var pct=Math.round((learnedLetters.length/total)*100);
+  document.getElementById('pb-alpha').style.width=pct+'%';
+}
+updateProgress();
+
+// VOCABULARY
+var VOCAB=[
+  {t:'அம்மா',r:'ammā',e:'mother',cat:'Family'},
+  {t:'அப்பா',r:'appā',e:'father',cat:'Family'},
+  {t:'அண்ணன்',r:'aṇṇaṉ',e:'older brother',cat:'Family'},
+  {t:'அக்கா',r:'akkā',e:'older sister',cat:'Family'},
+  {t:'தம்பி',r:'tampi',e:'younger brother',cat:'Family'},
+  {t:'தங்கை',r:'taṅkai',e:'younger sister',cat:'Family'},
+  {t:'தாத்தா',r:'tāttā',e:'grandfather',cat:'Family'},
+  {t:'பாட்டி',r:'pāṭṭi',e:'grandmother',cat:'Family'},
+  {t:'குழந்தை',r:'kuḻandai',e:'child',cat:'Family'},
+  {t:'கணவன்',r:'kaṇavaṉ',e:'husband',cat:'Family'},
+  {t:'மனைவி',r:'maṉaivi',e:'wife',cat:'Family'},
+  {t:'உணவு',r:'uṇavu',e:'food',cat:'Food'},
+  {t:'தண்ணீர்',r:'taṇṇīr',e:'water',cat:'Food'},
+  {t:'சாப்பாடு',r:'cāppāḍu',e:'meal/rice dish',cat:'Food'},
+  {t:'பால்',r:'pāl',e:'milk',cat:'Food'},
+  {t:'காய்கறி',r:'kāykaṟi',e:'vegetables',cat:'Food'},
+  {t:'பழம்',r:'paḻam',e:'fruit',cat:'Food'},
+  {t:'மாம்பழம்',r:'māmpaḻam',e:'mango',cat:'Food'},
+  {t:'வாழைப்பழம்',r:'vāḻaippaḻam',e:'banana',cat:'Food'},
+  {t:'தோசை',r:'tōcai',e:'dosa',cat:'Food'},
+  {t:'இட்லி',r:'iṭli',e:'idli',cat:'Food'},
+  {t:'சாம்பார்',r:'cāmpār',e:'sambar',cat:'Food'},
+  {t:'கடை',r:'kaḍai',e:'shop/store',cat:'Places'},
+  {t:'வீடு',r:'vīḍu',e:'house',cat:'Places'},
+  {t:'பள்ளி',r:'paḷḷi',e:'school',cat:'Places'},
+  {t:'மருத்துவமனை',r:'maruttuvamanai',e:'hospital',cat:'Places'},
+  {t:'கோயில்',r:'kōyil',e:'temple',cat:'Places'},
+  {t:'நகரம்',r:'nakaram',e:'city',cat:'Places'},
+  {t:'கடற்கரை',r:'kaḍaṟkarai',e:'beach',cat:'Places'},
+  {t:'சாலை',r:'cālai',e:'road',cat:'Places'},
+  {t:'சிவப்பு',r:'civappu',e:'red',cat:'Colours'},
+  {t:'நீலம்',r:'nīlam',e:'blue',cat:'Colours'},
+  {t:'பச்சை',r:'paccai',e:'green',cat:'Colours'},
+  {t:'மஞ்சள்',r:'mañcaḷ',e:'yellow',cat:'Colours'},
+  {t:'கறுப்பு',r:'kaṟuppu',e:'black',cat:'Colours'},
+  {t:'வெள்ளை',r:'veḷḷai',e:'white',cat:'Colours'},
+  {t:'ஆரஞ்சு',r:'ārancu',e:'orange',cat:'Colours'},
+  {t:'ஒன்று',r:'oṉṟu',e:'one',cat:'Numbers'},
+  {t:'இரண்டு',r:'iraṇḍu',e:'two',cat:'Numbers'},
+  {t:'மூன்று',r:'mūṉṟu',e:'three',cat:'Numbers'},
+  {t:'நான்கு',r:'nāṉku',e:'four',cat:'Numbers'},
+  {t:'ஐந்து',r:'aintu',e:'five',cat:'Numbers'},
+  {t:'ஆறு',r:'āṟu',e:'six',cat:'Numbers'},
+  {t:'ஏழு',r:'ēḻu',e:'seven',cat:'Numbers'},
+  {t:'எட்டு',r:'eṭṭu',e:'eight',cat:'Numbers'},
+  {t:'ஒன்பது',r:'oṉpatu',e:'nine',cat:'Numbers'},
+  {t:'பத்து',r:'pattu',e:'ten',cat:'Numbers'},
+  {t:'நான்',r:'nāṉ',e:'I',cat:'Pronouns'},
+  {t:'நீ',r:'nī',e:'you (informal)',cat:'Pronouns'},
+  {t:'நீங்கள்',r:'nīṅkaḷ',e:'you (formal)',cat:'Pronouns'},
+  {t:'அவன்',r:'avaṉ',e:'he (informal)',cat:'Pronouns'},
+  {t:'அவள்',r:'avaḷ',e:'she (informal)',cat:'Pronouns'},
+  {t:'அவர்',r:'avar',e:'he/she (formal)',cat:'Pronouns'},
+  {t:'அது',r:'atu',e:'it/that',cat:'Pronouns'},
+  {t:'நாம்',r:'nām',e:'we (inclusive)',cat:'Pronouns'},
+  {t:'அவர்கள்',r:'avarkaḷ',e:'they (formal)',cat:'Pronouns'},
+  {t:'செல்',r:'cel',e:'to go',cat:'Verbs'},
+  {t:'வா',r:'vā',e:'to come',cat:'Verbs'},
+  {t:'சாப்பிடு',r:'cāppiḍu',e:'to eat',cat:'Verbs'},
+  {t:'குடி',r:'kuḍi',e:'to drink',cat:'Verbs'},
+  {t:'படி',r:'paḍi',e:'to study/read',cat:'Verbs'},
+  {t:'பேசு',r:'pēcu',e:'to speak',cat:'Verbs'},
+  {t:'கேள்',r:'kēḷ',e:'to ask/hear',cat:'Verbs'},
+  {t:'பார்',r:'pār',e:'to see/look',cat:'Verbs'},
+  {t:'தா',r:'tā',e:'to give',cat:'Verbs'},
+  {t:'வாங்கு',r:'vāṅku',e:'to buy/take',cat:'Verbs'},
+  {t:'நல்ல',r:'nalla',e:'good',cat:'Adjectives'},
+  {t:'கெட்ட',r:'keṭṭa',e:'bad',cat:'Adjectives'},
+  {t:'பெரிய',r:'periya',e:'big',cat:'Adjectives'},
+  {t:'சின்ன',r:'ciṉṉa',e:'small',cat:'Adjectives'},
+  {t:'புது',r:'putu',e:'new',cat:'Adjectives'},
+  {t:'பழைய',r:'paḻaiya',e:'old',cat:'Adjectives'},
+  {t:'அழகான',r:'aḻakāṉa',e:'beautiful',cat:'Adjectives'},
+  {t:'வலிமையான',r:'valimaiān',e:'strong',cat:'Adjectives'},
+  {t:'இப்போது',r:'ippōtu',e:'now',cat:'Time'},
+  {t:'நாளை',r:'nāḷai',e:'tomorrow',cat:'Time'},
+  {t:'நேற்று',r:'nēṟṟu',e:'yesterday',cat:'Time'},
+  {t:'இன்று',r:'iṉṟu',e:'today',cat:'Time'},
+  {t:'காலை',r:'kālai',e:'morning',cat:'Time'},
+  {t:'மாலை',r:'mālai',e:'evening',cat:'Time'},
+  {t:'இரவு',r:'iravu',e:'night',cat:'Time'},
+  {t:'வாரம்',r:'vāram',e:'week',cat:'Time'},
+  {t:'மாதம்',r:'mātam',e:'month',cat:'Time'},
+  {t:'வருடம்',r:'varuḍam',e:'year',cat:'Time'},
+];
+
+var vocabCat='All';
+function renderVocab(){
+  var cats=['All'].concat([...new Set(VOCAB.map(function(v){return v.cat}))]);
+  document.getElementById('vocab-cats').innerHTML=cats.map(function(c){
+    return '<button class="tab-btn'+(c===vocabCat?' active':'')+'" onclick="setVocabCat(\''+c+'\')">'+(c==='All'?'All':c)+'</button>';
+  }).join('');
+  var data=vocabCat==='All'?VOCAB:VOCAB.filter(function(v){return v.cat===vocabCat});
+  document.getElementById('vocab-grid').innerHTML=data.map(function(v){
+    return '<div class="vocab-card" onclick="flipCard(this,\''+v.e+'\',\''+v.r+'\')">'
+      +'<div class="vocab-front"><div class="vocab-cat">'+v.cat+'</div><div class="vocab-tamil">'+v.t+'</div><div class="letter-roman" style="font-size:0.8rem;color:var(--text3)">'+v.r+'</div></div>'
+      +'<div class="vocab-back"><div class="vocab-english">'+v.e+'</div><div class="vocab-roman-back">'+v.r+'</div></div>'
+      +'</div>';
+  }).join('');
+}
+function setVocabCat(c){vocabCat=c;renderVocab();}
+function flipCard(el,en,r){
+  if(el.classList.contains('flipped')){el.classList.remove('flipped');}
+  else{el.classList.add('flipped');addXP(1);}
+}
+renderVocab();
+
+// PHRASES
+var PHRASES=[
+  {t:'வணக்கம்',r:'Vaṇakkam',e:'Hello / Greetings',ctx:'The universal Tamil greeting. Used any time of day.',cat:'Greetings'},
+  {t:'நலமா?',r:'Nalamā?',e:'Are you well?',ctx:'Informal way to ask "how are you?"',cat:'Greetings'},
+  {t:'நலம்',r:'Nalam',e:'I am well / Fine',ctx:'Reply to நலமா',cat:'Greetings'},
+  {t:'என் பெயர் ...',r:'En peyar ...',e:'My name is ...',ctx:'Fill in your name after "peyar"',cat:'Greetings'},
+  {t:'உங்கள் பெயர் என்ன?',r:'Uṅkaḷ peyar eṉṉa?',e:'What is your name? (formal)',ctx:'Polite form — use with elders/strangers',cat:'Greetings'},
+  {t:'நன்றி',r:'Naṉṟi',e:'Thank you',ctx:'Essential phrase. Can be said alone or with a nod.',cat:'Greetings'},
+  {t:'மன்னிக்கவும்',r:'Maṉṉikkavum',e:'Excuse me / Sorry',ctx:'Use to apologise or to get someone\'s attention',cat:'Greetings'},
+  {t:'சரி',r:'Cari',e:'OK / Alright',ctx:'Very common filler — used like "OK" in English',cat:'Greetings'},
+  {t:'போகிறேன்',r:'Pōkiṟēṉ',e:'I am going / Goodbye',ctx:'Casual goodbye. Literally "I am going".',cat:'Greetings'},
+  {t:'எவ்வளவு?',r:'Evvaḷavu?',e:'How much?',ctx:'First thing you need in any shop!',cat:'Shopping'},
+  {t:'விலை என்ன?',r:'Vilai eṉṉa?',e:'What is the price?',ctx:'More formal way to ask the price',cat:'Shopping'},
+  {t:'கொஞ்சம் கம்மி பண்ணுங்க',r:'Koñcam kammi paṇṇuṅka',e:'Please reduce a little',ctx:'For bargaining at markets',cat:'Shopping'},
+  {t:'வேண்டும்',r:'Vēṇḍum',e:'I want / I need',ctx:'Attach to a noun: "பால் வேண்டும்" = I want milk',cat:'Shopping'},
+  {t:'வேண்டாம்',r:'Vēṇḍām',e:'I don\'t want / No thanks',ctx:'Polite way to decline',cat:'Shopping'},
+  {t:'எங்கே?',r:'Eṅkē?',e:'Where?',ctx:'Basic question word for directions',cat:'Travel'},
+  {t:'எப்படி போவது?',r:'Eppaḍi pōvatu?',e:'How do I get there?',ctx:'Ask for directions anywhere',cat:'Travel'},
+  {t:'நேரடியாக போ',r:'Nēraḍiyāka pō',e:'Go straight ahead',ctx:'Direction instruction',cat:'Travel'},
+  {t:'வலது பக்கம்',r:'Valatu pakkam',e:'Right side / To the right',ctx:'Directions',cat:'Travel'},
+  {t:'இடது பக்கம்',r:'Iḍatu pakkam',e:'Left side / To the left',ctx:'Directions',cat:'Travel'},
+  {t:'பஸ் நிறுத்தம் எங்கே?',r:'Bas niṟuttam eṅkē?',e:'Where is the bus stop?',ctx:'Essential for getting around Tamil Nadu',cat:'Travel'},
+  {t:'டிக்கெட் வேண்டும்',r:'Ṭikkeṭ vēṇḍum',e:'I need a ticket',ctx:'At bus/train stations',cat:'Travel'},
+  {t:'நான் தமிழ் கற்றுக்கொள்கிறேன்',r:'Nāṉ tamiḻ kaṟṟukkoḷkiṟēṉ',e:'I am learning Tamil',ctx:'A great phrase to impress locals!',cat:'Learning'},
+  {t:'மீண்டும் சொல்லுங்கள்',r:'Mīṇḍum colluṅkaḷ',e:'Please say it again',ctx:'When you didn\'t understand',cat:'Learning'},
+  {t:'தமிழில் எப்படி சொல்வது?',r:'Tamiḻil eppaḍi colvatu?',e:'How do you say it in Tamil?',ctx:'Ask a local for the Tamil word',cat:'Learning'},
+  {t:'புரியவில்லை',r:'Puriyavillai',e:'I don\'t understand',ctx:'Essential — don\'t be shy to say this!',cat:'Learning'},
+  {t:'மெதுவாக பேசுங்கள்',r:'Metuvāka pēcuṅkaḷ',e:'Please speak slowly',ctx:'Ask someone to slow down',cat:'Learning'},
+  {t:'டாக்டர் தேவை',r:'Ṭākṭar tēvai',e:'I need a doctor',ctx:'Medical emergency phrase',cat:'Emergency'},
+  {t:'உதவி செய்யுங்கள்',r:'Utavi ceyyuṅkaḷ',e:'Please help me',ctx:'Calling for help',cat:'Emergency'},
+  {t:'போலீஸ் அழையுங்கள்',r:'Pōlīs aḻaiyuṅkaḷ',e:'Call the police',ctx:'Emergency situation',cat:'Emergency'},
+];
+
+var phraseCat='Greetings';
+function renderPhrases(){
+  var cats=[...new Set(PHRASES.map(function(p){return p.cat}))];
+  document.getElementById('phrase-cats').innerHTML=cats.map(function(c){
+    return '<button class="tab-btn'+(c===phraseCat?' active':'')+'" onclick="setPhraseCat(\''+c+'\')">'+(c)+'</button>';
+  }).join('');
+  var data=PHRASES.filter(function(p){return p.cat===phraseCat});
+  document.getElementById('phrase-list').innerHTML=data.map(function(p){
+    return '<div class="phrase-card">'
+      +'<span class="phrase-cat-label">'+p.cat+'</span>'
+      +'<div class="phrase-tamil">'+p.t+'</div>'
+      +'<div class="phrase-roman">'+p.r+'</div>'
+      +'<div class="phrase-english">'+p.e+'</div>'
+      +(p.ctx?'<div class="phrase-context">'+p.ctx+'</div>':'')
+      +'</div>';
+  }).join('');
+}
+function setPhraseCat(c){phraseCat=c;renderPhrases();}
+renderPhrases();
+
+// GRAMMAR
+var GRAMMAR_DATA=[
+  {section:'Word Order',rules:[
+    {title:'Subject-Object-Verb (SOV)',body:'Tamil follows SOV order — the verb always comes last. Unlike English ("I eat rice"), Tamil says "நான் சோறு சாப்பிடுகிறேன்" — literally "I rice eat".',examples:[{t:'நான் தண்ணீர் குடிக்கிறேன்',r:'Nāṉ taṇṇīr kuḍikkiṟēṉ',e:'I water drink → I drink water'}]},
+    {title:'Modifiers come before nouns',body:'Adjectives and relative clauses always appear before the noun they modify, unlike in English.',examples:[{t:'நல்ல உணவு',r:'Nalla uṇavu',e:'good food (literally: good-food)'}]},
+  ]},
+  {section:'Nouns & Cases',rules:[
+    {title:'No articles (a/an/the)',body:'Tamil has no articles. Context determines whether something is definite or indefinite. "வீடு" can mean "a house" or "the house".',examples:[{t:'வீடு நல்லது',r:'Vīḍu nallatu',e:'The/a house is good'}]},
+    {title:'Case suffixes (வேற்றுமை)',body:'Tamil adds suffixes to nouns to show grammatical role. No separate prepositions — the suffix does the work.',examples:[{t:'வீட்டில்',r:'vīṭṭil',e:'"in the house" (வீடு + இல்)'},{t:'வீட்டிற்கு',r:'vīṭṭiṟku',e:'"to the house" (வீடு + இற்கு)'}]},
+    {title:'Nominative (subject)',body:'The base form of the noun is used as subject. No suffix needed.',examples:[{t:'அவர் வருகிறார்',r:'Avar varukiṟār',e:'He/she is coming'}]},
+    {title:'Accusative (direct object)',body:'Add -ஐ (-ai) to mark the direct object.',examples:[{t:'நான் பழத்தை சாப்பிட்டேன்',r:'Nāṉ paḻattai cāppiṭṭēṉ',e:'I ate the fruit'}]},
+  ]},
+  {section:'Verbs',rules:[
+    {title:'Verbs conjugate for tense AND person',body:'Tamil verbs change form based on (1) tense — past/present/future, and (2) the subject — who is doing the action.',examples:[{t:'சாப்பிடுகிறேன்',r:'cāppikuṟēṉ',e:'I eat (present)'},{t:'சாப்பிட்டேன்',r:'cāppiṭṭēṉ',e:'I ate (past)'},{t:'சாப்பிடுவேன்',r:'cāppiḍuvēṉ',e:'I will eat (future)'}]},
+    {title:'Present tense: add கிற + person suffix',body:'Present tense is formed by adding கிற (kiṟa) to the verb stem, then a personal suffix.',examples:[{t:'வருகிறேன்',r:'varukiṟēṉ',e:'I am coming (வர் + கிற + ஏன்)'},{t:'வருகிறாய்',r:'varukiṟāy',e:'You are coming'},{t:'வருகிறார்',r:'varukiṟār',e:'He/She is coming (formal)'}]},
+    {title:'Past tense: stem change + personal suffix',body:'Past tense uses a doubled or modified stem, then personal suffix. Common patterns: ட்ட, ந்த, ன்ன.',examples:[{t:'போனேன்',r:'pōṉēṉ',e:'I went'},{t:'வந்தேன்',r:'vanttēṉ',e:'I came'},{t:'பார்த்தேன்',r:'pārttēṉ',e:'I saw'}]},
+    {title:'Future tense: add வ + personal suffix',body:'Future tense adds வ (va) after the verb stem.',examples:[{t:'வருவேன்',r:'varuvēṉ',e:'I will come'},{t:'செய்வேன்',r:'ceyvēṉ',e:'I will do'},{t:'பார்ப்பேன்',r:'pārppēṉ',e:'I will see'}]},
+  ]},
+  {section:'Pronouns',rules:[
+    {title:'Formal vs informal distinction',body:'Tamil has separate formal and informal pronouns. Always use the formal version (நீங்கள், அவர்) with elders, strangers, or in professional settings.',examples:[{t:'நீ — நீங்கள்',r:'nī — nīṅkaḷ',e:'you (informal) — you (formal)'},{t:'அவன்/அவள் — அவர்',r:'avaṉ/avaḷ — avar',e:'he/she (informal) — he/she (formal)'}]},
+    {title:'Inclusive vs exclusive "we"',body:'Tamil distinguishes between நாம் (we including the listener) and நாங்கள் (we not including the listener).',examples:[{t:'நாம் போவோம்',r:'Nām pōvōm',e:'Let\'s go (you and I — inclusive)'},{t:'நாங்கள் போனோம்',r:'Nāṅkaḷ pōṉōm',e:'We went (but not you — exclusive)'}]},
+  ]},
+  {section:'Postpositions',rules:[
+    {title:'Postpositions, not prepositions',body:'Where English uses prepositions before nouns (in, on, at, from), Tamil uses postpositions — they come AFTER the noun.',examples:[{t:'மரத்தின் மேல்',r:'marattil mēl',e:'on the tree (literally: tree-of above)'},{t:'கடையில் இருந்து',r:'kaḍaiyil iruntu',e:'from the shop'}]},
+  ]},
+  {section:'Negation',rules:[
+    {title:'Negative verb forms',body:'Tamil uses special negative forms of verbs rather than a simple "not" word. Verb stems are modified.',examples:[{t:'வரவில்லை',r:'varavillai',e:'did not come'},{t:'சாப்பிடவில்லை',r:'cāppiḍavillai',e:'did not eat'},{t:'போகமாட்டேன்',r:'pōkamāṭṭēṉ',e:'I will not go'}]},
+  ]},
+];
+
+function renderGrammar(){
+  document.getElementById('grammar-content').innerHTML=GRAMMAR_DATA.map(function(sec){
+    return '<div class="grammar-section"><h3>'+sec.section+'</h3>'
+      +sec.rules.map(function(r){
+        return '<div class="grammar-rule"><h4>'+r.title+'</h4><p>'+r.body+'</p>'
+          +r.examples.map(function(ex){
+            return '<div class="grammar-example"><div class="grammar-ex-tamil">'+ex.t+'</div>'
+              +'<div class="grammar-ex-roman">'+ex.r+'</div>'
+              +'<div class="grammar-ex-en">'+ex.e+'</div></div>';
+          }).join('')
+          +'</div>';
+      }).join('')
+      +'</div>';
+  }).join('');
+}
+renderGrammar();
+
+// QUIZ
+var quizState={questions:[],current:0,score:0,answered:false,type:''};
+
+function buildLetterIdQuestions(){
+  var qs=[];
+  var pool=VOWELS.concat(CONSONANTS);
+  var shuffled=pool.sort(function(){return Math.random()-0.5}).slice(0,10);
+  shuffled.forEach(function(l){
+    var wrongs=pool.filter(function(x){return x.t!==l.t}).sort(function(){return Math.random()-0.5}).slice(0,3);
+    var opts=[l.r].concat(wrongs.map(function(w){return w.r})).sort(function(){return Math.random()-0.5});
+    qs.push({type:'mcq',prompt:'What sound does this letter make?',big:l.t,answer:l.r,options:opts});
+  });
+  return qs;
+}
+function buildWordMatchQuestions(){
+  var pool=VOCAB.sort(function(){return Math.random()-0.5}).slice(0,10);
+  return pool.map(function(v){
+    var wrongs=VOCAB.filter(function(x){return x.t!==v.t}).sort(function(){return Math.random()-0.5}).slice(0,3);
+    var opts=[v.e].concat(wrongs.map(function(w){return w.e})).sort(function(){return Math.random()-0.5});
+    return{type:'mcq',prompt:'What does this Tamil word mean?',big:v.t,answer:v.e,options:opts};
+  });
+}
+function buildPhraseFillQuestions(){
+  var pool=PHRASES.sort(function(){return Math.random()-0.5}).slice(0,8);
+  return pool.map(function(p){
+    var wrongs=PHRASES.filter(function(x){return x.t!==p.t}).sort(function(){return Math.random()-0.5}).slice(0,3);
+    var opts=[p.e].concat(wrongs.map(function(w){return w.e})).sort(function(){return Math.random()-0.5});
+    return{type:'mcq',prompt:'What does this phrase mean?',big:p.t,sub:p.r,answer:p.e,options:opts};
+  });
+}
+function buildMixedQuestions(){
+  return buildLetterIdQuestions().slice(0,4).concat(buildWordMatchQuestions().slice(0,4)).concat(buildPhraseFillQuestions().slice(0,4)).sort(function(){return Math.random()-0.5});
+}
+
+function startQuiz(type){
+  var qs=type==='letter-id'?buildLetterIdQuestions():type==='word-match'?buildWordMatchQuestions():type==='phrase-fill'?buildPhraseFillQuestions():buildMixedQuestions();
+  quizState={questions:qs,current:0,score:0,answered:false,type:type};
+  document.getElementById('quiz-start').style.display='none';
+  document.getElementById('quiz-main').style.display='block';
+  renderQuizQ();
+}
+function renderQuizQ(){
+  var s=quizState;
+  if(s.current>=s.questions.length){renderQuizScore();return;}
+  var q=s.questions[s.current];
+  var dots=s.questions.map(function(_,i){
+    return '<div class="quiz-prog-dot'+(i<s.current?' done':i===s.current?' current':'')+'""></div>';
+  }).join('');
+  var html='<div class="quiz-progress">'+dots+'</div>'
+    +'<div class="quiz-q">'+q.prompt+'</div>'
+    +(q.sub?'<div class="quiz-q-sub">'+q.sub+'</div>':'')
+    +'<div class="quiz-big-tamil">'+q.big+'</div>'
+    +'<div class="quiz-options">'
+    +q.options.map(function(o){
+      return '<button class="quiz-opt" onclick="answerQuiz(this,\''+o.replace(/'/g,"\\'")+'\')">'+(o)+'</button>';
+    }).join('')
+    +'</div>'
+    +'<div id="quiz-feedback" style="display:none"></div>';
+  document.getElementById('quiz-main').innerHTML=html;
+  s.answered=false;
+}
+function answerQuiz(btn,chosen){
+  var s=quizState;
+  if(s.answered)return;
+  s.answered=true;
+  var q=s.questions[s.current];
+  var correct=chosen===q.answer;
+  document.querySelectorAll('.quiz-opt').forEach(function(b){b.disabled=true;});
+  btn.classList.add(correct?'correct':'wrong');
+  if(!correct){
+    document.querySelectorAll('.quiz-opt').forEach(function(b){if(b.textContent===q.answer)b.classList.add('reveal');});
+  }
+  if(correct){s.score++;addXP(10);}
+  var fb=document.getElementById('quiz-feedback');
+  fb.style.display='block';
+  fb.className='quiz-feedback '+(correct?'correct':'wrong');
+  fb.textContent=correct?'Correct! Well done.':'Not quite — the answer is: '+q.answer;
+  var nextBtn=document.createElement('button');
+  nextBtn.className='quiz-btn';
+  nextBtn.style.marginTop='0.5rem';
+  nextBtn.textContent=s.current<s.questions.length-1?'Next question':'See results';
+  nextBtn.onclick=function(){s.current++;renderQuizQ();};
+  document.getElementById('quiz-main').appendChild(nextBtn);
+}
+function renderQuizScore(){
+  var s=quizState;
+  var pct=Math.round((s.score/s.questions.length)*100);
+  var msg=pct>=80?'Excellent work!':pct>=50?'Good effort — keep practising!':'Keep going — you\'ll get there!';
+  document.getElementById('quiz-main').innerHTML='<div class="quiz-score">'
+    +'<div class="score-circle">'+pct+'%</div>'
+    +'<h2>'+msg+'</h2>'
+    +'<p>You got '+s.score+' out of '+s.questions.length+' correct.</p>'
+    +'<div style="display:flex;gap:0.75rem;justify-content:center">'
+    +'<button class="quiz-btn" onclick="startQuiz(\''+s.type+'\')">Try again</button>'
+    +'<button class="quiz-btn secondary" onclick="document.getElementById(\'quiz-start\').style.display=\'block\';document.getElementById(\'quiz-main\').style.display=\'none\'">Choose quiz type</button>'
+    +'</div></div>';
+}
+
+// AI TUTOR — fully offline smart knowledge engine
+var chatHistory=[];
+
+var TUTOR_KB=[
+  // PRONUNCIATION
+  {keys:['ழ','zh','zha','unique','special','hardest','difficult'],
+   reply:'🌟 ழ (ḻa) — The most unique sound in Tamil!\n\nThis letter has NO equivalent in any other language. Here\'s how to produce it:\n\n1. Curl your tongue tip all the way back to touch the soft palate\n2. Then flick it forward sharply\n\nIt\'s like a retroflex "l" combined with a flap. Native speakers do this naturally — it takes practice!\n\nWords that use it:\n• தமிழ் → tamiḻ → Tamil (the language itself!)\n• வாழை → vāḻai → banana\n• மழை → maḻai → rain\n• கீழ் → kīḻ → below/down\n\nPro tip: Listen to Tamil songs or films and focus every time you hear this sound. Your brain will eventually map it.'},
+
+  {keys:['pronounce','pronunciation','sound like','say','speak'],
+   reply:'Tamil pronunciation key points:\n\n🔤 Short vs Long vowels matter a lot:\n• அ (a) vs ஆ (ā) — short vs long "a"\n• இ (i) vs ஈ (ī) — short vs long "i"\nHolding a vowel longer changes the word meaning!\n\n🔤 Three types of "n":\n• ந (na) — dental, tongue to teeth\n• ண (ṇa) — retroflex, tongue curled back\n• ன (ṉa) — alveolar, tongue to ridge\n\n🔤 Consonants soften between vowels:\n• க = hard "k" at start, soft "g" between vowels\n• ப = hard "p" at start, soft "b" between vowels\n• த = hard "t" at start, soft "d" between vowels\n\nWhat specific sound would you like help with?'},
+
+  {keys:['retroflex','curl','tongue'],
+   reply:'Retroflex consonants in Tamil:\n\nThese are sounds made by curling the tongue tip back to touch the roof of the mouth. Tamil has several:\n\n• ட (ṭa) — retroflex "t"\n• ண (ṇa) — retroflex "n"\n• ள (ḷa) — retroflex "l"\n• ழ (ḻa) — the unique Tamil sound (retroflex + flap)\n• ற (ṟa) — strong rolled "r"\n\nThink of it like saying the English "t" or "n" but with your tongue curled all the way back instead of touching your teeth.\n\nExample: மண் (maṇ) = soil/earth — the ண is retroflex\nCompare: மன் (maṉ) = king — the ன is NOT retroflex\n\nThey sound different to native ears even if hard for beginners to distinguish at first.'},
+
+  // GREETINGS / SENTENCES
+  {keys:['hello','hi','greet','vanakkam','வணக்கம்'],
+   reply:'Greetings in Tamil:\n\n• வணக்கம் → Vaṇakkam → Hello / Greetings (universal, any time of day)\n• நலமா? → Nalamā? → Are you well? (informal "how are you?")\n• நலம் → Nalam → I\'m well / Fine (reply to above)\n• காலை வணக்கம் → Kālai vaṇakkam → Good morning\n• மாலை வணக்கம் → Mālai vaṇakkam → Good evening\n• இரவு வணக்கம் → Iravu vaṇakkam → Good night\n• போகிறேன் → Pōkiṟēṉ → Goodbye (literally "I am going")\n\nவணக்கம் is the safest all-purpose greeting — you can never go wrong with it!'},
+
+  {keys:['my name is','name','பெயர்','introduce','introduction'],
+   reply:'How to introduce yourself in Tamil:\n\n• என் பெயர் ___ → En peyar ___ → My name is ___\n• நான் ___ → Nāṉ ___ → I am ___\n• என் பெயர் John → En peyar John → My name is John\n\nFull introduction:\n"வணக்கம். என் பெயர் John. நான் ஆஸ்திரேலியா இருந்து வருகிறேன்."\nVaṇakkam. En peyar John. Nāṉ Āstirēliyā iruntu varukiṟēṉ.\n"Hello. My name is John. I am from Australia."\n\nAsking someone\'s name:\n• உங்கள் பெயர் என்ன? → Uṅkaḷ peyar eṉṉa? → What is your name? (formal)\n• உன் பெயர் என்ன? → Uṉ peyar eṉṉa? → What is your name? (informal)'},
+
+  {keys:['going to work','work','office','job','தொழில்','வேலை'],
+   reply:'How to say "going to work":\n\n• நான் வேலைக்கு போகிறேன் → Nāṉ vēlaikku pōkiṟēṉ → I am going to work\n\nBreaking it down:\n• நான் = I\n• வேலைக்கு = to work (வேலை + suffix கு = "to")\n• போகிறேன் = am going (present tense of "go")\n\nSo "Hello, my name is John and I\'m going to work" =\n"வணக்கம். என் பெயர் John. நான் வேலைக்கு போகிறேன்."\nVaṇakkam. En peyar John. Nāṉ vēlaikku pōkiṟēṉ.\n\nOther useful "going to" phrases:\n• நான் பள்ளிக்கு போகிறேன் → I am going to school\n• நான் கடைக்கு போகிறேன் → I am going to the shop\n• நான் வீட்டிற்கு போகிறேன் → I am going home'},
+
+  // NUMBERS
+  {keys:['count','number','100','hundred','1 to','one to','எண்'],
+   reply:'Tamil numbers 1–20:\n\n1 → ஒன்று (oṉṟu)\n2 → இரண்டு (iraṇḍu)\n3 → மூன்று (mūṉṟu)\n4 → நான்கு (nāṉku)\n5 → ஐந்து (aintu)\n6 → ஆறு (āṟu)\n7 → ஏழு (ēḻu)\n8 → எட்டு (eṭṭu)\n9 → ஒன்பது (oṉpatu)\n10 → பத்து (pattu)\n11 → பதினொன்று (patinoṉṟu)\n12 → பன்னிரண்டு (paṉṉiraṇḍu)\n13 → பதிமூன்று (patimūṉṟu)\n14 → பதினான்கு (patinānku)\n15 → பதினைந்து (patinaintu)\n16 → பதினாறு (patināṟu)\n17 → பதினேழு (patinēḻu)\n18 → பதினெட்டு (patiṉeṭṭu)\n19 → பத்தொன்பது (pattoṉpatu)\n20 → இருபது (irupatu)\n\nHigher:\n30 → முப்பது (muppatu)\n40 → நாற்பது (nāṟpatu)\n50 → ஐம்பது (aimpatu)\n100 → நூறு (nūṟu)\n1000 → ஆயிரம் (āyiram)'},
+
+  // GRAMMAR
+  {keys:['verb','conjugat','tense','past','present','future','போகிறேன்'],
+   reply:'Tamil verb conjugation:\n\nVerbs change based on TENSE and PERSON. The verb root + tense marker + person suffix.\n\nUsing the verb வர் (var) = "to come":\n\n🕐 PRESENT (கிற marker):\n• நான் வருகிறேன் → Nāṉ varukiṟēṉ → I am coming\n• நீ வருகிறாய் → Nī varukiṟāy → You are coming\n• அவர் வருகிறார் → Avar varukiṟār → He/She is coming\n\n🕐 PAST (ந்த/ட்ட/ன்ன marker):\n• நான் வந்தேன் → Nāṉ vanttēṉ → I came\n• நீ வந்தாய் → Nī vanttāy → You came\n• அவர் வந்தார் → Avar vanttār → He/She came\n\n🕐 FUTURE (வ marker):\n• நான் வருவேன் → Nāṉ varuvēṉ → I will come\n• நீ வருவாய் → Nī varuvāy → You will come\n• அவர் வருவார் → Avar varuvār → He/She will come\n\nPerson suffixes: ஏன் (I), ஆய் (you-informal), ஆன் (he), ஆள் (she), ஆர் (formal he/she), ஓம் (we)'},
+
+  {keys:['sov','word order','sentence','structure','order'],
+   reply:'Tamil word order — Subject-Object-Verb (SOV):\n\nEnglish: Subject → Verb → Object\n• "I eat rice"\n\nTamil: Subject → Object → Verb\n• நான் சோறு சாப்பிடுகிறேன்\n• Nāṉ cōṟu cāppiḍukiṟēṉ\n• I rice eat → "I eat rice"\n\nThe verb ALWAYS comes last in Tamil. Always.\n\nMore examples:\n• அவர் புத்தகம் படிக்கிறார் → He book reads → He reads a book\n• நாய் பந்தை கடிக்கிறது → Dog ball bites → The dog bites the ball\n\nAlso important:\n• Adjectives come BEFORE nouns (like English)\n• நல்ல உணவு → good food ✓ (not உணவு நல்ல)\n• Postpositions come AFTER nouns (unlike English prepositions)\n• வீட்டில் → in the house (வீடு + இல்) — suffix added, not a separate word before'},
+
+  {keys:['case','suffix','postposition','in the','to the','from','accusative','nominative'],
+   reply:'Tamil noun cases — suffixes that replace prepositions:\n\nBase word: வீடு (vīḍu) = house\n\n• Subject (no suffix): வீடு நல்லது → The house is good\n• Direct object (-ஐ): வீட்டை பார் → See the house\n• Location (-இல்): வீட்டில் → in the house\n• Direction to (-இற்கு): வீட்டிற்கு → to the house\n• From (-இலிருந்து): வீட்டிலிருந்து → from the house\n• Of/Possessive (-இன்): வீட்டின் → of the house\n• With/By (-ஆல்): வீட்டால் → by means of the house\n\nExample sentence:\n"நான் வீட்டிலிருந்து வருகிறேன்"\nNāṉ vīṭṭiliruntu varukiṟēṉ\n"I am coming from the house"\n\nThis is called agglutination — meaning is built by stacking suffixes onto a root word.'},
+
+  {keys:['negat','no','not','வில்லை','இல்லை','don\'t'],
+   reply:'Negation in Tamil:\n\nTamil doesn\'t use a simple "not" word. Instead the verb itself changes form.\n\n❌ PAST negative — add -வில்லை:\n• வந்தேன் (I came) → வரவில்லை (I did not come)\n• சாப்பிட்டேன் (I ate) → சாப்பிடவில்லை (I did not eat)\n• பார்த்தேன் (I saw) → பார்க்கவில்லை (I did not see)\n\n❌ FUTURE negative — add -மாட்டேன்:\n• போவேன் (I will go) → போகமாட்டேன் (I will not go)\n• வருவேன் (I will come) → வரமாட்டேன் (I will not come)\n\nUseful negatives:\n• இல்லை → illai → No / There isn\'t\n• வேண்டாம் → vēṇḍām → I don\'t want / No thanks\n• தெரியாது → teriyātu → I don\'t know\n• புரியவில்லை → puriyavillai → I don\'t understand'},
+
+  {keys:['formal','informal','polite','respect','அவர்','நீங்கள்'],
+   reply:'Formal vs Informal Tamil:\n\nTamil has a strong formal/informal distinction. Use formal with elders, strangers, professionals.\n\n📌 PRONOUNS:\n• நீ (nī) = you (informal — friends, children)\n• நீங்கள் (nīṅkaḷ) = you (formal — elders, strangers)\n• அவன் (avaṉ) = he (informal)\n• அவள் (avaḷ) = she (informal)\n• அவர் (avar) = he/she (formal, respectful)\n• அவர்கள் (avarkaḷ) = they (formal)\n\n📌 VERBS also change:\n• வா (vā) = come (informal command)\n• வாருங்கள் (vāruṅkaḷ) = please come (formal)\n• சாப்பிடு (cāppiḍu) = eat (informal)\n• சாப்பிடுங்கள் (cāppiḍuṅkaḷ) = please eat (formal)\n\n📌 Also note:\n• Colloquial spoken Tamil differs greatly from written/formal Tamil\n• TV news and literature use formal Tamil\n• Street conversations use colloquial Tamil\n• As a learner, colloquial is more useful day-to-day'},
+
+  {keys:['we','inclusive','exclusive','நாம்','நாங்கள்'],
+   reply:'The two "we" in Tamil — a unique feature!\n\n• நாம் (nām) = WE — INCLUSIVE\n  Includes the person you\'re speaking to.\n  "Let\'s go" / "We (you and I) are friends"\n  நாம் போவோம் → Let\'s go (you\'re invited!)\n\n• நாங்கள் (nāṅkaḷ) = WE — EXCLUSIVE\n  Does NOT include the listener.\n  "We went" (but you weren\'t there)\n  நாங்கள் போனோம் → We went (you didn\'t come)\n\nThis distinction is grammatically required in Tamil — you must choose the right one!\n\nExample:\n• நாம் தமிழ் கற்றுக்கொள்வோம் → Let\'s learn Tamil together (inclusive — you\'re part of this!)\n• நாங்கள் நேற்று சினிமா பார்த்தோம் → We watched a film yesterday (exclusive — you weren\'t there)'},
+
+  {keys:['agglutinati','suffix','stick','build','stack','word build'],
+   reply:'Tamil is an agglutinative language — meaning you BUILD words by stacking suffixes:\n\nStart with a root, then add meaning layer by layer:\n\nவீடு (vīḍu) = house\n+ இல் (location) = வீட்டில் = in the house\n+ இருந்து (from) = வீட்டிலிருந்து = from the house\n\nAnother example with a verb:\nபோ (pō) = go (root)\n+ கிற (present) = போகிற\n+ ஏன் (I) = போகிறேன் = I am going\n\nOr even longer:\nசாப்பிடு (cāppiḍu) = eat\n+ கொண்டு (continuous) = சாப்பிட்டுக்கொண்டு\n= while eating\n\nThis is very different from English where we use separate words ("I was eating" vs. one stacked Tamil word). Once you understand the suffix system, Tamil becomes very logical!'},
+
+  {keys:['idiom','saying','proverb','பழமொழி'],
+   reply:'Tamil idioms and proverbs (பழமொழிகள்):\n\n1. "யானை வரும் பின்னே, மணி ஓசை வரும் முன்னே"\n   Yāṉai varum piṉṉē, maṇi ōcai varum muṉṉē\n   The elephant comes behind, but its bell sound comes before.\n   → A great person\'s reputation precedes them.\n\n2. "ஆடாத மரத்தில் காய் காய்க்காது"\n   Āḍāta marattil kāy kāykkātu\n   A tree that doesn\'t sway won\'t bear fruit.\n   → No pain, no gain / Hard work pays off.\n\n3. "கற்றது கை மண் அளவு; கல்லாதது உலகளவு"\n   Kaṟṟatu kai maṇ aḷavu; kallātatu ulak aḷavu\n   What you\'ve learned is a handful of earth; what you haven\'t is the size of the world.\n   → There is always more to learn.\n\n4. "அன்புடையார்க்கு இல்லை தாழ்வு"\n   Aṉpuḍaiyārkku illai tāḻvu\n   Those who have love have no downfall.\n   → Love conquers all.\n\n5. "வாய் இருந்தால் வழி கிடைக்கும்"\n   Vāy iruntāl vaḻi kiḍaikkum\n   If you have a mouth, a way will be found.\n   → Ask and you shall receive / Speaking up helps.'},
+
+  {keys:['script','alphabet','letter','vowel','consonant','உயிர்','மெய்'],
+   reply:'The Tamil script explained:\n\nTamil has 247 characters total:\n\n📌 12 Vowels (உயிர் — uyir = "life/soul")\nStand-alone vowel sounds: அ ஆ இ ஈ உ ஊ எ ஏ ஐ ஒ ஓ ஔ\n(short and long pairs for a, i, u, e, o + 2 diphthongs)\n\n📌 18 Consonants (மெய் — mey = "body")\nPure consonants — must combine with a vowel to be spoken: க ங ச ஞ ட ண த ந ப ம ய ர ல வ ழ ள ற ன\n\n📌 216 Compound letters (உயிர்மெய் — uyirmey)\nEach of the 18 consonants × 12 vowels = 216 combinations\nThese use the base consonant + a vowel diacritic marker\nExample: க + ா = கா (ka + ā = kā)\n\n📌 1 special character\nஃ (āytam) — used in some loan words and classical texts\n\nThe vowel markers are added around the consonant (left, right, above, below) depending on which vowel. This is what makes reading Tamil initially tricky — the markers change the shape of the letter.'},
+
+  {keys:['food','eat','restaurant','menu','order','உணவு'],
+   reply:'Food vocabulary and restaurant Tamil:\n\n🍽️ Basic food words:\n• உணவு (uṇavu) = food\n• சாப்பாடு (cāppāḍu) = meal/cooked rice dish\n• தண்ணீர் (taṇṇīr) = water\n• காபி (kāpi) = coffee\n• டீ (ṭī) = tea\n• இனிப்பு (iṉippu) = sweet/dessert\n• காரம் (kāram) = spicy\n\n🍛 Tamil dishes:\n• தோசை (tōcai) = dosa\n• இட்லி (iṭli) = idli\n• சாம்பார் (cāmpār) = sambar\n• ரசம் (racam) = rasam\n• பொங்கல் (poṅkal) = pongal\n• பிரியாணி (piriyāṇi) = biryani\n\n🗣️ At a restaurant:\n• மெனு கொண்டு வாருங்கள் → Bring the menu please\n• இது என்ன? → What is this?\n• மிகவும் சுவையாக இருக்கிறது → It\'s very tasty\n• காரம் குறைவாக போடுங்கள் → Less spicy please\n• பில் கொண்டு வாருங்கள் → Bring the bill please'},
+
+  {keys:['shop','buy','price','money','how much','எவ்வளவு','bargain'],
+   reply:'Shopping Tamil:\n\n💰 Key phrases:\n• எவ்வளவு? → Evvaḷavu? → How much?\n• விலை என்ன? → Vilai eṉṉa? → What is the price?\n• இது வேண்டும் → Itu vēṇḍum → I want this\n• வேண்டாம் → Vēṇḍām → I don\'t want it\n• கொஞ்சம் கம்மி பண்ணுங்க → Koñcam kammi paṇṇuṅka → Reduce the price a bit\n• இது நல்லா இல்லை → This is not good (quality complaint)\n• வேற நிறம் இருக்கா? → Do you have another colour?\n\n💵 Numbers for money:\n• பத்து ரூபாய் → pattu rūpāy → 10 rupees\n• நூறு ரூபாய் → nūṟu rūpāy → 100 rupees\n• ஐநூறு → ainūṟu → 500\n• ஆயிரம் → āyiram → 1000'},
+
+  {keys:['direction','where','how to get','travel','bus','train','எங்கே'],
+   reply:'Directions and travel Tamil:\n\n📍 Asking directions:\n• எங்கே? → Eṅkē? → Where?\n• ___ எங்கே இருக்கு? → Where is ___?\n• எப்படி போவது? → Eppaḍi pōvatu? → How do I get there?\n• நேரடியாக போ → Nēraḍiyāka pō → Go straight\n• வலது பக்கம் திரும்பு → Turn right\n• இடது பக்கம் திரும்பு → Turn left\n• அருகில் இருக்கா? → Is it nearby?\n• தூரமா? → Is it far?\n\n🚌 Transport:\n• பஸ் நிறுத்தம் எங்கே? → Where is the bus stop?\n• ரயில் நிலையம் எங்கே? → Where is the train station?\n• டிக்கெட் எவ்வளவு? → How much is the ticket?\n• ___ போகுது இந்த பஸ்? → Does this bus go to ___?'},
+
+  {keys:['learn tamil','studying','student','beginner','tip','advice','how to learn'],
+   reply:'Tips for learning Tamil effectively:\n\n1. 🔤 Master the script first\nTamil script is completely phonetic — once you know the letters, you can read anything (even if you don\'t know the meaning). Spend 2-3 weeks on the alphabet before heavy vocabulary.\n\n2. 🎵 Use Tamil music and films\nTamil has a massive film industry (Kollywood). Films like those by Rajinikanth or Kamal Haasan, and songs by A.R. Rahman, are great for listening practice. Start with subtitles.\n\n3. 🗣️ Learn colloquial, not just classical\nSpoken Tamil differs from written Tamil. "நான் போகிறேன்" (written) becomes "நான் போறேன்" (spoken). Learn both!\n\n4. 📱 Use Tamil keyboard\nInstall a Tamil keyboard on your phone. Typing reinforces the script.\n\n5. 🔄 Use spaced repetition\nThe Quiz section here uses random questioning. Do it daily for 10 minutes.\n\n6. 🌟 Useful phrases to memorise first:\n• வணக்கம் (hello)\n• நன்றி (thank you)\n• இல்லை (no)\n• ஆமா (yes)\n• புரியவில்லை (I don\'t understand)\n• மீண்டும் சொல்லுங்கள் (say it again)'},
+
+  {keys:['thank','நன்றி','sorry','excuse','மன்னிக்க','please'],
+   reply:'Polite expressions in Tamil:\n\n🙏 Thank you:\n• நன்றி → Naṉṟi → Thank you\n• மிக்க நன்றி → Mikka naṉṟi → Thank you very much\n• நன்றி மிகவும் → Naṉṟi mikavum → Thank you so much\n\n🙏 Sorry / Excuse me:\n• மன்னிக்கவும் → Maṉṉikkavum → Sorry / Excuse me (formal)\n• மன்னிச்சுக்கோ → Maṉṉiccukkō → Sorry (informal)\n• தப்பு என்னோட → The fault is mine\n\n✅ Yes / No:\n• ஆமா → Āmā → Yes (informal, colloquial)\n• ஆம் → Ām → Yes (formal)\n• இல்லை → Illai → No\n\n🤝 Other polite phrases:\n• சரி → Cari → OK / Alright\n• நிச்சயமாக → Niccayamāka → Certainly / Of course\n• கொஞ்சம் → Koñcam → A little / Please (softener)'},
+
+  {keys:['colour','color','red','blue','green','சிவப்பு','நீலம்','பச்சை'],
+   reply:'Colours in Tamil:\n\n• சிவப்பு → civappu → red\n• நீலம் → nīlam → blue\n• பச்சை → paccai → green\n• மஞ்சள் → mañcaḷ → yellow (also means turmeric!)\n• கறுப்பு → kaṟuppu → black\n• வெள்ளை → veḷḷai → white\n• ஆரஞ்சு → ārancu → orange\n• ஊதா → ūtā → purple\n• இளஞ்சிவப்பு → iḷañcivappu → pink (literally "soft red")\n• பழுப்பு → paḻuppu → brown\n• வெள்ளி → veḷḷi → silver\n• தங்கம் → taṅkam → gold\n\nUsing colours:\n• சிவப்பு வீடு → red house\n• நீல நிற சட்டை → blue coloured shirt\n• இந்த பூ என்ன நிறம்? → What colour is this flower?'},
+
+  {keys:['family','mother','father','brother','sister','அம்மா','அப்பா'],
+   reply:'Family vocabulary in Tamil:\n\n👨‍👩‍👧‍👦 Immediate family:\n• அம்மா (ammā) = mother\n• அப்பா (appā) = father\n• அண்ணன் (aṇṇaṉ) = older brother\n• தம்பி (tampi) = younger brother\n• அக்கா (akkā) = older sister\n• தங்கை (taṅkai) = younger sister\n• கணவன் (kaṇavaṉ) = husband\n• மனைவி (maṉaivi) = wife\n• மகன் (makaṉ) = son\n• மகள் (makaḷ) = daughter\n\n👴 Extended family:\n• தாத்தா (tāttā) = grandfather (paternal)\n• பாட்டி (pāṭṭi) = grandmother (paternal)\n• அம்மம்மா = grandmother (maternal)\n• அம்மாப்பா = grandfather (maternal)\n• மாமா (māmā) = uncle (mother\'s brother)\n• அத்தை (attai) = aunt (father\'s sister)\n\nNote: Tamil has SEPARATE words for older vs younger siblings — you must specify! அண்ணன் is older brother, தம்பி is younger brother.'},
+
+  {keys:['body','health','pain','sick','doctor','hospital','உடல்'],
+   reply:'Body and health Tamil:\n\n🏥 Body parts:\n• தலை (talai) = head\n• கண் (kaṇ) = eye\n• காது (kātu) = ear\n• மூக்கு (mūkku) = nose\n• வாய் (vāy) = mouth\n• கை (kai) = hand/arm\n• கால் (kāl) = leg/foot\n• வயிறு (vayiṟu) = stomach\n• முதுகு (mutuку) = back\n• இதயம் (itayam) = heart\n\n🤒 Health phrases:\n• எனக்கு உடம்பு சரியில்லை → I\'m not feeling well\n• வலிக்கிறது → It hurts\n• தலை வலிக்கிறது → I have a headache\n• வயிறு வலிக்கிறது → I have a stomach ache\n• டாக்டர் தேவை → I need a doctor\n• மருந்து வேண்டும் → I need medicine\n• மருத்துவமனை எங்கே? → Where is the hospital?'},
+
+  {keys:['weather','rain','sun','hot','cold','மழை','வெயில்'],
+   reply:'Weather in Tamil:\n\n☀️ Weather words:\n• வெயில் (veyil) = sunshine / sunny\n• மழை (maḻai) = rain (note the ழ!)\n• காற்று (kāṟṟu) = wind\n• மேகம் (mēkam) = cloud\n• இடி (iḍi) = thunder\n• மின்னல் (miṉṉal) = lightning\n• பனி (paṉi) = snow / fog / dew\n\n🌡️ Temperature:\n• சூடு (cūḍu) = hot\n• குளிர் (kuḷir) = cold\n• மிகவும் சூடாக இருக்கிறது = It\'s very hot\n• இன்று மழை பெய்கிறது = It\'s raining today\n• நாளை வெயில் இருக்குமா? = Will it be sunny tomorrow?\n\nInteresting fact: Tamil Nadu has 3 seasons more than the Western 4:\n• கோடை (kōḍai) = summer (Mar–May, very hot)\n• மழைக்காலம் (maḻaikkālam) = monsoon (Jun–Nov)\n• குளிர்காலம் (kuḷirkālam) = winter (Dec–Feb, mild)'},
+
+  // FALLBACK
+  {keys:['__fallback__'],
+   reply:'Great question! Here are some things I can help you with:\n\n📚 Ask me about:\n• Any Tamil letter — "How do I pronounce ழ?"\n• Grammar — "Explain verb conjugation" or "What is SOV order?"\n• Vocabulary — "How do I say colours in Tamil?"\n• Phrases — "How do I say hello?" or "How do I introduce myself?"\n• Numbers — "How do I count to 100?"\n• Culture — "What are Tamil idioms?"\n• Tips — "How do I learn Tamil faster?"\n\nTry typing a specific question and I\'ll do my best to answer!'}
+];
+
+function tutoReply(msg){
+  var lower=msg.toLowerCase();
+  for(var i=0;i<TUTOR_KB.length-1;i++){
+    var entry=TUTOR_KB[i];
+    for(var j=0;j<entry.keys.length;j++){
+      if(lower.indexOf(entry.keys[j])>=0) return entry.reply;
+    }
+  }
+  // Check vocab
+  for(var v=0;v<VOCAB.length;v++){
+    var voc=VOCAB[v];
+    if(lower.indexOf(voc.e.toLowerCase())>=0||msg.indexOf(voc.t)>=0){
+      return '📖 '+voc.t+' → '+voc.r+' → '+voc.e+'\n\nCategory: '+voc.cat+'\n\nThis word belongs to the "'+voc.cat+'" category. You can find it in the Vocabulary tab where you can flip flashcards to practise.\n\nWant to know how to use it in a sentence? Just ask!';
+    }
+  }
+  // Check letters
+  for(var l=0;l<VOWELS.length;l++){
+    if(msg.indexOf(VOWELS[l].t)>=0||lower.indexOf(VOWELS[l].r)>=0){
+      var lt=VOWELS[l];
+      return '🔤 The letter '+lt.t+' ('+lt.r+') — '+lt.name+'\n\n'+lt.guide+'\n\nWords with this letter:\n'+lt.words.map(function(w){return '• '+w.t+' → '+w.r+' → '+w.e}).join('\n')+'\n\nGo to the Script tab and click on '+lt.t+' to mark it as learned and earn XP!';
+    }
+  }
+  for(var c=0;c<CONSONANTS.length;c++){
+    if(msg.indexOf(CONSONANTS[c].t)>=0||lower.indexOf(CONSONANTS[c].r.split('/')[0])>=0){
+      var ct=CONSONANTS[c];
+      return '🔤 The letter '+ct.t+' ('+ct.r+') — '+ct.name+'\n\n'+ct.guide+'\n\nWords with this letter:\n'+ct.words.map(function(w){return '• '+w.t+' → '+w.r+' → '+w.e}).join('\n')+'\n\nGo to the Script tab and click on '+ct.t+' to mark it as learned and earn XP!';
+    }
+  }
+  return TUTOR_KB[TUTOR_KB.length-1].reply;
+}
+
+function sendChat(){
+  var input=document.getElementById('chat-input');
+  var msg=input.value.trim();
+  if(!msg)return;
+  input.value='';
+  appendChat('user',msg);
+  chatHistory.push(msg);
+  document.getElementById('chat-send').disabled=true;
+  var typingEl=document.createElement('div');
+  typingEl.className='chat-typing';
+  typingEl.textContent='Thinking...';
+  document.getElementById('chat-msgs').appendChild(typingEl);
+  scrollChat();
+  setTimeout(function(){
+    typingEl.remove();
+    var reply=tutoReply(msg);
+    appendChat('ai',reply);
+    document.getElementById('chat-send').disabled=false;
+  },600);
+}
+
+function appendChat(role,text){
+  var div=document.createElement('div');
+  div.className='chat-msg '+role;
+  div.textContent=text;
+  document.getElementById('chat-msgs').appendChild(div);
+  scrollChat();
+}
+function scrollChat(){var c=document.getElementById('chat-msgs');c.scrollTop=c.scrollHeight;}
+function sendQuick(msg){document.getElementById('chat-input').value=msg;sendChat();}
+
+// NAV
+function showSection(id){
+  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active')});
+  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active')});
+  document.getElementById('section-'+id).classList.add('active');
+  var tabs=document.querySelectorAll('.nav-tab');
+  tabs.forEach(function(t){if(t.getAttribute('onclick').indexOf("'"+id+"'")>=0)t.classList.add('active');});
+}
+
+renderLetters();
+</script>
+</body>
+</html>
