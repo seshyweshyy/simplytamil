@@ -1100,6 +1100,22 @@ function showSection(id){
   tabs.forEach(function(t){if(t.getAttribute('onclick').indexOf("'"+id+"'")>=0)t.classList.add('active');});
 }
 
+function getSpeakerIcon(isSpeaking){
+  if(isSpeaking){
+    return `
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="white">
+      <path d="M3 10v4h4l5 5V5L7 10H3z"/>
+      <path d="M14 9a3 3 0 010 6"/>
+      <path d="M16.5 7.5a5 5 0 010 9"/>
+    </svg>`;
+  } else {
+    return `
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="white">
+      <path d="M3 10v4h4l5 5V5L7 10H3z"/>
+    </svg>`;
+  }
+}
+
 function speakTamil(text,btn){
   if(!window.speechSynthesis){alert('Speech not supported on this browser.');return;}
   window.speechSynthesis.cancel();
@@ -1111,10 +1127,18 @@ function speakTamil(text,btn){
   var tamil=voices.find(function(v){return v.lang==='ta-IN'||v.lang==='ta'});
   if(tamil)utt.voice=tamil;
   if(btn){
-    btn.textContent='🔊';
+    btn.innerHTML = getSpeakerIcon(true);
     btn.classList.add('speaking');
-    utt.onend=function(){btn.textContent='🔈';btn.classList.remove('speaking');};
-    utt.onerror=function(){btn.textContent='🔈';btn.classList.remove('speaking');};
+
+    utt.onend=function(){
+      btn.innerHTML = getSpeakerIcon(false);
+      btn.classList.remove('speaking');
+    };
+
+    utt.onerror=function(){
+      btn.innerHTML = getSpeakerIcon(false);
+      btn.classList.remove('speaking');
+    };
   }
   window.speechSynthesis.speak(utt);
 }
