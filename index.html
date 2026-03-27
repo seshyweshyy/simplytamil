@@ -962,19 +962,23 @@ function sendChat(){
   if(!msg)return;
   input.value='';
   appendChat('user',msg);
-  chatHistory.push(msg);
+  chatHistory.push({role:'user',content:msg});
   document.getElementById('chat-send').disabled=true;
   var typingEl=document.createElement('div');
   typingEl.className='chat-typing';
   typingEl.textContent='Thinking...';
   document.getElementById('chat-msgs').appendChild(typingEl);
   scrollChat();
-  setTimeout(function(){
+  var BACKEND_URL='https://tamil-backend.onrender.com/';
+  fetch(BACKEND_URL+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chatHistory})})
+  .then(function(r){return r.json();})
+  .then(function(data){
     typingEl.remove();
-    var reply=tutoReply(msg);
-    appendChat('ai',reply);
-    document.getElementById('chat-send').disabled=false;
-  },600);
+    if(data.error){appendChat('ai','⚠️ '+data.error);}
+    else{chatHistory.push({role:'assistant',content:data.reply});appendChat('ai',data.reply);addXP(2);}
+  })
+  .catch(function(){typingEl.remove();appendChat('ai','⚠️ Could not reach the server.');})
+  .finally(function(){document.getElementById('chat-send').disabled=false;});
 }
 
 function appendChat(role,text){
