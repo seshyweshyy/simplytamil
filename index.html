@@ -1129,16 +1129,16 @@ function showSection(id){
 function getSpeakerIcon(isSpeaking){
   if(isSpeaking){
     return `
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="white" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M3 10v4h4l5 5V5L7 10H3z" fill="white" stroke="none"/>
-      <path d="M14 9a3 3 0 010 6" fill="none"/>
-      <path d="M17 7a5 5 0 010 10" fill="none"/>
-    </svg>`;
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M5 10v4h3l4 3V7l-4 3H5z"/>
+  <path d="M15 9a3 3 0 010 6"/>
+  <path d="M18 7a5 5 0 010 10"/>
+</svg>`;
   } else {
     return `
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="white" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M3 10v4h4l5 5V5L7 10H3z" fill="white" stroke="none"/>
-    </svg>`;
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M5 10v4h3l4 3V7l-4 3H5z"/>
+</svg>`;
   }
 }
 
