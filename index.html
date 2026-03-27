@@ -1100,25 +1100,51 @@ function showSection(id){
   tabs.forEach(function(t){if(t.getAttribute('onclick').indexOf("'"+id+"'")>=0)t.classList.add('active');});
 }
 
-function speakTamil(text,btn){
-  if(!window.speechSynthesis){alert('Speech not supported on this browser.');return;}
-  window.speechSynthesis.cancel();
-  var utt=new SpeechSynthesisUtterance(text);
-  utt.lang='ta-IN';
-  utt.rate=0.85;
-  utt.pitch=1;
-  var voices=window.speechSynthesis.getVoices();
-  var tamil=voices.find(function(v){return v.lang==='ta-IN'||v.lang==='ta'});
-  if(tamil)utt.voice=tamil;
-  if(btn){
-    btn.textContent='🔊';
-    btn.classList.add('speaking');
-    utt.onend=function(){btn.textContent='🔈';btn.classList.remove('speaking');};
-    utt.onerror=function(){btn.textContent='🔈';btn.classList.remove('speaking');};
-  }
-  window.speechSynthesis.speak(utt);
+// Voice setup (put this near the top of your script)
+let tamilVoice = null;
+
+function loadTamilVoice() {
+  const voices = speechSynthesis.getVoices();
+
+  tamilVoice = voices.find(v =>
+    v.lang === "ta-IN" || v.lang.startsWith("ta")
+  ) || voices.find(v =>
+    v.lang === "en-IN"
+  ) || voices[0];
 }
-window.speechSynthesis&&window.speechSynthesis.getVoices();
+
+// Important: ensures voices are actually loaded
+speechSynthesis.onvoiceschanged = loadTamilVoice;
+loadTamilVoice();
+
+function speakTamil(text, btn) {
+  if (!text) return;
+
+  const utterance = new SpeechSynthesisUtterance(text);
+
+  // Use the loaded voice
+  if (tamilVoice) {
+    utterance.voice = tamilVoice;
+  }
+
+  // Fix croaky sound
+  utterance.rate = 0.88;
+  utterance.pitch = 1;
+  utterance.volume = 1;
+  utterance.lang = "ta-IN";
+
+  // Stop overlapping audio
+  speechSynthesis.cancel();
+
+  // Button animation (optional)
+  if (btn) btn.classList.add("speaking");
+
+  utterance.onend = () => {
+    if (btn) btn.classList.remove("speaking");
+  };
+
+  speechSynthesis.speak(utterance);
+}
 
 renderLetters();
 </script>
