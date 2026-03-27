@@ -1100,57 +1100,25 @@ function showSection(id){
   tabs.forEach(function(t){if(t.getAttribute('onclick').indexOf("'"+id+"'")>=0)t.classList.add('active');});
 }
 
-// Voice setup (put this near the top of your script)
-let tamilVoice = null;
-
-function loadTamilVoice() {
-  const voices = speechSynthesis.getVoices();
-
-  tamilVoice = voices.find(v =>
-    v.lang === "ta-IN" || v.lang.startsWith("ta")
-  ) || voices.find(v =>
-    v.lang === "en-IN"
-  ) || voices[0];
+function speakTamil(text,btn){
+  if(!window.speechSynthesis){alert('Speech not supported on this browser.');return;}
+  window.speechSynthesis.cancel();
+  var utt=new SpeechSynthesisUtterance(text);
+  utt.lang='ta-IN';
+  utt.rate=0.85;
+  utt.pitch=1;
+  var voices=window.speechSynthesis.getVoices();
+  var tamil=voices.find(function(v){return v.lang==='ta-IN'||v.lang==='ta'});
+  if(tamil)utt.voice=tamil;
+  if(btn){
+    btn.textContent='🔊';
+    btn.classList.add('speaking');
+    utt.onend=function(){btn.textContent='🔈';btn.classList.remove('speaking');};
+    utt.onerror=function(){btn.textContent='🔈';btn.classList.remove('speaking');};
+  }
+  window.speechSynthesis.speak(utt);
 }
-
-// Important: ensures voices are actually loaded
-speechSynthesis.onvoiceschanged = loadTamilVoice;
-loadTamilVoice();
-
-function speakTamil(text, btn) {
-  if (!text) return;
-
-  const utterance = new SpeechSynthesisUtterance(text);
-  const voices = speechSynthesis.getVoices();
-
-  // 🔥 FORCE a smooth voice instead of broken Tamil one
-  const goodVoice =
-    voices.find(v => v.name.includes("Google UK English Female")) ||
-    voices.find(v => v.name.includes("Google US English")) ||
-    voices.find(v => v.lang === "en-US") ||
-    voices[0];
-
-  utterance.voice = goodVoice;
-
-  // THESE are the key settings for smooth audio
-  utterance.rate = 0.75;   // slower = removes vibration
-  utterance.pitch = 1;
-  utterance.volume = 1;
-
-  // Let it still read Tamil properly
-  utterance.lang = "ta-IN";
-
-  // Stop glitch stacking
-  speechSynthesis.cancel();
-
-  if (btn) btn.classList.add("speaking");
-
-  utterance.onend = () => {
-    if (btn) btn.classList.remove("speaking");
-  };
-
-  speechSynthesis.speak(utterance);
-}
+window.speechSynthesis&&window.speechSynthesis.getVoices();
 
 renderLetters();
 </script>
