@@ -1105,7 +1105,7 @@ function speakTamil(text,btn){
   window.speechSynthesis.cancel();
   var utt=new SpeechSynthesisUtterance(text);
   utt.lang='ta-IN';
-  utt.rate=0.85;
+  utt.rate=0.88;
   utt.pitch=1;
   var voices=window.speechSynthesis.getVoices();
   var tamil=voices.find(function(v){return v.lang==='ta-IN'||v.lang==='ta'});
