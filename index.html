@@ -1142,31 +1142,44 @@ function autoResizeTamilText() {
   });
 }
 
-function speakTamil(text,btn){
-  if(!window.speechSynthesis){alert('Speech not supported on this browser.');return;}
-  window.speechSynthesis.cancel();
-  var utt=new SpeechSynthesisUtterance(text);
-  utt.lang='ta-IN';
-  utt.rate=0.88;
-  utt.pitch=1;
-  var voices=window.speechSynthesis.getVoices();
-  var tamil=voices.find(function(v){return v.lang==='ta-IN'||v.lang==='ta'});
-  if(tamil)utt.voice=tamil;
-  if(btn){
-    btn.innerHTML = getSpeakerIcon(true);
-    btn.classList.add('speaking');
+function fixTamilPronunciation(text){
+  return text
+    // break doubled retroflex sounds
+    .replace(/ள்ள/g, 'ள் ள')
+    .replace(/ற்ற/g, 'ற் ற')
+    .replace(/ன்ன/g, 'ன் ன')
+    .replace(/ப்ப/g, 'ப் ப')
+    .replace(/த்த/g, 'த் த')
+    .replace(/க்க/g, 'க் க')
 
-    utt.onend=function(){
-      btn.innerHTML = getSpeakerIcon(false);
-      btn.classList.remove('speaking');
-    };
+    // fix ending patterns (common TTS bugs)
+    .replace(/ளை/g, 'ள் ளை')
+    .replace(/ழை/g, 'ழை') // sometimes leave as-is (depends on voice)
 
-    utt.onerror=function(){
-      btn.innerHTML = getSpeakerIcon(false);
-      btn.classList.remove('speaking');
-    };
-  }
-  window.speechSynthesis.speak(utt);
+    // help "ழ" (zh sound)
+    .replace(/ழ/g, 'ழ் ')
+
+    // help "ற" (rolling r)
+    .replace(/ற/g, 'ற் ')
+
+    // clean double spaces
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function speakTamil(text, btn){
+  const utter = new SpeechSynthesisUtterance(
+    fixTamilPronunciation(text)
+  );
+
+  utter.lang = 'ta-IN';
+  utter.rate = 0.9;
+
+  const voices = speechSynthesis.getVoices();
+  const tamilVoice = voices.find(v => v.lang === 'ta-IN');
+  if(tamilVoice) utter.voice = tamilVoice;
+
+  speechSynthesis.speak(utter);
 }
 window.speechSynthesis&&window.speechSynthesis.getVoices();
 
