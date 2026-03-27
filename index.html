@@ -1142,27 +1142,22 @@ function autoResizeTamilText() {
   });
 }
 
+const pronunciationOverrides = {
+  'வெள்ளை': 'வெள் ளை',
+  'வாழை': 'வா ழை',
+  'காற்று': 'கா ற்று'
+};
+
 function fixTamilPronunciation(text){
+  if(pronunciationOverrides[text]){
+    return pronunciationOverrides[text];
+  }
+
   return text
-    // break doubled retroflex sounds
     .replace(/ள்ள/g, 'ள் ள')
     .replace(/ற்ற/g, 'ற் ற')
-    .replace(/ன்ன/g, 'ன் ன')
-    .replace(/ப்ப/g, 'ப் ப')
-    .replace(/த்த/g, 'த் த')
-    .replace(/க்க/g, 'க் க')
-
-    // fix ending patterns (common TTS bugs)
-    .replace(/ளை/g, 'ள் ளை')
-    .replace(/ழை/g, 'ழை') // sometimes leave as-is (depends on voice)
-
-    // help "ழ" (zh sound)
     .replace(/ழ/g, 'ழ் ')
-
-    // help "ற" (rolling r)
     .replace(/ற/g, 'ற் ')
-
-    // clean double spaces
     .replace(/\s+/g, ' ')
     .trim();
 }
