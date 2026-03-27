@@ -485,9 +485,10 @@ function showLetterTab(tab,btn){
 function renderLetters(){
   var grid=document.getElementById('letter-grid');
   var data=currentLetterTab==='vowels'?VOWELS:currentLetterTab==='consonants'?CONSONANTS:currentLetterTab==='numbers'?NUMBERS:PROPER_COMPOUNDS;
+  window._letterData=data;
   grid.innerHTML=data.map(function(l,i){
     var learned=learnedLetters.indexOf(l.t)>=0;
-    return '<div class="letter-card'+(learned?' learned':'')+'" onclick="openModal('+JSON.stringify(JSON.stringify(l))+')">'
+    return '<div class="letter-card'+(learned?' learned':'')+'" onclick="openModal('+i+')">'
       +'<span class="letter-tamil">'+l.t+'</span>'
       +'<div class="letter-roman">'+l.r+'</div>'
       +'<div class="letter-name">'+l.name+'</div>'
@@ -495,8 +496,8 @@ function renderLetters(){
   }).join('');
 }
 
-function openModal(lStr){
-  var l=JSON.parse(lStr);
+function openModal(i){
+  var l=window._letterData[i];
   currentLetter=l;
   document.getElementById('modal-tamil').textContent=l.t;
   document.getElementById('modal-roman').textContent=l.r;
