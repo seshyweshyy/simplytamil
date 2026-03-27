@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 <title>SimplyTamil — Learn the Language</title>
 <link rel="icon" type="image/png" href="images/mainicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;700&family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -218,7 +218,8 @@ main{flex:1;padding:2rem;max-width:960px;margin:0 auto;width:100%}
   .quiz-options{grid-template-columns:1fr;gap:0.5rem}
   .quiz-big-tamil{font-size:3rem}
   .quiz-type-select{grid-template-columns:1fr}
-  .tutor-wrap{height:calc(100vh - 220px)}
+  .tutor-wrap{height:auto;min-height:0;flex:1}
+  .chat-msgs{max-height:50vh;min-height:120px}
   .chat-msg{max-width:92%}
   .quick-prompts{gap:0.35rem}
   .quick-prompt-btn{font-size:0.72rem;padding:0.3rem 0.6rem}
@@ -375,7 +376,7 @@ main{flex:1;padding:2rem;max-width:960px;margin:0 auto;width:100%}
 <div class="section" id="section-tutor">
   <div class="tutor-wrap">
     <div class="section-header" style="margin-bottom:0.75rem">
-      <h2>SimplyTamil AI Tutor</h2>
+      <h2>SimplyTamil Tutor</h2>
       <p style="font-size:0.82rem">Powered by Claude — ask anything about Tamil language, script, pronunciation or grammar. <br> <i>Responses can take up to 30 seconds.</i></p>
     </div>
     <div class="quick-prompts">
