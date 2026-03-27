@@ -575,6 +575,8 @@ function markLearned(){
     document.getElementById('mark-btn').textContent='Mark as learned';
     document.getElementById('mark-btn').style.background='';
     document.getElementById('mark-btn').style.color='';
+    XP=Math.max(0,XP-5);
+    saveXP();
   }
   renderLetters();
   updateProgress();
@@ -766,6 +768,8 @@ function togglePhraseLearn(i,btn){
     btn.textContent='Mark learned';
     btn.style.background='transparent';
     btn.style.color='var(--green)';
+    XP=Math.max(0,XP-3);
+    saveXP();
   }
   localStorage.setItem('tamil_learned',JSON.stringify(learnedLetters));
 }
