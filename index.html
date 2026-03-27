@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tamil — Learn the Language</title>
+<title>SimplyTamil — Learn the Language</title>
 <link rel="icon" type="image/png" href="images/mainicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;700&family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -693,30 +693,37 @@ function renderPhrases(){
   }).join('');
   _phraseData=PHRASES.filter(function(p){return p.cat===phraseCat});
   document.getElementById('phrase-list').innerHTML=_phraseData.map(function(p,i){
-    return '<div class="phrase-card" style="cursor:pointer" onclick="openPhraseModal('+i+')">'
+    var learned=learnedLetters.indexOf(p.t)>=0;
+    return '<div class="phrase-card" style="display:flex;align-items:center;justify-content:space-between;gap:1rem">'
+      +'<div style="flex:1">'
       +'<span class="phrase-cat-label">'+p.cat+'</span>'
       +'<div class="phrase-tamil">'+p.t+'</div>'
       +'<div class="phrase-roman">'+p.r+'</div>'
       +'<div class="phrase-english">'+p.e+'</div>'
       +(p.ctx?'<div class="phrase-context">'+p.ctx+'</div>':'')
-      +'<div style="font-size:0.75rem;color:var(--accent);margin-top:0.5rem">Tap for breakdown →</div>'
+      +'</div>'
+      +'<button onclick="togglePhraseLearn('+i+',this)" style="flex-shrink:0;background:'+(learned?'var(--green)':'transparent')+';border:1px solid var(--green);color:'+(learned?'#000':'var(--green)')+';font-family:\'DM Sans\',sans-serif;font-size:0.78rem;font-weight:500;padding:0.4rem 0.85rem;border-radius:8px;cursor:pointer;white-space:nowrap;transition:all 0.15s">'+(learned?'✓ Learned':'Mark learned')+'</button>'
       +'</div>';
   }).join('');
 }
 function setPhraseCat(c){phraseCat=c;renderPhrases();}
 
-function openPhraseModal(i){
+function togglePhraseLearn(i,btn){
   var p=_phraseData[i];
-  document.getElementById('modal-tamil').textContent=p.t;
-  document.getElementById('modal-roman').textContent=p.r;
-  document.getElementById('modal-type').textContent=p.e;
-  document.getElementById('modal-guide').textContent=p.ctx||'';
-  document.getElementById('modal-words-section').style.display='none';
-  currentLetter={t:p.t};
-  var learned=learnedLetters.indexOf(p.t)>=0;
-  document.getElementById('mark-btn').textContent=learned?'✓ Learned — tap to undo':'Mark as learned';
-  document.getElementById('modal').classList.add('open');
-  addXP(1);
+  var idx=learnedLetters.indexOf(p.t);
+  if(idx<0){
+    learnedLetters.push(p.t);
+    btn.textContent='✓ Learned';
+    btn.style.background='var(--green)';
+    btn.style.color='#000';
+    addXP(3);
+  } else {
+    learnedLetters.splice(idx,1);
+    btn.textContent='Mark learned';
+    btn.style.background='transparent';
+    btn.style.color='var(--green)';
+  }
+  localStorage.setItem('tamil_learned',JSON.stringify(learnedLetters));
 }
 
 renderPhrases();
