@@ -120,9 +120,35 @@ main{flex:1;padding:2rem;max-width:960px;margin:0 auto;width:100%}
 .phrase-roman{font-size:0.9rem;color:var(--text2);margin-bottom:0.2rem;font-style:italic}
 .phrase-english{font-size:0.95rem;color:var(--teal);font-weight:500}
 .phrase-context{font-size:0.78rem;color:var(--text3);margin-top:0.4rem}
-.speak-btn{background:none;border:none;cursor:pointer;color:var(--text2);padding:0.2rem 0.3rem;border-radius:6px;transition:all 0.15s;font-size:0.95rem;line-height:1;flex-shrink:0}
-.speak-btn:hover{color:var(--accent);background:var(--accent-bg)}
-.speak-btn.speaking{color:var(--accent)}
+.speak-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+
+  border-radius: 10px; /* rounded */
+  background: var(--surface3);
+  border: 1px solid var(--border);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.speak-btn:hover {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  transform: scale(1.08);
+}
+
+.speak-btn.speaking {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+}
+.speak-btn svg {
+  opacity: 0.9;
+}
 .phrase-cat-label{display:inline-block;font-size:0.7rem;background:var(--surface3);border:1px solid var(--border);color:var(--text3);padding:0.15rem 0.5rem;border-radius:6px;margin-bottom:0.6rem}
 
 /* GRAMMAR */
@@ -1103,15 +1129,15 @@ function showSection(id){
 function getSpeakerIcon(isSpeaking){
   if(isSpeaking){
     return `
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="white">
-      <path d="M3 10v4h4l5 5V5L7 10H3z"/>
-      <path d="M14 9a3 3 0 010 6"/>
-      <path d="M16.5 7.5a5 5 0 010 9"/>
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="white" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 10v4h4l5 5V5L7 10H3z" fill="white" stroke="none"/>
+      <path d="M14 9a3 3 0 010 6" fill="none"/>
+      <path d="M17 7a5 5 0 010 10" fill="none"/>
     </svg>`;
   } else {
     return `
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="white">
-      <path d="M3 10v4h4l5 5V5L7 10H3z"/>
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="white" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 10v4h4l5 5V5L7 10H3z" fill="white" stroke="none"/>
     </svg>`;
   }
 }
