@@ -689,8 +689,16 @@ function renderVocab(){
   }).join('');
   var data=vocabCat==='All'?VOCAB:VOCAB.filter(function(v){return v.cat===vocabCat});
   document.getElementById('vocab-grid').innerHTML=data.map(function(v){
+    var tSafe=v.t.replace(/'/g,"\\'");
     return '<div class="vocab-card" onclick="flipCard(this,\''+v.e+'\',\''+v.r+'\')">'
-      +'<div class="vocab-front"><div class="vocab-cat">'+v.cat+'</div><div class="vocab-tamil">'+v.t+'</div><div class="letter-roman" style="font-size:0.8rem;color:var(--text3)">'+v.r+'</div></div>'
+      +'<div class="vocab-front">'
+      +'<div class="vocab-cat">'+v.cat+'</div>'
+      +'<div style="display:flex;align-items:center;gap:0.4rem">'
+      +'<div class="vocab-tamil">'+v.t+'</div>'
+      +'<button class="speak-btn" onclick="event.stopPropagation();speakTamil(\''+tSafe+'\',this)" title="Pronounce">🔈</button>'
+      +'</div>'
+      +'<div class="letter-roman" style="font-size:0.8rem;color:var(--text3)">'+v.r+'</div>'
+      +'</div>'
       +'<div class="vocab-back"><div class="vocab-english">'+v.e+'</div><div class="vocab-roman-back">'+v.r+'</div></div>'
       +'</div>';
   }).join('');
@@ -750,7 +758,7 @@ function renderPhrases(){
       +'<span class="phrase-cat-label">'+p.cat+'</span>'
       +'<div style="display:flex;align-items:center;gap:0.5rem">'
       +'<div class="phrase-tamil">'+p.t+'</div>'
-      +'<button class="speak-btn" onclick="event.stopPropagation();speakTamil(\''+p.t.replace(/'/g,"\\'")+'\'+(\''+p.r.replace(/'/g,"\\'")+'\'),this)" title="Hear pronunciation">🔈</button>'
+      +'<button class="speak-btn" onclick="event.stopPropagation();speakTamil(\''+p.t.replace(/'/g,"\\'")+'\',this)" title="Hear pronunciation">🔈</button>'
       +'</div>'
       +'<div class="phrase-roman">'+p.r+'</div>'
       +'<div class="phrase-english">'+p.e+'</div>'
@@ -1093,24 +1101,12 @@ function showSection(id){
 }
 
 function speakTamil(text,btn){
-  if(!window.speechSynthesis){alert('Speech not supported on this browser.');return;}
-  window.speechSynthesis.cancel();
-  var utt=new SpeechSynthesisUtterance(text);
-  utt.lang='ta-IN';
-  utt.rate=0.85;
-  utt.pitch=1;
-  var voices=window.speechSynthesis.getVoices();
-  var tamil=voices.find(function(v){return v.lang==='ta-IN'||v.lang==='ta'});
-  if(tamil)utt.voice=tamil;
-  if(btn){
-    btn.textContent='🔊';
-    btn.classList.add('speaking');
-    utt.onend=function(){btn.textContent='🔈';btn.classList.remove('speaking');};
-    utt.onerror=function(){btn.textContent='🔈';btn.classList.remove('speaking');};
-  }
-  window.speechSynthesis.speak(utt);
+  if(btn){btn.textContent='🔊';btn.classList.add('speaking');}
+  var audio=new Audio('https://translate.googleapis.com/translate_tts?ie=UTF-8&q='+encodeURIComponent(text)+'&tl=ta&client=gtx');
+  audio.onended=function(){if(btn){btn.textContent='🔈';btn.classList.remove('speaking');}};
+  audio.onerror=function(){if(btn){btn.textContent='🔈';btn.classList.remove('speaking');}};
+  audio.play().catch(function(){if(btn){btn.textContent='🔈';btn.classList.remove('speaking');}});
 }
-window.speechSynthesis&&window.speechSynthesis.getVoices();
 
 renderLetters();
 </script>
