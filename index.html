@@ -969,7 +969,7 @@ function sendChat(){
   typingEl.textContent='Thinking...';
   document.getElementById('chat-msgs').appendChild(typingEl);
   scrollChat();
-  var BACKEND_URL='https://tamil-backend.onrender.com/';
+  var BACKEND_URL='https://tamil-backend.onrender.com';
   fetch(BACKEND_URL+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chatHistory})})
   .then(function(r){return r.json();})
   .then(function(data){
