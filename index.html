@@ -102,7 +102,7 @@ main{flex:1;padding:2rem;max-width:960px;margin:0 auto;width:100%}
 
 /* VOCAB */
 .vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.75rem}
-.vocab-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;cursor:pointer;transition:all 0.2s}
+.vocab-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;cursor:pointer;transition:all 0.2s;position:relative;}
 .vocab-card:hover{border-color:var(--teal);transform:translateY(-1px)}
 .vocab-card.flipped .vocab-front{display:none}
 .vocab-card.flipped .vocab-back{display:flex}
@@ -121,7 +121,7 @@ main{flex:1;padding:2rem;max-width:960px;margin:0 auto;width:100%}
 .phrase-roman{font-size:0.9rem;color:var(--text2);margin-bottom:0.2rem;font-style:italic}
 .phrase-english{font-size:0.95rem;color:var(--teal);font-weight:500}
 .phrase-context{font-size:0.78rem;color:var(--text3);margin-top:0.4rem}
-.speak-btn {display: flex;align-items: center;justify-content: center;width: 32px;height: 32px;border-radius: 10px;background: var(--surface3);border: 1px solid var(--border);cursor: pointer;transition: all 0.2s ease;}
+.speak-btn{position:absolute;top:10px;right:10px;display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:10px;background:var(--surface3);border:1px solid var(--border);cursor:pointer;transition:all 0.2s ease;}
 .speak-btn:hover {background: var(--accent-bg);border-color: var(--accent);transform: scale(1.08);}
 .speak-btn.speaking {background: var(--accent-bg);border-color: var(--accent);}
 .speak-btn svg {opacity: 0.9;}
@@ -699,14 +699,12 @@ function renderVocab(){
     return '<div class="vocab-card" onclick="flipCard(this,\''+v.e+'\',\''+v.r+'\')">'
       +'<div class="vocab-front">'
       +'<div class="vocab-cat">'+v.cat+'</div>'
-      +'<div style="display:flex;align-items:center;gap:0.4rem">'
       +'<div class="vocab-tamil">'+v.t+'</div>'
       +'<button class="speak-btn" onclick="event.stopPropagation();speakTamil(\''+tSafe+'\',this)" title="Pronounce">'
       + '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
       + '<path d="M5 10v4h3l4 3V7l-4 3H5z"/>'
       + '</svg>'
       + '</button>'
-      +'</div>'
       +'<div class="letter-roman" style="font-size:0.8rem;color:var(--text3)">'+v.r+'</div>'
       +'</div>'
       +'<div class="vocab-back"><div class="vocab-english">'+v.e+'</div><div class="vocab-roman-back">'+v.r+'</div></div>'
