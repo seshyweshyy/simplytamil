@@ -426,18 +426,18 @@ var CONSONANTS=[
 ];
 
 var NUMBERS=[
-  {t:'௧',r:'1',name:'one',guide:'Tamil numeral 1. Pronounced "ondru" (ஒன்று)',words:[{t:'ஒன்று',r:'ondru',e:'one'}]},
-  {t:'௨',r:'2',name:'two',guide:'Tamil numeral 2. Pronounced "iraṇḍu" (இரண்டு)',words:[{t:'இரண்டு',r:'iraṇḍu',e:'two'}]},
-  {t:'௩',r:'3',name:'three',guide:'Tamil numeral 3. Pronounced "mūnṟu" (மூன்று)',words:[{t:'மூன்று',r:'mūnṟu',e:'three'}]},
-  {t:'௪',r:'4',name:'four',guide:'Tamil numeral 4. Pronounced "nāṉku" (நான்கு)',words:[{t:'நான்கு',r:'nāṉku',e:'four'}]},
-  {t:'௫',r:'5',name:'five',guide:'Tamil numeral 5. Pronounced "aindu" (ஐந்து)',words:[{t:'ஐந்து',r:'aindu',e:'five'}]},
-  {t:'௬',r:'6',name:'six',guide:'Tamil numeral 6. Pronounced "āru" (ஆறு)',words:[{t:'ஆறு',r:'āru',e:'six'}]},
-  {t:'௭',r:'7',name:'seven',guide:'Tamil numeral 7. Pronounced "ēḻu" (ஏழு)',words:[{t:'ஏழு',r:'ēḻu',e:'seven'}]},
-  {t:'௮',r:'8',name:'eight',guide:'Tamil numeral 8. Pronounced "eṭṭu" (எட்டு)',words:[{t:'எட்டு',r:'eṭṭu',e:'eight'}]},
-  {t:'௯',r:'9',name:'nine',guide:'Tamil numeral 9. Pronounced "oṉpatu" (ஒன்பது)',words:[{t:'ஒன்பது',r:'oṉpatu',e:'nine'}]},
-  {t:'௰',r:'10',name:'ten',guide:'Tamil numeral 10. Pronounced "pattu" (பத்து)',words:[{t:'பத்து',r:'pattu',e:'ten'}]},
-  {t:'௱',r:'100',name:'hundred',guide:'Tamil numeral 100. Pronounced "nūṟu" (நூறு)',words:[{t:'நூறு',r:'nūṟu',e:'hundred'}]},
-  {t:'௲',r:'1000',name:'thousand',guide:'Tamil numeral 1000. Pronounced "āyiram" (ஆயிரம்)',words:[{t:'ஆயிரம்',r:'āyiram',e:'thousand'}]},
+  {t:'௧',r:'ondru',name:'1 — one',guide:'The Tamil numeral for 1. Pronounced like "on-dru" — the "dr" blends together.',words:[{t:'ஒன்று',r:'ondru',e:'one'},{t:'ஒரு நாள்',r:'oru nāl',e:'one day'}]},
+  {t:'௨',r:'irandu',name:'2 — two',guide:'Tamil numeral 2. Pronounced "i-ran-du" — stress on the first syllable.',words:[{t:'இரண்டு',r:'irandu',e:'two'},{t:'இரண்டு பேர்',r:'irandu pēr',e:'two people'}]},
+  {t:'௩',r:'moonru',name:'3 — three',guide:'Tamil numeral 3. Pronounced "mōon-ru" — the oo is long.',words:[{t:'மூன்று',r:'mūnru',e:'three'},{t:'மூன்று நாள்',r:'mūnru nāl',e:'three days'}]},
+  {t:'௪',r:'naangu',name:'4 — four',guide:'Tamil numeral 4. Pronounced "nāan-gu" — long a sound.',words:[{t:'நான்கு',r:'nāngu',e:'four'},{t:'நான்கு மணி',r:'nāngu mani',e:'four o\'clock'}]},
+  {t:'௫',r:'aindu',name:'5 — five',guide:'Tamil numeral 5. Pronounced "ain-du" — rhymes with "bind-u".',words:[{t:'ஐந்து',r:'aindu',e:'five'},{t:'ஐந்து ரூபாய்',r:'aindu rūpāy',e:'five rupees'}]},
+  {t:'௬',r:'aaru',name:'6 — six',guide:'Tamil numeral 6. Pronounced "ā-ru" — long a, then ru.',words:[{t:'ஆறு',r:'āru',e:'six'},{t:'ஆறு மாதம்',r:'āru mātam',e:'six months'}]},
+  {t:'௭',r:'ezhu',name:'7 — seven',guide:'Tamil numeral 7. Pronounced "ē-zhu" — the zh is the unique Tamil sound!',words:[{t:'ஏழு',r:'ēzhu',e:'seven'},{t:'ஏழு நிறம்',r:'ēzhu niram',e:'seven colours'}]},
+  {t:'௮',r:'ettu',name:'8 — eight',guide:'Tamil numeral 8. Pronounced "et-tu" — short and sharp, doubled t.',words:[{t:'எட்டு',r:'ettu',e:'eight'},{t:'எட்டு மணி',r:'ettu mani',e:'eight o\'clock'}]},
+  {t:'௯',r:'onbadu',name:'9 — nine',guide:'Tamil numeral 9. Pronounced "on-ba-du" — three syllables.',words:[{t:'ஒன்பது',r:'onbadu',e:'nine'},{t:'ஒன்பது பேர்',r:'onbadu pēr',e:'nine people'}]},
+  {t:'௰',r:'pattu',name:'10 — ten',guide:'Tamil numeral 10. Pronounced "pat-tu" — short and sharp.',words:[{t:'பத்து',r:'pattu',e:'ten'},{t:'பத்து ரூபாய்',r:'pattu rūpāy',e:'ten rupees'}]},
+  {t:'௱',r:'nooru',name:'100 — hundred',guide:'Tamil numeral 100. Pronounced "nū-ru" — long u sound.',words:[{t:'நூறு',r:'nūru',e:'hundred'},{t:'நூறு ரூபாய்',r:'nūru rūpāy',e:'one hundred rupees'}]},
+  {t:'௲',r:'aayiram',name:'1000 — thousand',guide:'Tamil numeral 1000. Pronounced "ā-yi-ram" — three syllables, stress on first.',words:[{t:'ஆயிரம்',r:'āyiram',e:'thousand'},{t:'ஆயிரம் ரூபாய்',r:'āyiram rūpāy',e:'one thousand rupees'}]},
 ];
 
 // Build compound letters
@@ -680,16 +680,33 @@ function renderPhrases(){
   }).join('');
   var data=PHRASES.filter(function(p){return p.cat===phraseCat});
   document.getElementById('phrase-list').innerHTML=data.map(function(p){
-    return '<div class="phrase-card">'
+    var safe=JSON.stringify(JSON.stringify(p));
+    return '<div class="phrase-card" style="cursor:pointer" onclick="openPhraseModal('+safe+')">'
       +'<span class="phrase-cat-label">'+p.cat+'</span>'
       +'<div class="phrase-tamil">'+p.t+'</div>'
       +'<div class="phrase-roman">'+p.r+'</div>'
       +'<div class="phrase-english">'+p.e+'</div>'
       +(p.ctx?'<div class="phrase-context">'+p.ctx+'</div>':'')
+      +'<div style="font-size:0.75rem;color:var(--accent);margin-top:0.5rem">Tap for breakdown →</div>'
       +'</div>';
   }).join('');
 }
 function setPhraseCat(c){phraseCat=c;renderPhrases();}
+
+function openPhraseModal(pStr){
+  var p=JSON.parse(pStr);
+  document.getElementById('modal-tamil').textContent=p.t;
+  document.getElementById('modal-roman').textContent=p.r;
+  document.getElementById('modal-type').textContent=p.e;
+  document.getElementById('modal-guide').textContent=p.ctx||'';
+  document.getElementById('modal-words-section').style.display='none';
+  currentLetter={t:p.t};
+  var learned=learnedLetters.indexOf(p.t)>=0;
+  document.getElementById('mark-btn').textContent=learned?'Learned ✓':'Mark as learned';
+  document.getElementById('modal').classList.add('open');
+  addXP(1);
+}
+
 renderPhrases();
 
 // GRAMMAR
