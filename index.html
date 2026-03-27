@@ -509,20 +509,31 @@ function openModal(i){
     return '<div class="word-ex"><span class="word-ex-tamil">'+w.t+'</span><div class="word-ex-right"><div class="word-ex-roman">'+w.r+'</div><div class="word-ex-en">'+w.e+'</div></div></div>';
   }).join('');
   var learned=learnedLetters.indexOf(l.t)>=0;
-  document.getElementById('mark-btn').textContent=learned?'Learned ✓':'Mark as learned';
+  document.getElementById('mark-btn').textContent=learned?'✓ Learned — tap to undo':'Mark as learned';
+  document.getElementById('mark-btn').style.background=learned?'var(--green)':'';
+  document.getElementById('mark-btn').style.color=learned?'#000':'';
   document.getElementById('modal').classList.add('open');
 }
 function closeModal(){document.getElementById('modal').classList.remove('open');}
 function markLearned(){
   if(!currentLetter)return;
-  if(learnedLetters.indexOf(currentLetter.t)<0){
+  var idx=learnedLetters.indexOf(currentLetter.t);
+  if(idx<0){
     learnedLetters.push(currentLetter.t);
     localStorage.setItem('tamil_learned',JSON.stringify(learnedLetters));
     addXP(5);
-    document.getElementById('mark-btn').textContent='Learned ✓';
-    renderLetters();
-    updateProgress();
+    document.getElementById('mark-btn').textContent='✓ Learned — tap to undo';
+    document.getElementById('mark-btn').style.background='var(--green)';
+    document.getElementById('mark-btn').style.color='#000';
+  } else {
+    learnedLetters.splice(idx,1);
+    localStorage.setItem('tamil_learned',JSON.stringify(learnedLetters));
+    document.getElementById('mark-btn').textContent='Mark as learned';
+    document.getElementById('mark-btn').style.background='';
+    document.getElementById('mark-btn').style.color='';
   }
+  renderLetters();
+  updateProgress();
 }
 function updateProgress(){
   var total=VOWELS.length+CONSONANTS.length;
@@ -674,15 +685,15 @@ var PHRASES=[
 ];
 
 var phraseCat='Greetings';
+var _phraseData=[];
 function renderPhrases(){
   var cats=[...new Set(PHRASES.map(function(p){return p.cat}))];
   document.getElementById('phrase-cats').innerHTML=cats.map(function(c){
     return '<button class="tab-btn'+(c===phraseCat?' active':'')+'" onclick="setPhraseCat(\''+c+'\')">'+(c)+'</button>';
   }).join('');
-  var data=PHRASES.filter(function(p){return p.cat===phraseCat});
-  document.getElementById('phrase-list').innerHTML=data.map(function(p){
-    var safe=JSON.stringify(JSON.stringify(p));
-    return '<div class="phrase-card" style="cursor:pointer" onclick="openPhraseModal('+safe+')">'
+  _phraseData=PHRASES.filter(function(p){return p.cat===phraseCat});
+  document.getElementById('phrase-list').innerHTML=_phraseData.map(function(p,i){
+    return '<div class="phrase-card" style="cursor:pointer" onclick="openPhraseModal('+i+')">'
       +'<span class="phrase-cat-label">'+p.cat+'</span>'
       +'<div class="phrase-tamil">'+p.t+'</div>'
       +'<div class="phrase-roman">'+p.r+'</div>'
@@ -694,8 +705,8 @@ function renderPhrases(){
 }
 function setPhraseCat(c){phraseCat=c;renderPhrases();}
 
-function openPhraseModal(pStr){
-  var p=JSON.parse(pStr);
+function openPhraseModal(i){
+  var p=_phraseData[i];
   document.getElementById('modal-tamil').textContent=p.t;
   document.getElementById('modal-roman').textContent=p.r;
   document.getElementById('modal-type').textContent=p.e;
@@ -703,7 +714,7 @@ function openPhraseModal(pStr){
   document.getElementById('modal-words-section').style.display='none';
   currentLetter={t:p.t};
   var learned=learnedLetters.indexOf(p.t)>=0;
-  document.getElementById('mark-btn').textContent=learned?'Learned ✓':'Mark as learned';
+  document.getElementById('mark-btn').textContent=learned?'✓ Learned — tap to undo':'Mark as learned';
   document.getElementById('modal').classList.add('open');
   addXP(1);
 }
