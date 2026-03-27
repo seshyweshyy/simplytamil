@@ -984,7 +984,7 @@ function sendChat(){
 function appendChat(role,text){
   var div=document.createElement('div');
   div.className='chat-msg '+role;
-  div.textContent=text;
+  div.innerHTML=text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
   document.getElementById('chat-msgs').appendChild(div);
   scrollChat();
 }
