@@ -561,7 +561,14 @@ function openModal(i){
   var ws=l.words||[];
   document.getElementById('modal-words-section').style.display=ws.length?'block':'none';
   document.getElementById('modal-words').innerHTML=ws.map(function(w){
-    return '<div class="word-ex"><span class="word-ex-tamil">'+w.t+'</span><div class="word-ex-right"><div class="word-ex-roman">'+w.r+'</div><div class="word-ex-en">'+w.e+'</div></div></div>';
+  var safe=w.t.replace(/'/g,"\\'");
+  return '<div class="word-ex">'
+    +'<span class="word-ex-tamil">'+w.t+'</span>'
+    +'<button class="speak-btn" onclick="speakTamil(\''+safe+'\',this)" style="position:static;flex-shrink:0;margin:0 8px;">'
+    +speakerSVG()
+    +'</button>'
+    +'<div class="word-ex-right"><div class="word-ex-roman">'+w.r+'</div><div class="word-ex-en">'+w.e+'</div></div>'
+    +'</div>';
   }).join('');
   var learned=learnedLetters.indexOf(l.t)>=0;
   document.getElementById('mark-btn').textContent=learned?'✓ Learned — tap to undo':'Mark as learned';
@@ -1216,7 +1223,7 @@ const pronunciationOverrides = {
   'காற்று': 'கா ற்று',
   'அ': 'u', 'ஆ': 'ah', 'இ': 'i', 'ஈ': 'ee',
   'உ': 'உ', 'ஊ': 'ஊ', 'எ': 'eh', 'ஏ': 'ஏ',
-  'ஐ': 'eye', 'ஒ': 'oh', 'ஓ': 'ooh', 'ஔ': 'ஔ'
+  'ஐ': 'eye', 'ஒ': 'oh', 'ஓ': 'ooh', 'ஔ': 'oww'
 };
 
 function fixTamilPronunciation(text){
