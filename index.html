@@ -1214,10 +1214,9 @@ const pronunciationOverrides = {
   'வெள்ளை': 'வெள் ளை',
   'வாழை': 'வா ழை',
   'காற்று': 'கா ற்று',
-  'ஒ': 'ஒ',
-  'ஓ': 'ஓ',
-  'ஔ': 'ஔ',
-  'ஐ': 'ஐ'
+  'அ': 'அ', 'ஆ': 'ஆ', 'இ': 'இ', 'ஈ': 'ஈ',
+  'உ': 'உ', 'ஊ': 'ஊ', 'எ': 'எ', 'ஏ': 'ஏ',
+  'ஐ': 'ஐ', 'ஒ': 'ஒன்று', 'ஓ': 'ஓடு', 'ஔ': 'ஔவி'
 };
 
 function fixTamilPronunciation(text){
@@ -1237,7 +1236,9 @@ function fixTamilPronunciation(text){
 function speakTamil(text, btn){
   if(!text) return;
 
-  const processed = text.length <= 2 ? text : fixTamilPronunciation(text);
+  const processed = pronunciationOverrides[text]
+    ? pronunciationOverrides[text]
+    : text.length <= 2 ? text : fixTamilPronunciation(text);
   const utter = new SpeechSynthesisUtterance(processed);
 
   utter.lang = 'ta-IN';
