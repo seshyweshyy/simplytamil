@@ -1140,8 +1140,20 @@ function appendChat(role,text){
       var coloured=escaped.replace(/([\u0B80-\u0BFF]+)/g,function(match){
         return '<span style="color:var(--accent);font-family:\'Noto Sans Tamil\',sans-serif">'+match+'</span>';
       });
+      // check if next line is a romanisation (latin only, no = or →)
+      var lineIdx=lines.indexOf(line);
+      var nextLine=lines[lineIdx+1]||'';
+      var isRoman=nextLine.trim().length>0
+        && !/[\u0B80-\u0BFF]/.test(nextLine)
+        && !/[=→]/.test(nextLine)
+        && !/^(if|note|use|for|this|the|a |in |to )/i.test(nextLine.trim());
+      var romanSub=isRoman
+        ? '<br><span style="font-size:0.78rem;color:var(--text2);font-style:italic;margin-left:2px">'+nextLine.trim().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span>'
+        : '';
+      if(isRoman) lines[lineIdx+1]=''; // consume so it doesn't render again
       return coloured
-        +'<button class="speak-btn" style="position:static;display:inline-flex;vertical-align:middle;margin-left:6px;width:22px;height:22px;border-radius:6px;" onclick="speakTamil(\''+safe+'\',this)">'+speakerSVG()+'</button>';
+        +'<button class="speak-btn" style="position:static;display:inline-flex;vertical-align:middle;margin-left:6px;width:22px;height:22px;border-radius:6px;" onclick="speakTamil(\''+safe+'\',this)">'+speakerSVG()+'</button>'
+        +romanSub;
     }
   });
 
