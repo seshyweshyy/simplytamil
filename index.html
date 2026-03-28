@@ -1115,25 +1115,37 @@ function sendChat(){
 function appendChat(role,text){
   var div=document.createElement('div');
   div.className='chat-msg '+role;
-  var escaped=text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-  div.innerHTML=escaped.replace(/([\u0B80-\u0BFF]+)/g, function(match){
-    var safe=match.replace(/'/g,"\\'");
-    return '<span style="color:var(--accent);font-family:\'Noto Sans Tamil\',sans-serif">'
-      +match
-      +'<button class="speak-btn" style="position:static;display:inline-flex;vertical-align:middle;margin-left:4px;width:22px;height:22px;border-radius:6px;" onclick="speakTamil(\''+safe+'\',this)">'
-      +speakerSVG()
-      +'</button></span>';
-  });
-  if(role==='ai'){
-    var allTamil=[...text.matchAll(/[\u0B80-\u0BFF]+/g)].map(m=>m[0]).join(' ');
-    if(allTamil.trim()){
-      var fullBtn=document.createElement('div');
-      fullBtn.style.cssText='margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;';
-      fullBtn.innerHTML='<button class="speak-btn" style="position:static;display:inline-flex;width:26px;height:26px;border-radius:8px;flex-shrink:0;" onclick="speakTamil(\''+allTamil.replace(/'/g,"\\'")+'\',this)">'+speakerSVG()+'</button>'
-        +'<span style="font-size:0.75rem;color:var(--text3)">Speak full Tamil</span>';
-      div.appendChild(fullBtn);
+
+  var lines=text.split('\n');
+  var htmlLines=lines.map(function(line){
+    var escaped=line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    var tamilRuns=[...line.matchAll(/[\u0B80-\u0BFF]+/g)];
+    if(!tamilRuns.length) return escaped;
+
+    // detect breakdown line: has Tamil + romanisation/meaning pattern like "(xxx) = yyy" or "→"
+    var isBreakdown=/[=→]/.test(line);
+
+    if(isBreakdown){
+      // wrap each Tamil word with its own speaker button
+      return escaped.replace(/([\u0B80-\u0BFF]+)/g,function(match){
+        var safe=match.replace(/'/g,"\\'");
+        return '<span style="color:var(--accent);font-family:\'Noto Sans Tamil\',sans-serif">'+match
+          +'<button class="speak-btn" style="position:static;display:inline-flex;vertical-align:middle;margin-left:3px;width:22px;height:22px;border-radius:6px;" onclick="speakTamil(\''+safe+'\',this)">'+speakerSVG()+'</button>'
+          +'</span>';
+      });
+    } else {
+      // full sentence line — colour all Tamil, one speaker button at the end
+      var fullTamil=tamilRuns.map(function(m){return m[0];}).join(' ');
+      var safe=fullTamil.replace(/'/g,"\\'");
+      var coloured=escaped.replace(/([\u0B80-\u0BFF]+)/g,function(match){
+        return '<span style="color:var(--accent);font-family:\'Noto Sans Tamil\',sans-serif">'+match+'</span>';
+      });
+      return coloured
+        +'<button class="speak-btn" style="position:static;display:inline-flex;vertical-align:middle;margin-left:6px;width:22px;height:22px;border-radius:6px;" onclick="speakTamil(\''+safe+'\',this)">'+speakerSVG()+'</button>';
     }
-  }
+  });
+
+  div.innerHTML=htmlLines.join('<br>');
   document.getElementById('chat-msgs').appendChild(div);
   scrollChat();
 }
