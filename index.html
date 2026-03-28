@@ -1116,7 +1116,6 @@ function appendChat(role,text){
   var div=document.createElement('div');
   div.className='chat-msg '+role;
   var escaped=text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-  // wrap Tamil script runs in a speakable span
   div.innerHTML=escaped.replace(/([\u0B80-\u0BFF]+)/g, function(match){
     var safe=match.replace(/'/g,"\\'");
     return '<span style="color:var(--accent);font-family:\'Noto Sans Tamil\',sans-serif">'
@@ -1125,6 +1124,16 @@ function appendChat(role,text){
       +speakerSVG()
       +'</button></span>';
   });
+  if(role==='ai'){
+    var allTamil=[...text.matchAll(/[\u0B80-\u0BFF]+/g)].map(m=>m[0]).join(' ');
+    if(allTamil.trim()){
+      var fullBtn=document.createElement('div');
+      fullBtn.style.cssText='margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;';
+      fullBtn.innerHTML='<button class="speak-btn" style="position:static;display:inline-flex;width:26px;height:26px;border-radius:8px;flex-shrink:0;" onclick="speakTamil(\''+allTamil.replace(/'/g,"\\'")+'\',this)">'+speakerSVG()+'</button>'
+        +'<span style="font-size:0.75rem;color:var(--text3)">Speak full Tamil</span>';
+      div.appendChild(fullBtn);
+    }
+  }
   document.getElementById('chat-msgs').appendChild(div);
   scrollChat();
 }
