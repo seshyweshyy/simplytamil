@@ -408,3 +408,31 @@ function openAllAttachmentsModal(){
 
   modal.classList.add('open');
 }
+
+let attachMenuOpen = false;
+
+function toggleAttachMenu(){
+  const btn = document.getElementById('attach-btn');
+  const menu = document.getElementById('attach-menu');
+
+  attachMenuOpen = !attachMenuOpen;
+
+  if(attachMenuOpen){
+    btn.classList.add('open');
+    menu.classList.add('open');
+  } else {
+    btn.classList.remove('open');
+    menu.classList.remove('open');
+  }
+}
+
+document.addEventListener('click', function(e){
+  const btn = document.getElementById('attach-btn');
+  const menu = document.getElementById('attach-menu');
+
+  if(!btn.contains(e.target) && !menu.contains(e.target)){
+    btn.classList.remove('open');
+    menu.classList.remove('open');
+    attachMenuOpen = false;
+  }
+});

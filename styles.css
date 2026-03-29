@@ -339,3 +339,35 @@ overflow-y: auto;
   font-size:18px;
   background:var(--surface2);
 }
+
+.attach-btn{
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid var(--border);
+  background:var(--surface);
+  cursor:pointer;
+  transition:all 0.2s ease;
+}
+
+.attach-btn:hover{
+  border-color:var(--accent);
+}
+
+.attach-btn svg{
+  width:20px;
+  height:20px;
+  stroke:var(--text2);
+  stroke-width:2;
+  stroke-linecap:round;
+  transition:transform 0.25s ease;
+}
+
+/* rotate to X */
+.attach-btn.open svg{
+  transform:rotate(45deg);
+  stroke:var(--accent);
+}
