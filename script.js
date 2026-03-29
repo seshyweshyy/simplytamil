@@ -55,7 +55,6 @@ function renderQuizScore(){var s=quizState;var pct=Math.round((s.score/s.questio
    ===================================================== */
 var chatHistory=[];
 var chatAttachments=[];
-var _attachMenuOpen=false;
 
 (function buildAttachMenu(){
   var menu=document.getElementById('attach-menu');
@@ -68,41 +67,23 @@ stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="r
 
   var btn=document.createElement('button');
   btn.className='attach-menu-item';btn.setAttribute('role','menuitem');
-  btn.innerHTML=fileIcon+' Upload file or photo';
+  btn.innerHTML=fileIcon+' Upload files or photos';
   btn.onclick=function(){pickFile('image/*,application/pdf,.pdf','any');};
   menu.appendChild(btn);
 })();
 
-function toggleAttachMenu(e){
-  e.stopPropagation();
-  _attachMenuOpen=!_attachMenuOpen;
-  document.getElementById('attach-menu').classList.toggle('open',_attachMenuOpen);
-  document.getElementById('chat-attach-btn').classList.toggle('active',_attachMenuOpen);
-}
-function closeAttachMenu(){
-  _attachMenuOpen=false;
-  document.getElementById('attach-menu').classList.remove('open');
-  document.getElementById('chat-attach-btn').classList.remove('active');
-}
-document.addEventListener('click',function(e){
-  if(_attachMenuOpen&&!document.getElementById('attach-popup-wrap').contains(e.target))closeAttachMenu();
-});
-
 /* pickFile: 'img' = image-only input, 'cam' = camera, 'any' = broad file input */
 function pickFile(accept,mode){
-  closeAttachMenu();
-  var input;
-  if(mode==='cam'){
-    input=document.getElementById('chat-camera-input');
-  } else if(mode==='any'){
-    input=document.getElementById('chat-any-input');
-    input.accept=accept;
-  } else {
-    input=document.getElementById('chat-file-input');
-    input.accept=accept;
-  }
+  const input =
+    mode==='cam' ? document.getElementById('chat-camera-input') :
+    mode==='any' ? document.getElementById('chat-any-input') :
+                   document.getElementById('chat-file-input');
+
+  input.accept = accept;
   input.value = null;
-  setTimeout(()=>input.click(), 0);
+
+  input.click(); // trigger FIRST
+  setTimeout(closeAttachMenu, 100); // close AFTER
 }
 
 function compressImage(file,callback){
@@ -411,7 +392,9 @@ function openAllAttachmentsModal(){
 
 let attachMenuOpen = false;
 
-function toggleAttachMenu(){
+function toggleAttachMenu(e){
+  e.stopPropagation();
+
   const btn = document.getElementById('attach-btn');
   const menu = document.getElementById('attach-menu');
 
@@ -426,13 +409,20 @@ function toggleAttachMenu(){
   }
 }
 
+function closeAttachMenu(){
+  const btn = document.getElementById('attach-btn');
+  const menu = document.getElementById('attach-menu');
+
+  btn.classList.remove('open');
+  menu.classList.remove('open');
+  attachMenuOpen = false;
+}
+
 document.addEventListener('click', function(e){
   const btn = document.getElementById('attach-btn');
   const menu = document.getElementById('attach-menu');
 
   if(!btn.contains(e.target) && !menu.contains(e.target)){
-    btn.classList.remove('open');
-    menu.classList.remove('open');
-    attachMenuOpen = false;
+    closeAttachMenu();
   }
 });
