@@ -335,7 +335,7 @@ function fixTamilPronunciation(text){if(pronunciationOverrides[text])return pron
 function speakTamil(text,btn){if(!text)return;var processed=pronunciationOverrides[text]?pronunciationOverrides[text]:text.length<=2?text:fixTamilPronunciation(text);var utter=new SpeechSynthesisUtterance(processed);utter.lang='ta-IN';utter.rate=0.9;var voices=speechSynthesis.getVoices();var tamilVoice=voices.find(function(v){return v.lang==='ta-IN';});if(tamilVoice)utter.voice=tamilVoice;if(btn)btn.classList.add('speaking');utter.onend=function(){if(btn)btn.classList.remove('speaking');};utter.onerror=function(){if(btn)btn.classList.remove('speaking');};speechSynthesis.cancel();speechSynthesis.speak(utter);}
 window.speechSynthesis&&window.speechSynthesis.getVoices();
 renderLetters();
-if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').then(function(reg){console.log('SW registered:',reg.scope);}).catch(function(err){console.log('SW registration failed:',err);});});}
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/static/sw.js').then(function(reg){console.log('SW registered:',reg.scope);}).catch(function(err){console.log('SW registration failed:',err);});});}
 /* Mobile keyboard fix */
 (function () {
   const inputArea = document.querySelector('.chat-input-area');
