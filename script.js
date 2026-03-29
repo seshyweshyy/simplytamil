@@ -422,6 +422,8 @@ document.addEventListener('click', function(e){
   const btn = document.getElementById('attach-btn');
   const menu = document.getElementById('attach-menu');
 
+  if(!btn || !menu) return;
+
   if(!btn.contains(e.target) && !menu.contains(e.target)){
     closeAttachMenu();
   }
