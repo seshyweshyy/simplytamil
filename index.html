@@ -183,29 +183,193 @@ main{flex:1;padding:2rem;max-width:960px;margin:0 auto;width:100%}
 .quiz-type-card h4{font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.95rem;margin-bottom:0.25rem}
 .quiz-type-card p{font-size:0.8rem;color:var(--text2)}
 
-/* AI TUTOR */
-.tutor-wrap{display:flex;flex-direction:column;height:calc(100vh - 160px);max-width:700px;margin:0 auto}
-.chat-msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:0.75rem;padding-bottom:1rem}
+/* =====================
+   AI TUTOR — FIXED
+   ===================== */
+.tutor-wrap{
+  display:flex;
+  flex-direction:column;
+  height:calc(100vh - 160px);
+  max-width:700px;
+  margin:0 auto;
+}
+.chat-msgs{
+  flex:1;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:0.75rem;
+  padding-bottom:1rem;
+  min-height:0; /* critical for flex children to scroll */
+}
 .chat-msg{max-width:80%;padding:0.8rem 1rem;border-radius:14px;font-size:0.9rem;line-height:1.6}
 .chat-msg.ai{background:var(--surface);border:1px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px}
 .chat-msg.user{background:var(--accent-bg);border:1px solid var(--accent);color:var(--text);align-self:flex-end;border-bottom-right-radius:4px}
 .chat-msg .tamil-inline{font-family:'Noto Sans Tamil',sans-serif;font-size:1.1em;color:var(--accent)}
 .chat-typing{align-self:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:14px;border-bottom-left-radius:4px;padding:0.8rem 1rem;color:var(--text2);font-size:0.85rem}
-.chat-input-row{display:flex;gap:0.5rem;padding-top:0.75rem;border-top:1px solid var(--border)}
-.chat-input{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:0.7rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;color:var(--text);outline:none}
-.chat-input:focus{border-color:var(--accent)}
-.chat-send{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:0.7rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;cursor:pointer}
+
+/* ── CHAT INPUT WRAP (FIX #1: proper desktop sizing) ── */
+.chat-input-area{
+  flex-shrink:0; /* don't compress */
+  padding-top:0.75rem;
+  border-top:1px solid var(--border);
+}
+.chat-input-wrap{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:12px;
+  transition:border-color 0.15s;
+  /* no fixed height — grows with content, capped by textarea max */
+}
+.chat-input-wrap:focus-within{border-color:var(--accent)}
+
+/* Attachment preview strip */
+.chat-attach-preview{
+  display:none;
+  flex-wrap:wrap;
+  gap:6px;
+  padding:8px 10px 0;
+}
+.chat-attach-preview.has-items{display:flex}
+
+.chat-attach-thumb{
+  position:relative;
+  width:52px;height:52px;
+  border-radius:8px;overflow:hidden;
+  border:1px solid var(--border2);
+  flex-shrink:0;
+}
+.chat-attach-thumb img{width:100%;height:100%;object-fit:cover}
+.chat-attach-thumb .remove-attach{
+  position:absolute;top:2px;right:2px;
+  width:16px;height:16px;border-radius:50%;
+  background:rgba(0,0,0,0.75);border:none;
+  color:white;font-size:10px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;line-height:1;
+}
+
+/* Input row inside wrap */
+.chat-input-row-inner{
+  display:flex;
+  gap:0.5rem;
+  align-items:flex-end;
+  padding:8px 10px;
+}
+.chat-input{
+  flex:1;
+  background:transparent;
+  border:none;
+  outline:none;
+  font-family:'DM Sans',sans-serif;
+  font-size:0.9rem;
+  color:var(--text);
+  resize:none;
+  overflow:hidden;
+  line-height:1.5;
+  padding:0;
+  max-height:140px;
+}
+.chat-input::placeholder{color:var(--text3)}
+.chat-send{
+  flex-shrink:0;
+  background:var(--accent);
+  color:#fff;border:none;
+  border-radius:8px;
+  padding:0 1rem;
+  height:34px;
+  font-family:'DM Sans',sans-serif;
+  font-size:0.9rem;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:background 0.15s;
+}
+.chat-send:hover{background:var(--accent2)}
 .chat-send:disabled{opacity:0.5;cursor:not-allowed}
+
+/* ── ATTACH POPUP BUTTON (FIX #3) ── */
+.attach-popup-wrap{
+  position:relative;
+  flex-shrink:0;
+}
+.chat-attach-btn{
+  background:none;
+  border:1px solid var(--border2);
+  border-radius:8px;
+  width:34px;height:34px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  color:var(--text3);
+  transition:all 0.15s;
+  flex-shrink:0;
+}
+.chat-attach-btn:hover{
+  background:var(--surface2);
+  border-color:var(--accent);
+  color:var(--accent);
+}
+.chat-attach-btn.active{
+  background:var(--accent-bg);
+  border-color:var(--accent);
+  color:var(--accent);
+}
+
+/* Popup menu */
+.attach-menu{
+  position:absolute;
+  bottom:calc(100% + 8px);
+  left:0;
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:12px;
+  padding:6px;
+  min-width:180px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+  z-index:200;
+  opacity:0;
+  transform:translateY(6px) scale(0.97);
+  pointer-events:none;
+  transition:opacity 0.15s ease, transform 0.15s ease;
+  transform-origin:bottom left;
+}
+.attach-menu.open{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  pointer-events:all;
+}
+.attach-menu-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  background:none;
+  border:none;
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:0.88rem;
+  padding:9px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  text-align:left;
+  transition:background 0.12s;
+}
+.attach-menu-item:hover{background:var(--surface2)}
+.attach-menu-item svg{flex-shrink:0;color:var(--text2)}
+
+/* quick prompts */
 .quick-prompts{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.75rem}
 .quick-prompt-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:0.78rem;padding:0.35rem 0.75rem;border-radius:8px;cursor:pointer;transition:all 0.15s}
 .quick-prompt-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* misc */
 .xp-toast{position:fixed;bottom:2rem;right:2rem;background:var(--gold-bg);border:1px solid var(--gold);color:var(--gold);padding:0.6rem 1.1rem;border-radius:10px;font-size:0.85rem;font-weight:500;z-index:9999;animation:toastIn 0.3s ease;display:none}
 @keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .filter-row{display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
 .filter-label{font-size:0.8rem;color:var(--text3)}
 .badge{display:inline-block;font-size:0.7rem;padding:0.2rem 0.5rem;border-radius:6px;font-weight:500}
 .badge-new{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent)}
-.chat-disclaimer{font-size:0.7rem; color:var(--text3);margin-top:0.3rem;text-align:center;opacity:0.6;}
+.chat-disclaimer{font-size:0.7rem;color:var(--text3);margin-top:0.5rem;text-align:center;opacity:0.6;}
+
+/* ── MOBILE ── */
 @media(max-width:640px){
   nav{padding:0 1rem;height:auto;min-height:56px;flex-wrap:wrap;gap:0.4rem;padding-top:0.5rem;padding-bottom:0.5rem}
   .logo{font-size:1.15rem;order:0}
@@ -245,16 +409,8 @@ main{flex:1;padding:2rem;max-width:960px;margin:0 auto;width:100%}
   .section-header h2{font-size:1.4rem}
   .grammar-rule{padding:0.75rem}
   .score-circle{width:80px;height:80px;font-size:1.4rem}
-.chat-input-wrap{background:var(--surface);border:1px solid var(--border2);border-radius:12px;transition:border-color 0.15s}
-.chat-input-wrap:focus-within{border-color:var(--accent)}
-.chat-input-wrap .chat-input{border:none;border-radius:0;background:transparent;padding-left:0;padding-right:0}
-.chat-input-wrap .chat-input:focus{border:none;outline:none}
-.chat-attach-thumb{position:relative;width:56px;height:56px;border-radius:8px;overflow:hidden;border:1px solid var(--border2);flex-shrink:0}
-.chat-attach-thumb img{width:100%;height:100%;object-fit:cover}
-.chat-attach-thumb .remove-attach{position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:rgba(0,0,0,0.7);border:none;color:white;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
-.chat-attach-file{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:0.78rem;color:var(--text2);max-width:160px}
-.chat-attach-file span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.chat-attach-btn-hover:hover{background:var(--surface2)!important;border-color:var(--accent)!important;color:var(--accent)!important}
+  /* popup opens upward on mobile too — left-anchored is fine */
+  .attach-menu{min-width:160px}
 }
 </style>
 </head>
@@ -416,29 +572,60 @@ main{flex:1;padding:2rem;max-width:960px;margin:0 auto;width:100%}
     <div class="chat-msgs" id="chat-msgs">
       <div class="chat-msg ai">வணக்கம்! (Vanakkam!) 👋 I'm your Tamil tutor. You can ask about letters, words, grammar rules, pronunciation tips, or just practice a conversation. What would you like to explore today?</div>
     </div>
-    <div class="chat-input-wrap" id="chat-input-wrap">
-  <div id="chat-attachment-preview" style="display:none;padding:8px 8px 0;display:none;flex-wrap:wrap;gap:6px"></div>
-  <div style="display:flex;gap:0.5rem;align-items:flex-end;padding:8px">
-    <button id="chat-attach-btn" onclick="document.getElementById('chat-file-input').click()"
-      title="Attach image"
-      style="flex-shrink:0;background:none;border:1px solid var(--border2);border-radius:8px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text3);transition:all 0.15s">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
-        <polyline points="21 15 16 10 5 21"/>
-      </svg>
-    </button>
-    <input type="file" id="chat-file-input" accept="image/*,application/pdf" style="display:none" onchange="handleChatAttachment(this)">
-    <textarea class="chat-input" id="chat-input" placeholder="Ask your Tamil tutor anything..." rows="1"
-      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"
-      oninput="autoGrowTextarea(this)"
-      onpaste="handleChatPaste(event)"
-      style="resize:none;overflow:hidden;line-height:1.5;padding-top:7px;padding-bottom:7px"></textarea>
-    <button class="chat-send" id="chat-send" onclick="sendChat()" style="flex-shrink:0;height:34px;padding:0 1rem">Send</button>
-  </div>
-</div>
-    <p class="chat-disclaimer">
-      SimplyTamil Tutor is AI and can make mistakes. Please double-check responses.
-    </p>
+
+    <!-- FIXED INPUT AREA -->
+    <div class="chat-input-area">
+      <div class="chat-input-wrap" id="chat-input-wrap">
+        <!-- Attachment preview strip -->
+        <div class="chat-attach-preview" id="chat-attachment-preview"></div>
+        <!-- Input row -->
+        <div class="chat-input-row-inner">
+          <!-- POPUP ATTACH BUTTON (FIX #3) -->
+          <div class="attach-popup-wrap" id="attach-popup-wrap">
+            <button class="chat-attach-btn" id="chat-attach-btn"
+              onclick="toggleAttachMenu(event)"
+              title="Attach image"
+              aria-label="Attach image">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </button>
+            <!-- Popup menu -->
+            <div class="attach-menu" id="attach-menu" role="menu">
+              <button class="attach-menu-item" onclick="pickFile('image/*')" role="menuitem">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21 15 16 10 5 21"/>
+                </svg>
+                Upload image
+              </button>
+              <button class="attach-menu-item" onclick="pickFile('image/*', true)" role="menuitem">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                  <circle cx="12" cy="13" r="4"/>
+                </svg>
+                Take photo
+              </button>
+            </div>
+          </div>
+          <!-- Hidden file inputs -->
+          <input type="file" id="chat-file-input" accept="image/*" style="display:none" onchange="handleChatAttachment(this)">
+          <input type="file" id="chat-camera-input" accept="image/*" capture="environment" style="display:none" onchange="handleChatAttachment(this)">
+
+          <textarea class="chat-input" id="chat-input"
+            placeholder="Ask your Tamil tutor anything..."
+            rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"
+            oninput="autoGrowTextarea(this)"
+            onpaste="handleChatPaste(event)"></textarea>
+          <button class="chat-send" id="chat-send" onclick="sendChat()">Send</button>
+        </div>
+      </div>
+      <p class="chat-disclaimer">SimplyTamil Tutor is AI and can make mistakes. Please double-check responses.</p>
+    </div>
   </div>
 </div>
 
@@ -526,15 +713,6 @@ var NUMBERS=[
   {t:'௲',r:'aayiram',name:'1000 — thousand',guide:'Tamil numeral 1000. Pronounced "ā-yi-ram" — three syllables, stress on first.',words:[{t:'ஆயிரம்',r:'āyiram',e:'thousand'},{t:'ஆயிரம் ரூபாய்',r:'āyiram rūpāy',e:'one thousand rupees'}]},
 ];
 
-// Build compound letters
-var COMPOUNDS=[];
-CONSONANTS.slice(0,6).forEach(function(c){
-  VOWELS.forEach(function(v,vi){
-    // simplified approximation for display
-    COMPOUNDS.push({t:c.t+(vi<2?'า':''),r:c.r+v.r,name:c.name+'+'+v.name,guide:'Compound: '+c.t+' ('+c.r+') + '+v.t+' ('+v.r+'). The vowel marker modifies the base consonant.',words:[]});
-  });
-});
-// Use proper compounds for display
 var PROPER_COMPOUNDS=[
   {t:'கா',r:'kā',name:'ka+ā',guide:'க + ா = கா. The vowel marker ா (long a) is added to the right of க.',words:[{t:'காடு',r:'kāḍu',e:'forest'},{t:'கால்',r:'kāl',e:'leg/foot'}]},
   {t:'கி',r:'ki',name:'ka+i',guide:'க + ி = கி. The vowel marker ி (short i) is added to the right of க.',words:[{t:'கிடை',r:'kiḍai',e:'to get/receive'}]},
@@ -607,7 +785,6 @@ function openModal(i){
   document.getElementById('mark-btn').textContent=learned?'✓ Learned — tap to undo':'Mark as learned';
   document.getElementById('mark-btn').style.background=learned?'var(--green)':'';
   document.getElementById('mark-btn').style.color=learned?'#000':'';
-  var speakText=l.t+(l.r?' '+l.r:'');
   document.getElementById('modal-roman').innerHTML=
     l.r+'<button class="speak-btn" onclick="speakTamil(\''+l.t+'\',this)" title="Hear pronunciation" style="vertical-align:middle">'
     + '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
@@ -817,32 +994,9 @@ function renderPhrases(){
           + '<div class="phrase-english">'+p.e+'</div>'
           + '<div class="phrase-context">'+p.ctx+'</div>'
           + '</div>';
-      +'<button onclick="togglePhraseLearn('+i+',this)" style="flex-shrink:0;background:'+(learned?'var(--green)':'transparent')+';border:1px solid var(--green);color:'+(learned?'#000':'var(--green)')+';font-family:\'DM Sans\',sans-serif;font-size:0.78rem;font-weight:500;padding:0.4rem 0.85rem;border-radius:8px;cursor:pointer;white-space:nowrap;transition:all 0.15s">'+(learned?'✓ Learned':'Mark learned')+'</button>'
-      +'</div>';
   }).join('');
 }
 function setPhraseCat(c){phraseCat=c;renderPhrases();}
-
-function togglePhraseLearn(i,btn){
-  var p=_phraseData[i];
-  var idx=learnedLetters.indexOf(p.t);
-  if(idx<0){
-    learnedLetters.push(p.t);
-    btn.textContent='✓ Learned';
-    btn.style.background='var(--green)';
-    btn.style.color='#000';
-    addXP(3);
-  } else {
-    learnedLetters.splice(idx,1);
-    btn.textContent='Mark learned';
-    btn.style.background='transparent';
-    btn.style.color='var(--green)';
-    XP=Math.max(0,XP-3);
-    saveXP();
-  }
-  localStorage.setItem('tamil_learned',JSON.stringify(learnedLetters));
-}
-
 renderPhrases();
 
 // GRAMMAR
@@ -968,25 +1122,17 @@ function answerQuiz(btn,chosen){
   var fb=document.getElementById('quiz-feedback');
   fb.style.display='block';
   fb.className='quiz-feedback '+(correct?'correct':'wrong');
-  var speakBtn = '';
+  var speakBtn='';
   if(q.big){
-    var safe = q.big.replace(/'/g,"\\'");
-    speakBtn =
-      '<button class="speak-btn" style="position:static;margin-top:10px;" onclick="speakTamil(\''+safe+'\',this)">'
-      + '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
-      + '<path d="M5 10v4h3l4 3V7l-4 3H5z"/>'
-      + '<path d="M14 9a3 3 0 0 1 0 6"/>'
-      + '<path d="M17 7a6 6 0 0 1 0 10"/>'
-      + '</svg>'
-      + '</button>';
+    var safe=q.big.replace(/'/g,"\\'");
+    speakBtn='<button class="speak-btn" style="position:static;margin-top:10px;" onclick="speakTamil(\''+safe+'\',this)">'
+      +'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+      +'<path d="M5 10v4h3l4 3V7l-4 3H5z"/>'
+      +'<path d="M14 9a3 3 0 0 1 0 6"/>'
+      +'<path d="M17 7a6 6 0 0 1 0 10"/>'
+      +'</svg></button>';
   }
-  fb.innerHTML =
-    (correct
-      ? 'Correct! Well done.'
-      : 'Not quite — the answer is: ' + q.answer)
-    + '<br><br>'
-    + 'Tamil: ' + (q.big || '')
-    + speakBtn;
+  fb.innerHTML=(correct?'Correct! Well done.':'Not quite — the answer is: '+q.answer)+'<br><br>'+'Tamil: '+(q.big||'')+speakBtn;
   var nextBtn=document.createElement('button');
   nextBtn.className='quiz-btn';
   nextBtn.style.marginTop='0.5rem';
@@ -1008,130 +1154,94 @@ function renderQuizScore(){
     +'</div></div>';
 }
 
-// AI TUTOR — fully offline smart knowledge engine
+/* =====================================================
+   AI TUTOR — FIXED LOGIC
+   ===================================================== */
+
 var chatHistory=[];
+var chatAttachments=[]; // {type:'image', base64, mediaType, name, previewUrl}
+var _attachMenuOpen=false;
 
-var TUTOR_KB=[
-  // PRONUNCIATION
-  {keys:['ழ','zh','zha','unique','special','hardest','difficult'],
-   reply:'🌟 ழ (ḻa) — The most unique sound in Tamil!\n\nThis letter has NO equivalent in any other language. Here\'s how to produce it:\n\n1. Curl your tongue tip all the way back to touch the soft palate\n2. Then flick it forward sharply\n\nIt\'s like a retroflex "l" combined with a flap. Native speakers do this naturally — it takes practice!\n\nWords that use it:\n• தமிழ் → tamiḻ → Tamil (the language itself!)\n• வாழை → vāḻai → banana\n• மழை → maḻai → rain\n• கீழ் → kīḻ → below/down\n\nPro tip: Listen to Tamil songs or films and focus every time you hear this sound. Your brain will eventually map it.'},
-
-  {keys:['pronounce','pronunciation','sound like','say','speak'],
-   reply:'Tamil pronunciation key points:\n\n🔤 Short vs Long vowels matter a lot:\n• அ (a) vs ஆ (ā) — short vs long "a"\n• இ (i) vs ஈ (ī) — short vs long "i"\nHolding a vowel longer changes the word meaning!\n\n🔤 Three types of "n":\n• ந (na) — dental, tongue to teeth\n• ண (ṇa) — retroflex, tongue curled back\n• ன (ṉa) — alveolar, tongue to ridge\n\n🔤 Consonants soften between vowels:\n• க = hard "k" at start, soft "g" between vowels\n• ப = hard "p" at start, soft "b" between vowels\n• த = hard "t" at start, soft "d" between vowels\n\nWhat specific sound would you like help with?'},
-
-  {keys:['retroflex','curl','tongue'],
-   reply:'Retroflex consonants in Tamil:\n\nThese are sounds made by curling the tongue tip back to touch the roof of the mouth. Tamil has several:\n\n• ட (ṭa) — retroflex "t"\n• ண (ṇa) — retroflex "n"\n• ள (ḷa) — retroflex "l"\n• ழ (ḻa) — the unique Tamil sound (retroflex + flap)\n• ற (ṟa) — strong rolled "r"\n\nThink of it like saying the English "t" or "n" but with your tongue curled all the way back instead of touching your teeth.\n\nExample: மண் (maṇ) = soil/earth — the ண is retroflex\nCompare: மன் (maṉ) = king — the ன is NOT retroflex\n\nThey sound different to native ears even if hard for beginners to distinguish at first.'},
-
-  // GREETINGS / SENTENCES
-  {keys:['hello','hi','greet','vanakkam','வணக்கம்'],
-   reply:'Greetings in Tamil:\n\n• வணக்கம் → Vaṇakkam → Hello / Greetings (universal, any time of day)\n• நலமா? → Nalamā? → Are you well? (informal "how are you?")\n• நலம் → Nalam → I\'m well / Fine (reply to above)\n• காலை வணக்கம் → Kālai vaṇakkam → Good morning\n• மாலை வணக்கம் → Mālai vaṇakkam → Good evening\n• இரவு வணக்கம் → Iravu vaṇakkam → Good night\n• போகிறேன் → Pōkiṟēṉ → Goodbye (literally "I am going")\n\nவணக்கம் is the safest all-purpose greeting — you can never go wrong with it!'},
-
-  {keys:['my name is','name','பெயர்','introduce','introduction'],
-   reply:'How to introduce yourself in Tamil:\n\n• என் பெயர் ___ → En peyar ___ → My name is ___\n• நான் ___ → Nāṉ ___ → I am ___\n• என் பெயர் John → En peyar John → My name is John\n\nFull introduction:\n"வணக்கம். என் பெயர் John. நான் ஆஸ்திரேலியா இருந்து வருகிறேன்."\nVaṇakkam. En peyar John. Nāṉ Āstirēliyā iruntu varukiṟēṉ.\n"Hello. My name is John. I am from Australia."\n\nAsking someone\'s name:\n• உங்கள் பெயர் என்ன? → Uṅkaḷ peyar eṉṉa? → What is your name? (formal)\n• உன் பெயர் என்ன? → Uṉ peyar eṉṉa? → What is your name? (informal)'},
-
-  {keys:['going to work','work','office','job','தொழில்','வேலை'],
-   reply:'How to say "going to work":\n\n• நான் வேலைக்கு போகிறேன் → Nāṉ vēlaikku pōkiṟēṉ → I am going to work\n\nBreaking it down:\n• நான் = I\n• வேலைக்கு = to work (வேலை + suffix கு = "to")\n• போகிறேன் = am going (present tense of "go")\n\nSo "Hello, my name is John and I\'m going to work" =\n"வணக்கம். என் பெயர் John. நான் வேலைக்கு போகிறேன்."\nVaṇakkam. En peyar John. Nāṉ vēlaikku pōkiṟēṉ.\n\nOther useful "going to" phrases:\n• நான் பள்ளிக்கு போகிறேன் → I am going to school\n• நான் கடைக்கு போகிறேன் → I am going to the shop\n• நான் வீட்டிற்கு போகிறேன் → I am going home'},
-
-  // NUMBERS
-  {keys:['count','number','100','hundred','1 to','one to','எண்'],
-   reply:'Tamil numbers 1–20:\n\n1 → ஒன்று (oṉṟu)\n2 → இரண்டு (iraṇḍu)\n3 → மூன்று (mūṉṟu)\n4 → நான்கு (nāṉku)\n5 → ஐந்து (aintu)\n6 → ஆறு (āṟu)\n7 → ஏழு (ēḻu)\n8 → எட்டு (eṭṭu)\n9 → ஒன்பது (oṉpatu)\n10 → பத்து (pattu)\n11 → பதினொன்று (patinoṉṟu)\n12 → பன்னிரண்டு (paṉṉiraṇḍu)\n13 → பதிமூன்று (patimūṉṟu)\n14 → பதினான்கு (patinānku)\n15 → பதினைந்து (patinaintu)\n16 → பதினாறு (patināṟu)\n17 → பதினேழு (patinēḻu)\n18 → பதினெட்டு (patiṉeṭṭu)\n19 → பத்தொன்பது (pattoṉpatu)\n20 → இருபது (irupatu)\n\nHigher:\n30 → முப்பது (muppatu)\n40 → நாற்பது (nāṟpatu)\n50 → ஐம்பது (aimpatu)\n100 → நூறு (nūṟu)\n1000 → ஆயிரம் (āyiram)'},
-
-  // GRAMMAR
-  {keys:['verb','conjugat','tense','past','present','future','போகிறேன்'],
-   reply:'Tamil verb conjugation:\n\nVerbs change based on TENSE and PERSON. The verb root + tense marker + person suffix.\n\nUsing the verb வர் (var) = "to come":\n\n🕐 PRESENT (கிற marker):\n• நான் வருகிறேன் → Nāṉ varukiṟēṉ → I am coming\n• நீ வருகிறாய் → Nī varukiṟāy → You are coming\n• அவர் வருகிறார் → Avar varukiṟār → He/She is coming\n\n🕐 PAST (ந்த/ட்ட/ன்ன marker):\n• நான் வந்தேன் → Nāṉ vanttēṉ → I came\n• நீ வந்தாய் → Nī vanttāy → You came\n• அவர் வந்தார் → Avar vanttār → He/She came\n\n🕐 FUTURE (வ marker):\n• நான் வருவேன் → Nāṉ varuvēṉ → I will come\n• நீ வருவாய் → Nī varuvāy → You will come\n• அவர் வருவார் → Avar varuvār → He/She will come\n\nPerson suffixes: ஏன் (I), ஆய் (you-informal), ஆன் (he), ஆள் (she), ஆர் (formal he/she), ஓம் (we)'},
-
-  {keys:['sov','word order','sentence','structure','order'],
-   reply:'Tamil word order — Subject-Object-Verb (SOV):\n\nEnglish: Subject → Verb → Object\n• "I eat rice"\n\nTamil: Subject → Object → Verb\n• நான் சோறு சாப்பிடுகிறேன்\n• Nāṉ cōṟu cāppiḍukiṟēṉ\n• I rice eat → "I eat rice"\n\nThe verb ALWAYS comes last in Tamil. Always.\n\nMore examples:\n• அவர் புத்தகம் படிக்கிறார் → He book reads → He reads a book\n• நாய் பந்தை கடிக்கிறது → Dog ball bites → The dog bites the ball\n\nAlso important:\n• Adjectives come BEFORE nouns (like English)\n• நல்ல உணவு → good food ✓ (not உணவு நல்ல)\n• Postpositions come AFTER nouns (unlike English prepositions)\n• வீட்டில் → in the house (வீடு + இல்) — suffix added, not a separate word before'},
-
-  {keys:['case','suffix','postposition','in the','to the','from','accusative','nominative'],
-   reply:'Tamil noun cases — suffixes that replace prepositions:\n\nBase word: வீடு (vīḍu) = house\n\n• Subject (no suffix): வீடு நல்லது → The house is good\n• Direct object (-ஐ): வீட்டை பார் → See the house\n• Location (-இல்): வீட்டில் → in the house\n• Direction to (-இற்கு): வீட்டிற்கு → to the house\n• From (-இலிருந்து): வீட்டிலிருந்து → from the house\n• Of/Possessive (-இன்): வீட்டின் → of the house\n• With/By (-ஆல்): வீட்டால் → by means of the house\n\nExample sentence:\n"நான் வீட்டிலிருந்து வருகிறேன்"\nNāṉ vīṭṭiliruntu varukiṟēṉ\n"I am coming from the house"\n\nThis is called agglutination — meaning is built by stacking suffixes onto a root word.'},
-
-  {keys:['negat','no','not','வில்லை','இல்லை','don\'t'],
-   reply:'Negation in Tamil:\n\nTamil doesn\'t use a simple "not" word. Instead the verb itself changes form.\n\n❌ PAST negative — add -வில்லை:\n• வந்தேன் (I came) → வரவில்லை (I did not come)\n• சாப்பிட்டேன் (I ate) → சாப்பிடவில்லை (I did not eat)\n• பார்த்தேன் (I saw) → பார்க்கவில்லை (I did not see)\n\n❌ FUTURE negative — add -மாட்டேன்:\n• போவேன் (I will go) → போகமாட்டேன் (I will not go)\n• வருவேன் (I will come) → வரமாட்டேன் (I will not come)\n\nUseful negatives:\n• இல்லை → illai → No / There isn\'t\n• வேண்டாம் → vēṇḍām → I don\'t want / No thanks\n• தெரியாது → teriyātu → I don\'t know\n• புரியவில்லை → puriyavillai → I don\'t understand'},
-
-  {keys:['formal','informal','polite','respect','அவர்','நீங்கள்'],
-   reply:'Formal vs Informal Tamil:\n\nTamil has a strong formal/informal distinction. Use formal with elders, strangers, professionals.\n\n📌 PRONOUNS:\n• நீ (nī) = you (informal — friends, children)\n• நீங்கள் (nīṅkaḷ) = you (formal — elders, strangers)\n• அவன் (avaṉ) = he (informal)\n• அவள் (avaḷ) = she (informal)\n• அவர் (avar) = he/she (formal, respectful)\n• அவர்கள் (avarkaḷ) = they (formal)\n\n📌 VERBS also change:\n• வா (vā) = come (informal command)\n• வாருங்கள் (vāruṅkaḷ) = please come (formal)\n• சாப்பிடு (cāppiḍu) = eat (informal)\n• சாப்பிடுங்கள் (cāppiḍuṅkaḷ) = please eat (formal)\n\n📌 Also note:\n• Colloquial spoken Tamil differs greatly from written/formal Tamil\n• TV news and literature use formal Tamil\n• Street conversations use colloquial Tamil\n• As a learner, colloquial is more useful day-to-day'},
-
-  {keys:['we','inclusive','exclusive','நாம்','நாங்கள்'],
-   reply:'The two "we" in Tamil — a unique feature!\n\n• நாம் (nām) = WE — INCLUSIVE\n  Includes the person you\'re speaking to.\n  "Let\'s go" / "We (you and I) are friends"\n  நாம் போவோம் → Let\'s go (you\'re invited!)\n\n• நாங்கள் (nāṅkaḷ) = WE — EXCLUSIVE\n  Does NOT include the listener.\n  "We went" (but you weren\'t there)\n  நாங்கள் போனோம் → We went (you didn\'t come)\n\nThis distinction is grammatically required in Tamil — you must choose the right one!\n\nExample:\n• நாம் தமிழ் கற்றுக்கொள்வோம் → Let\'s learn Tamil together (inclusive — you\'re part of this!)\n• நாங்கள் நேற்று சினிமா பார்த்தோம் → We watched a film yesterday (exclusive — you weren\'t there)'},
-
-  {keys:['agglutinati','suffix','stick','build','stack','word build'],
-   reply:'Tamil is an agglutinative language — meaning you BUILD words by stacking suffixes:\n\nStart with a root, then add meaning layer by layer:\n\nவீடு (vīḍu) = house\n+ இல் (location) = வீட்டில் = in the house\n+ இருந்து (from) = வீட்டிலிருந்து = from the house\n\nAnother example with a verb:\nபோ (pō) = go (root)\n+ கிற (present) = போகிற\n+ ஏன் (I) = போகிறேன் = I am going\n\nOr even longer:\nசாப்பிடு (cāppiḍu) = eat\n+ கொண்டு (continuous) = சாப்பிட்டுக்கொண்டு\n= while eating\n\nThis is very different from English where we use separate words ("I was eating" vs. one stacked Tamil word). Once you understand the suffix system, Tamil becomes very logical!'},
-
-  {keys:['idiom','saying','proverb','பழமொழி'],
-   reply:'Tamil idioms and proverbs (பழமொழிகள்):\n\n1. "யானை வரும் பின்னே, மணி ஓசை வரும் முன்னே"\n   Yāṉai varum piṉṉē, maṇi ōcai varum muṉṉē\n   The elephant comes behind, but its bell sound comes before.\n   → A great person\'s reputation precedes them.\n\n2. "ஆடாத மரத்தில் காய் காய்க்காது"\n   Āḍāta marattil kāy kāykkātu\n   A tree that doesn\'t sway won\'t bear fruit.\n   → No pain, no gain / Hard work pays off.\n\n3. "கற்றது கை மண் அளவு; கல்லாதது உலகளவு"\n   Kaṟṟatu kai maṇ aḷavu; kallātatu ulak aḷavu\n   What you\'ve learned is a handful of earth; what you haven\'t is the size of the world.\n   → There is always more to learn.\n\n4. "அன்புடையார்க்கு இல்லை தாழ்வு"\n   Aṉpuḍaiyārkku illai tāḻvu\n   Those who have love have no downfall.\n   → Love conquers all.\n\n5. "வாய் இருந்தால் வழி கிடைக்கும்"\n   Vāy iruntāl vaḻi kiḍaikkum\n   If you have a mouth, a way will be found.\n   → Ask and you shall receive / Speaking up helps.'},
-
-  {keys:['script','alphabet','letter','vowel','consonant','உயிர்','மெய்'],
-   reply:'The Tamil script explained:\n\nTamil has 247 characters total:\n\n📌 12 Vowels (உயிர் — uyir = "life/soul")\nStand-alone vowel sounds: அ ஆ இ ஈ உ ஊ எ ஏ ஐ ஒ ஓ ஔ\n(short and long pairs for a, i, u, e, o + 2 diphthongs)\n\n📌 18 Consonants (மெய் — mey = "body")\nPure consonants — must combine with a vowel to be spoken: க ங ச ஞ ட ண த ந ப ம ய ர ல வ ழ ள ற ன\n\n📌 216 Compound letters (உயிர்மெய் — uyirmey)\nEach of the 18 consonants × 12 vowels = 216 combinations\nThese use the base consonant + a vowel diacritic marker\nExample: க + ா = கா (ka + ā = kā)\n\n📌 1 special character\nஃ (āytam) — used in some loan words and classical texts\n\nThe vowel markers are added around the consonant (left, right, above, below) depending on which vowel. This is what makes reading Tamil initially tricky — the markers change the shape of the letter.'},
-
-  {keys:['food','eat','restaurant','menu','order','உணவு'],
-   reply:'Food vocabulary and restaurant Tamil:\n\n🍽️ Basic food words:\n• உணவு (uṇavu) = food\n• சாப்பாடு (cāppāḍu) = meal/cooked rice dish\n• தண்ணீர் (taṇṇīr) = water\n• காபி (kāpi) = coffee\n• டீ (ṭī) = tea\n• இனிப்பு (iṉippu) = sweet/dessert\n• காரம் (kāram) = spicy\n\n🍛 Tamil dishes:\n• தோசை (tōcai) = dosa\n• இட்லி (iṭli) = idli\n• சாம்பார் (cāmpār) = sambar\n• ரசம் (racam) = rasam\n• பொங்கல் (poṅkal) = pongal\n• பிரியாணி (piriyāṇi) = biryani\n\n🗣️ At a restaurant:\n• மெனு கொண்டு வாருங்கள் → Bring the menu please\n• இது என்ன? → What is this?\n• மிகவும் சுவையாக இருக்கிறது → It\'s very tasty\n• காரம் குறைவாக போடுங்கள் → Less spicy please\n• பில் கொண்டு வாருங்கள் → Bring the bill please'},
-
-  {keys:['shop','buy','price','money','how much','எவ்வளவு','bargain'],
-   reply:'Shopping Tamil:\n\n💰 Key phrases:\n• எவ்வளவு? → Evvaḷavu? → How much?\n• விலை என்ன? → Vilai eṉṉa? → What is the price?\n• இது வேண்டும் → Itu vēṇḍum → I want this\n• வேண்டாம் → Vēṇḍām → I don\'t want it\n• கொஞ்சம் கம்மி பண்ணுங்க → Koñcam kammi paṇṇuṅka → Reduce the price a bit\n• இது நல்லா இல்லை → This is not good (quality complaint)\n• வேற நிறம் இருக்கா? → Do you have another colour?\n\n💵 Numbers for money:\n• பத்து ரூபாய் → pattu rūpāy → 10 rupees\n• நூறு ரூபாய் → nūṟu rūpāy → 100 rupees\n• ஐநூறு → ainūṟu → 500\n• ஆயிரம் → āyiram → 1000'},
-
-  {keys:['direction','where','how to get','travel','bus','train','எங்கே'],
-   reply:'Directions and travel Tamil:\n\n📍 Asking directions:\n• எங்கே? → Eṅkē? → Where?\n• ___ எங்கே இருக்கு? → Where is ___?\n• எப்படி போவது? → Eppaḍi pōvatu? → How do I get there?\n• நேரடியாக போ → Nēraḍiyāka pō → Go straight\n• வலது பக்கம் திரும்பு → Turn right\n• இடது பக்கம் திரும்பு → Turn left\n• அருகில் இருக்கா? → Is it nearby?\n• தூரமா? → Is it far?\n\n🚌 Transport:\n• பஸ் நிறுத்தம் எங்கே? → Where is the bus stop?\n• ரயில் நிலையம் எங்கே? → Where is the train station?\n• டிக்கெட் எவ்வளவு? → How much is the ticket?\n• ___ போகுது இந்த பஸ்? → Does this bus go to ___?'},
-
-  {keys:['learn tamil','studying','student','beginner','tip','advice','how to learn'],
-   reply:'Tips for learning Tamil effectively:\n\n1. 🔤 Master the script first\nTamil script is completely phonetic — once you know the letters, you can read anything (even if you don\'t know the meaning). Spend 2-3 weeks on the alphabet before heavy vocabulary.\n\n2. 🎵 Use Tamil music and films\nTamil has a massive film industry (Kollywood). Films like those by Rajinikanth or Kamal Haasan, and songs by A.R. Rahman, are great for listening practice. Start with subtitles.\n\n3. 🗣️ Learn colloquial, not just classical\nSpoken Tamil differs from written Tamil. "நான் போகிறேன்" (written) becomes "நான் போறேன்" (spoken). Learn both!\n\n4. 📱 Use Tamil keyboard\nInstall a Tamil keyboard on your phone. Typing reinforces the script.\n\n5. 🔄 Use spaced repetition\nThe Quiz section here uses random questioning. Do it daily for 10 minutes.\n\n6. 🌟 Useful phrases to memorise first:\n• வணக்கம் (hello)\n• நன்றி (thank you)\n• இல்லை (no)\n• ஆமா (yes)\n• புரியவில்லை (I don\'t understand)\n• மீண்டும் சொல்லுங்கள் (say it again)'},
-
-  {keys:['thank','நன்றி','sorry','excuse','மன்னிக்க','please'],
-   reply:'Polite expressions in Tamil:\n\n🙏 Thank you:\n• நன்றி → Naṉṟi → Thank you\n• மிக்க நன்றி → Mikka naṉṟi → Thank you very much\n• நன்றி மிகவும் → Naṉṟi mikavum → Thank you so much\n\n🙏 Sorry / Excuse me:\n• மன்னிக்கவும் → Maṉṉikkavum → Sorry / Excuse me (formal)\n• மன்னிச்சுக்கோ → Maṉṉiccukkō → Sorry (informal)\n• தப்பு என்னோட → The fault is mine\n\n✅ Yes / No:\n• ஆமா → Āmā → Yes (informal, colloquial)\n• ஆம் → Ām → Yes (formal)\n• இல்லை → Illai → No\n\n🤝 Other polite phrases:\n• சரி → Cari → OK / Alright\n• நிச்சயமாக → Niccayamāka → Certainly / Of course\n• கொஞ்சம் → Koñcam → A little / Please (softener)'},
-
-  {keys:['colour','color','red','blue','green','சிவப்பு','நீலம்','பச்சை'],
-   reply:'Colours in Tamil:\n\n• சிவப்பு → civappu → red\n• நீலம் → nīlam → blue\n• பச்சை → paccai → green\n• மஞ்சள் → mañcaḷ → yellow (also means turmeric!)\n• கறுப்பு → kaṟuppu → black\n• வெள்ளை → veḷḷai → white\n• ஆரஞ்சு → ārancu → orange\n• ஊதா → ūtā → purple\n• இளஞ்சிவப்பு → iḷañcivappu → pink (literally "soft red")\n• பழுப்பு → paḻuppu → brown\n• வெள்ளி → veḷḷi → silver\n• தங்கம் → taṅkam → gold\n\nUsing colours:\n• சிவப்பு வீடு → red house\n• நீல நிற சட்டை → blue coloured shirt\n• இந்த பூ என்ன நிறம்? → What colour is this flower?'},
-
-  {keys:['family','mother','father','brother','sister','அம்மா','அப்பா'],
-   reply:'Family vocabulary in Tamil:\n\n👨‍👩‍👧‍👦 Immediate family:\n• அம்மா (ammā) = mother\n• அப்பா (appā) = father\n• அண்ணன் (aṇṇaṉ) = older brother\n• தம்பி (tampi) = younger brother\n• அக்கா (akkā) = older sister\n• தங்கை (taṅkai) = younger sister\n• கணவன் (kaṇavaṉ) = husband\n• மனைவி (maṉaivi) = wife\n• மகன் (makaṉ) = son\n• மகள் (makaḷ) = daughter\n\n👴 Extended family:\n• தாத்தா (tāttā) = grandfather (paternal)\n• பாட்டி (pāṭṭi) = grandmother (paternal)\n• அம்மம்மா = grandmother (maternal)\n• அம்மாப்பா = grandfather (maternal)\n• மாமா (māmā) = uncle (mother\'s brother)\n• அத்தை (attai) = aunt (father\'s sister)\n\nNote: Tamil has SEPARATE words for older vs younger siblings — you must specify! அண்ணன் is older brother, தம்பி is younger brother.'},
-
-  {keys:['body','health','pain','sick','doctor','hospital','உடல்'],
-   reply:'Body and health Tamil:\n\n🏥 Body parts:\n• தலை (talai) = head\n• கண் (kaṇ) = eye\n• காது (kātu) = ear\n• மூக்கு (mūkku) = nose\n• வாய் (vāy) = mouth\n• கை (kai) = hand/arm\n• கால் (kāl) = leg/foot\n• வயிறு (vayiṟu) = stomach\n• முதுகு (mutuку) = back\n• இதயம் (itayam) = heart\n\n🤒 Health phrases:\n• எனக்கு உடம்பு சரியில்லை → I\'m not feeling well\n• வலிக்கிறது → It hurts\n• தலை வலிக்கிறது → I have a headache\n• வயிறு வலிக்கிறது → I have a stomach ache\n• டாக்டர் தேவை → I need a doctor\n• மருந்து வேண்டும் → I need medicine\n• மருத்துவமனை எங்கே? → Where is the hospital?'},
-
-  {keys:['weather','rain','sun','hot','cold','மழை','வெயில்'],
-   reply:'Weather in Tamil:\n\n☀️ Weather words:\n• வெயில் (veyil) = sunshine / sunny\n• மழை (maḻai) = rain (note the ழ!)\n• காற்று (kāṟṟu) = wind\n• மேகம் (mēkam) = cloud\n• இடி (iḍi) = thunder\n• மின்னல் (miṉṉal) = lightning\n• பனி (paṉi) = snow / fog / dew\n\n🌡️ Temperature:\n• சூடு (cūḍu) = hot\n• குளிர் (kuḷir) = cold\n• மிகவும் சூடாக இருக்கிறது = It\'s very hot\n• இன்று மழை பெய்கிறது = It\'s raining today\n• நாளை வெயில் இருக்குமா? = Will it be sunny tomorrow?\n\nInteresting fact: Tamil Nadu has 3 seasons more than the Western 4:\n• கோடை (kōḍai) = summer (Mar–May, very hot)\n• மழைக்காலம் (maḻaikkālam) = monsoon (Jun–Nov)\n• குளிர்காலம் (kuḷirkālam) = winter (Dec–Feb, mild)'},
-
-  // FALLBACK
-  {keys:['__fallback__'],
-   reply:'Great question! Here are some things I can help you with:\n\n📚 Ask me about:\n• Any Tamil letter — "How do I pronounce ழ?"\n• Grammar — "Explain verb conjugation" or "What is SOV order?"\n• Vocabulary — "How do I say colours in Tamil?"\n• Phrases — "How do I say hello?" or "How do I introduce myself?"\n• Numbers — "How do I count to 100?"\n• Culture — "What are Tamil idioms?"\n• Tips — "How do I learn Tamil faster?"\n\nTry typing a specific question and I\'ll do my best to answer!'}
-];
-
-function tutoReply(msg){
-  var lower=msg.toLowerCase();
-  for(var i=0;i<TUTOR_KB.length-1;i++){
-    var entry=TUTOR_KB[i];
-    for(var j=0;j<entry.keys.length;j++){
-      if(lower.indexOf(entry.keys[j])>=0) return entry.reply;
-    }
+/* ── FIX #3: Popup menu ── */
+function toggleAttachMenu(e){
+  e.stopPropagation();
+  _attachMenuOpen=!_attachMenuOpen;
+  document.getElementById('attach-menu').classList.toggle('open',_attachMenuOpen);
+  document.getElementById('chat-attach-btn').classList.toggle('active',_attachMenuOpen);
+}
+function closeAttachMenu(){
+  _attachMenuOpen=false;
+  document.getElementById('attach-menu').classList.remove('open');
+  document.getElementById('chat-attach-btn').classList.remove('active');
+}
+// Close popup when clicking outside
+document.addEventListener('click',function(e){
+  if(_attachMenuOpen && !document.getElementById('attach-popup-wrap').contains(e.target)){
+    closeAttachMenu();
   }
-  // Check vocab
-  for(var v=0;v<VOCAB.length;v++){
-    var voc=VOCAB[v];
-    if(lower.indexOf(voc.e.toLowerCase())>=0||msg.indexOf(voc.t)>=0){
-      return '📖 '+voc.t+' → '+voc.r+' → '+voc.e+'\n\nCategory: '+voc.cat+'\n\nThis word belongs to the "'+voc.cat+'" category. You can find it in the Vocabulary tab where you can flip flashcards to practise.\n\nWant to know how to use it in a sentence? Just ask!';
-    }
-  }
-  // Check letters
-  for(var l=0;l<VOWELS.length;l++){
-    if(msg.indexOf(VOWELS[l].t)>=0||lower.indexOf(VOWELS[l].r)>=0){
-      var lt=VOWELS[l];
-      return '🔤 The letter '+lt.t+' ('+lt.r+') — '+lt.name+'\n\n'+lt.guide+'\n\nWords with this letter:\n'+lt.words.map(function(w){return '• '+w.t+' → '+w.r+' → '+w.e}).join('\n')+'\n\nGo to the Script tab and click on '+lt.t+' to mark it as learned and earn XP!';
-    }
-  }
-  for(var c=0;c<CONSONANTS.length;c++){
-    if(msg.indexOf(CONSONANTS[c].t)>=0||lower.indexOf(CONSONANTS[c].r.split('/')[0])>=0){
-      var ct=CONSONANTS[c];
-      return '🔤 The letter '+ct.t+' ('+ct.r+') — '+ct.name+'\n\n'+ct.guide+'\n\nWords with this letter:\n'+ct.words.map(function(w){return '• '+w.t+' → '+w.r+' → '+w.e}).join('\n')+'\n\nGo to the Script tab and click on '+ct.t+' to mark it as learned and earn XP!';
-    }
-  }
-  return TUTOR_KB[TUTOR_KB.length-1].reply;
+});
+
+function pickFile(accept,camera){
+  closeAttachMenu();
+  var input=camera
+    ? document.getElementById('chat-camera-input')
+    : document.getElementById('chat-file-input');
+  input.accept=accept;
+  input.click();
 }
 
-var chatAttachments=[]; // {type:'image'|'file', base64, mediaType, name, previewUrl}
+/* ── FIX #1 + #2: Image compression before storing ── */
+function compressImage(file, callback){
+  var MAX_PX=1600;      // max dimension
+  var QUALITY=0.82;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      var w=img.width, h=img.height;
+      // scale down if needed
+      if(w>MAX_PX||h>MAX_PX){
+        if(w>=h){h=Math.round(h*(MAX_PX/w));w=MAX_PX;}
+        else{w=Math.round(w*(MAX_PX/h));h=MAX_PX;}
+      }
+      var canvas=document.createElement('canvas');
+      canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      var dataUrl=canvas.toDataURL('image/jpeg',QUALITY);
+      var base64=dataUrl.split(',')[1];
+      // size check — if still too big, compress harder
+      var bytes=base64.length*0.75;
+      if(bytes>4.5*1024*1024){
+        // try again at lower quality
+        dataUrl=canvas.toDataURL('image/jpeg',0.6);
+        base64=dataUrl.split(',')[1];
+      }
+      callback(base64,'image/jpeg',dataUrl);
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
 
-function autoGrowTextarea(el){
-  el.style.height='auto';
-  el.style.height=Math.min(el.scrollHeight,160)+'px';
+function handleChatAttachment(input){
+  var file=input.files[0];
+  if(!file)return;
+  input.value=''; // reset so same file can be re-picked
+  if(!file.type.startsWith('image/')){
+    appendChat('ai','⚠️ Only image files are supported for attachment.');
+    return;
+  }
+  // compress & store
+  compressImage(file,function(base64,mediaType,previewUrl){
+    chatAttachments.push({
+      type:'image',
+      base64:base64,
+      mediaType:mediaType,
+      name:file.name,
+      previewUrl:previewUrl
+    });
+    renderAttachmentPreviews();
+  });
 }
 
 function handleChatPaste(e){
@@ -1141,53 +1251,25 @@ function handleChatPaste(e){
     if(items[i].type.indexOf('image')>=0){
       e.preventDefault();
       var file=items[i].getAsFile();
-      if(file)addChatAttachment(file);
+      if(file)handleChatAttachment({files:[file],value:''});
       return;
     }
   }
 }
 
-function handleChatAttachment(input){
-  var file=input.files[0];
-  if(file)addChatAttachment(file);
-  input.value='';
-}
-
-function addChatAttachment(file){
-  var reader=new FileReader();
-  reader.onload=function(e){
-    var base64=e.target.result.split(',')[1];
-    var isImage=file.type.indexOf('image')>=0;
-    var attachment={
-      type:isImage?'image':'file',
-      base64:base64,
-      mediaType:file.type,
-      name:file.name,
-      previewUrl:isImage?e.target.result:null
-    };
-    chatAttachments.push(attachment);
-    renderAttachmentPreviews();
-  };
-  reader.readAsDataURL(file);
-}
-
 function renderAttachmentPreviews(){
   var preview=document.getElementById('chat-attachment-preview');
-  if(!chatAttachments.length){preview.style.display='none';return;}
-  preview.style.display='flex';
+  if(!chatAttachments.length){
+    preview.classList.remove('has-items');
+    preview.innerHTML='';
+    return;
+  }
+  preview.classList.add('has-items');
   preview.innerHTML=chatAttachments.map(function(a,i){
-    if(a.type==='image'){
-      return '<div class="chat-attach-thumb">'
-        +'<img src="'+a.previewUrl+'">'
-        +'<button class="remove-attach" onclick="removeAttachment('+i+')">×</button>'
-        +'</div>';
-    } else {
-      return '<div class="chat-attach-file">'
-        +'<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'
-        +'<span>'+a.name+'</span>'
-        +'<button class="remove-attach" style="position:static;background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;padding:0;margin-left:2px" onclick="removeAttachment('+i+')">×</button>'
-        +'</div>';
-    }
+    return '<div class="chat-attach-thumb">'
+      +'<img src="'+a.previewUrl+'" alt="attachment">'
+      +'<button class="remove-attach" onclick="removeAttachment('+i+')" aria-label="Remove">×</button>'
+      +'</div>';
   }).join('');
 }
 
@@ -1196,79 +1278,117 @@ function removeAttachment(i){
   renderAttachmentPreviews();
 }
 
+/* ── FIX #2: sendChat with robust error handling ── */
 function sendChat(){
   var input=document.getElementById('chat-input');
   var msg=input.value.trim();
   if(!msg&&!chatAttachments.length)return;
-  input.value='';
-  input.style.height='auto';
 
-  // build user message content
+  var sendBtn=document.getElementById('chat-send');
+
+  // Build API content
   var userContent=[];
   chatAttachments.forEach(function(a){
-    if(a.type==='image'){
-      userContent.push({type:'image',source:{type:'base64',media_type:a.mediaType,data:a.base64}});
-    }
+    userContent.push({type:'image',source:{type:'base64',media_type:a.mediaType,data:a.base64}});
   });
-  if(msg)userContent.push({type:'text',text:msg});
+  if(msg) userContent.push({type:'text',text:msg});
   if(!userContent.length)return;
 
-  // show in chat — images as thumbnails + text
+  // Display user message
   var userDisplayParts=[];
   chatAttachments.forEach(function(a){
-    if(a.type==='image')userDisplayParts.push('<img src="'+a.previewUrl+'" style="max-width:200px;max-height:150px;border-radius:8px;display:block;margin-bottom:4px">');
-    else userDisplayParts.push('<div style="font-size:0.78rem;color:var(--text2);margin-bottom:4px">📄 '+a.name+'</div>');
+    userDisplayParts.push('<img src="'+a.previewUrl+'" style="max-width:200px;max-height:150px;border-radius:8px;display:block;margin-bottom:4px">');
   });
-  if(msg)userDisplayParts.push(msg.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'));
+  if(msg) userDisplayParts.push(msg.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'));
+
   var userDiv=document.createElement('div');
   userDiv.className='chat-msg user';
   userDiv.innerHTML=userDisplayParts.join('');
   document.getElementById('chat-msgs').appendChild(userDiv);
 
-  // add to history — use simple text if no attachments, array if attachments
+  // Add to history
   var historyContent=userContent.length===1&&userContent[0].type==='text'
-    ?userContent[0].text
-    :userContent;
+    ? userContent[0].text
+    : userContent;
   chatHistory.push({role:'user',content:historyContent});
 
-  // clear attachments
+  // Clear input & attachments
+  input.value='';
+  input.style.height='auto';
   chatAttachments=[];
   renderAttachmentPreviews();
 
-  document.getElementById('chat-send').disabled=true;
+  // Disable send, show typing
+  sendBtn.disabled=true;
   var typingEl=document.createElement('div');
   typingEl.className='chat-typing';
-  typingEl.textContent='Thinking...';
+  typingEl.textContent='Thinking…';
   document.getElementById('chat-msgs').appendChild(typingEl);
   scrollChat();
 
   var BACKEND_URL='https://tamil-backend.onrender.com';
-  fetch(BACKEND_URL+'/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chatHistory})})
-  .then(function(r){return r.json();})
+
+  fetch(BACKEND_URL+'/chat',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({messages:chatHistory})
+  })
+  .then(function(r){
+    if(!r.ok) return r.json().then(function(d){throw d;});
+    return r.json();
+  })
   .then(function(data){
     typingEl.remove();
-    if(data.error){appendChat('ai','⚠️ '+data.error);}
-    else{chatHistory.push({role:'assistant',content:data.reply});appendChat('ai',data.reply);addXP(2);}
+    if(data.error){
+      // ── FIX #2: friendly error messages ──
+      var errMsg=data.error||'Unknown error';
+      var friendly='⚠️ Something went wrong. Please try again.';
+      if(typeof errMsg==='string'||typeof errMsg==='object'){
+        var errStr=JSON.stringify(errMsg);
+        if(errStr.indexOf('image exceeds')>=0||errStr.indexOf('5 MB')>=0||errStr.indexOf('5242880')>=0){
+          friendly='⚠️ That image is too large to process (even after compression). Please try a smaller or lower-resolution image.';
+        } else if(errStr.indexOf('invalid_request')>=0){
+          friendly='⚠️ The request was invalid — this image format may not be supported. Try a JPEG or PNG.';
+        } else if(errStr.indexOf('overloaded')>=0||errStr.indexOf('529')>=0){
+          friendly='⚠️ The AI is busy right now. Please wait a moment and try again.';
+        }
+      }
+      appendChat('ai',friendly);
+      // Remove the failed user message from history so chat doesn't get stuck
+      chatHistory.pop();
+    } else {
+      chatHistory.push({role:'assistant',content:data.reply});
+      appendChat('ai',data.reply);
+      addXP(2);
+    }
   })
-  .catch(function(){typingEl.remove();appendChat('ai','⚠️ Could not reach the server.');})
-  .finally(function(){document.getElementById('chat-send').disabled=false;});
+  .catch(function(err){
+    typingEl.remove();
+    var errStr=JSON.stringify(err||'');
+    var friendly='⚠️ Could not reach the server. Please check your connection.';
+    if(errStr.indexOf('image exceeds')>=0||errStr.indexOf('5242880')>=0){
+      friendly='⚠️ That image is too large to process. Please try a smaller image.';
+    }
+    appendChat('ai',friendly);
+    // Remove failed message from history
+    chatHistory.pop();
+  })
+  .finally(function(){
+    sendBtn.disabled=false; // ALWAYS re-enable
+    scrollChat();
+  });
 }
 
 function appendChat(role,text){
   var div=document.createElement('div');
   div.className='chat-msg '+role;
-
   var lines=text.split('\n');
   var htmlLines=lines.map(function(line){
     var escaped=line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     var tamilRuns=[...line.matchAll(/[\u0B80-\u0BFF]+/g)];
-    if(!tamilRuns.length) return escaped;
-
-    // detect breakdown line: has Tamil + romanisation/meaning pattern like "(xxx) = yyy" or "→"
+    if(!tamilRuns.length)return escaped;
     var isBreakdown=/[=→]/.test(line);
-
     if(isBreakdown){
-      // wrap each Tamil word with its own speaker button
       return escaped.replace(/([\u0B80-\u0BFF]+)/g,function(match){
         var safe=match.replace(/'/g,"\\'");
         return '<span style="color:var(--accent);font-family:\'Noto Sans Tamil\',sans-serif">'+match
@@ -1276,35 +1396,36 @@ function appendChat(role,text){
           +'</span>';
       });
     } else {
-      // full sentence line — colour all Tamil, one speaker button at the end
       var fullTamil=tamilRuns.map(function(m){return m[0];}).join(' ');
       var safe=fullTamil.replace(/'/g,"\\'");
       var coloured=escaped.replace(/([\u0B80-\u0BFF]+)/g,function(match){
         return '<span style="color:var(--accent);font-family:\'Noto Sans Tamil\',sans-serif">'+match+'</span>';
       });
-      // check if next line is a romanisation (latin only, no = or →)
       var lineIdx=lines.indexOf(line);
       var nextLine=lines[lineIdx+1]||'';
       var isRoman=nextLine.trim().length>0
-        && !/[\u0B80-\u0BFF]/.test(nextLine)
-        && !/[=→]/.test(nextLine)
-        && !/^(if|note|use|for|this|the|a |in |to )/i.test(nextLine.trim());
+        &&!/[\u0B80-\u0BFF]/.test(nextLine)
+        &&!/[=→]/.test(nextLine)
+        &&!/^(if|note|use|for|this|the|a |in |to )/i.test(nextLine.trim());
       var romanSub=isRoman
-        ? '<br><span style="font-size:0.78rem;color:var(--text2);font-style:italic;margin-left:2px">'+nextLine.trim().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span>'
-        : '';
-      if(isRoman) lines[lineIdx+1]=''; // consume so it doesn't render again
+        ?'<br><span style="font-size:0.78rem;color:var(--text2);font-style:italic;margin-left:2px">'+nextLine.trim().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span>'
+        :'';
+      if(isRoman)lines[lineIdx+1]='';
       return coloured
         +'<button class="speak-btn" style="position:static;display:inline-flex;vertical-align:middle;margin-left:6px;width:22px;height:22px;border-radius:6px;" onclick="speakTamil(\''+safe+'\',this)">'+speakerSVG()+'</button>'
         +romanSub;
     }
   });
-
   div.innerHTML=htmlLines.join('<br>');
   document.getElementById('chat-msgs').appendChild(div);
   scrollChat();
 }
+
 function scrollChat(){var c=document.getElementById('chat-msgs');c.scrollTop=c.scrollHeight;}
-function sendQuick(msg){document.getElementById('chat-input').value=msg;sendChat();}
+function sendQuick(msg){
+  document.getElementById('chat-input').value=msg;
+  sendChat();
+}
 
 // NAV
 function showSection(id){
@@ -1315,110 +1436,63 @@ function showSection(id){
   tabs.forEach(function(t){if(t.getAttribute('onclick').indexOf("'"+id+"'")>=0)t.classList.add('active');});
 }
 
-function getSpeakerIcon(isSpeaking){
-  if(isSpeaking){
-    return `
-    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4 10v4h3l4 3V7l-4 3H4z"/>
-    <path d="M14 9.5c1 .7 1.5 1.6 1.5 2.5s-.5 1.8-1.5 2.5"/>
-    <path d="M16.5 7.5c1.8 1.2 2.7 2.7 2.7 4.5s-.9 3.3-2.7 4.5"/>
-  </svg>`;
-  } else {
-    return `
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M5 10v4h3l4 3V7l-4 3H5z"/>
-    </svg>`;
-  }
-}
-
 function speakerSVG(){
   return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
-  + '<path d="M5 10v4h3l4 3V7l-4 3H5z"/>'
-  + '<path class="wave1" d="M16 9.5c0.8 0.8 0.8 3.5 0 5" style="opacity:0;transition:opacity 0.2s ease"/>'
-  + '<path class="wave2" d="M18 7.5c1.8 1.8 1.8 7 0 9" style="opacity:0;transition:opacity 0.25s ease 0.07s"/>'
-  + '</svg>';
+    +'<path d="M5 10v4h3l4 3V7l-4 3H5z"/>'
+    +'<path class="wave1" d="M16 9.5c0.8 0.8 0.8 3.5 0 5" style="opacity:0;transition:opacity 0.2s ease"/>'
+    +'<path class="wave2" d="M18 7.5c1.8 1.8 1.8 7 0 9" style="opacity:0;transition:opacity 0.25s ease 0.07s"/>'
+    +'</svg>';
 }
 
-function autoResizeTamilText() {
-  document.querySelectorAll('.vocab-tamil').forEach(el => {
-    let maxSize = 24;   // starting size (px)
-    let minSize = 14;   // smallest allowed
-    el.style.fontSize = maxSize + 'px';
+function autoGrowTextarea(el){
+  el.style.height='auto';
+  el.style.height=Math.min(el.scrollHeight,140)+'px';
+}
 
-    while (el.scrollWidth > el.clientWidth && maxSize > minSize) {
-      maxSize--;
-      el.style.fontSize = maxSize + 'px';
-    }
+function autoResizeTamilText(){
+  document.querySelectorAll('.vocab-tamil').forEach(function(el){
+    var maxSize=24,minSize=14;
+    el.style.fontSize=maxSize+'px';
+    while(el.scrollWidth>el.clientWidth&&maxSize>minSize){maxSize--;el.style.fontSize=maxSize+'px';}
   });
 }
 
-const pronunciationOverrides = {
-  'வெள்ளை': 'வெள் ளை',
-  'வாழை': 'வா ழை',
-  'காற்று': 'கா ற்று',
-  'அ': 'u', 'ஆ': 'ah', 'இ': 'i', 'ஈ': 'ee',
-  'உ': 'உ', 'ஊ': 'ஊ', 'எ': 'eh', 'ஏ': 'ஏ',
-  'ஐ': 'eye', 'ஒ': 'oh', 'ஓ': 'ooh', 'ஔ': 'ஔ'
+var pronunciationOverrides={
+  'வெள்ளை':'வெள் ளை','வாழை':'வா ழை','காற்று':'கா ற்று',
+  'அ':'u','ஆ':'ah','இ':'i','ஈ':'ee',
+  'உ':'உ','ஊ':'ஊ','எ':'eh','ஏ':'ஏ',
+  'ஐ':'eye','ஒ':'oh','ஓ':'ooh','ஔ':'ஔ'
 };
 
 function fixTamilPronunciation(text){
-  if(pronunciationOverrides[text]){
-    return pronunciationOverrides[text];
-  }
-
-  return text
-    .replace(/ள்ள/g, 'ள் ள')
-    .replace(/ற்ற/g, 'ற் ற')
-    .replace(/ழ/g, 'ழ் ')
-    .replace(/ற/g, 'ற் ')
-    .replace(/\s+/g, ' ')
-    .trim();
+  if(pronunciationOverrides[text])return pronunciationOverrides[text];
+  return text.replace(/ள்ள/g,'ள் ள').replace(/ற்ற/g,'ற் ற').replace(/ழ/g,'ழ் ').replace(/ற/g,'ற் ').replace(/\s+/g,' ').trim();
 }
 
-function speakTamil(text, btn){
-  if(!text) return;
-
-  const processed = pronunciationOverrides[text]
-    ? pronunciationOverrides[text]
-    : text.length <= 2 ? text : fixTamilPronunciation(text);
-  const utter = new SpeechSynthesisUtterance(processed);
-
-  utter.lang = 'ta-IN';
-  utter.rate = 0.9;
-
-  const voices = speechSynthesis.getVoices();
-  const tamilVoice = voices.find(v => v.lang === 'ta-IN');
-  if(tamilVoice) utter.voice = tamilVoice;
-
-  if(btn){
-    btn.classList.add('speaking');
-  }
-
-  utter.onend = function(){
-    if(btn){
-      btn.classList.remove('speaking');
-    }
-  };
-
-  utter.onerror = function(){
-    if(btn){
-      btn.classList.remove('speaking');
-    }
-  };
-
+function speakTamil(text,btn){
+  if(!text)return;
+  var processed=pronunciationOverrides[text]?pronunciationOverrides[text]:text.length<=2?text:fixTamilPronunciation(text);
+  var utter=new SpeechSynthesisUtterance(processed);
+  utter.lang='ta-IN';
+  utter.rate=0.9;
+  var voices=speechSynthesis.getVoices();
+  var tamilVoice=voices.find(function(v){return v.lang==='ta-IN';});
+  if(tamilVoice)utter.voice=tamilVoice;
+  if(btn)btn.classList.add('speaking');
+  utter.onend=function(){if(btn)btn.classList.remove('speaking');};
+  utter.onerror=function(){if(btn)btn.classList.remove('speaking');};
   speechSynthesis.cancel();
-
   speechSynthesis.speak(utter);
 }
-window.speechSynthesis && window.speechSynthesis.getVoices();
+window.speechSynthesis&&window.speechSynthesis.getVoices();
 
 renderLetters();
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
     navigator.serviceWorker.register('./sw.js')
-      .then(function(reg) { console.log('SW registered:', reg.scope); })
-      .catch(function(err) { console.log('SW registration failed:', err); });
+      .then(function(reg){console.log('SW registered:',reg.scope);})
+      .catch(function(err){console.log('SW registration failed:',err);});
   });
 }
 </script>
