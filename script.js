@@ -169,11 +169,6 @@ function handleChatAttachment(input){
 
   });
 }
-  compressImage(file,function(base64,mediaType,previewUrl){
-    chatAttachments.push({type:'image',base64:base64,mediaType:mediaType,name:file.name,previewUrl:previewUrl});
-    renderAttachmentPreviews();
-  });
-}
 
 function handleChatPaste(e){
   var items=e.clipboardData&&e.clipboardData.items;if(!items)return;
