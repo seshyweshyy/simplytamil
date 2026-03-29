@@ -1,0 +1,27 @@
+{
+  "name": "SimplyTamil — Learn the Language",
+  "short_name": "SimplyTamil",
+  "description": "Learn Tamil script, vocabulary, phrases and grammar — with an AI tutor.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0d0d12",
+  "theme_color": "#c084fc",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "images/mainicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/mainicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "lifestyle"],
+  "lang": "en",
+  "dir": "ltr"
+}
