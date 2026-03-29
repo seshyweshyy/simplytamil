@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="auth.css">
+<script src="auth.js" defer></script>
 <script src="script.js" defer></script>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,6 +19,64 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;700&family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     AUTH MODAL  (hidden by default, opened by profile icon)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="auth-modal-overlay" id="auth-modal-overlay" onclick="if(event.target===this)closeAuthModal()">
+  <div class="auth-card">
+    <button class="auth-card-close" onclick="closeAuthModal()">×</button>
+
+    <!-- Logo -->
+    <div class="auth-logo-strip">
+      <div class="auth-logo-mark">Simply<span>தமிழ்</span></div>
+    </div>
+
+    <!-- Context nudge (shown when triggered by a saveable action) -->
+    <div class="auth-nudge-msg" id="auth-nudge-msg"></div>
+
+    <h2 class="auth-modal-title" id="auth-modal-title">Welcome Back</h2>
+
+    <div class="auth-error-msg" id="auth-error-msg"></div>
+
+    <!-- Name field (signup only) -->
+    <div class="auth-field" id="auth-name-field" style="display:none">
+      <label class="auth-label">Display Name</label>
+      <input id="auth-name-input" type="text" class="auth-input"
+        placeholder="What should we call you?"
+        autocomplete="name"
+        onkeydown="if(event.key==='Enter')document.getElementById('auth-email-input').focus()">
+    </div>
+
+    <div class="auth-field">
+      <label class="auth-label">Email</label>
+      <input id="auth-email-input" type="email" class="auth-input"
+        placeholder="you@example.com"
+        autocomplete="email"
+        onkeydown="if(event.key==='Enter')document.getElementById('auth-password-input').focus()">
+    </div>
+
+    <div class="auth-field">
+      <label class="auth-label">Password</label>
+      <input id="auth-password-input" type="password" class="auth-input"
+        placeholder="••••••••"
+        autocomplete="current-password"
+        onkeydown="if(event.key==='Enter')handleAuthSubmit()">
+    </div>
+
+    <button id="auth-submit-btn" class="auth-submit-btn" onclick="handleAuthSubmit()">
+      Log In
+    </button>
+
+    <p class="auth-toggle-text" id="auth-toggle-text">
+      New here? <a onclick="setAuthMode('signup')" href="#">Create account</a>
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     NAV
+     ═══════════════════════════════════════════════════════════ -->
 <nav>
   <div class="logo">Simply <span>தமிழ்</span></div>
   <div class="nav-tabs">
@@ -28,8 +88,24 @@
     <button class="nav-tab" onclick="showSection('quiz')">Quiz</button>
     <button class="nav-tab" onclick="showSection('tutor')">AI Tutor</button>
   </div>
-  <div class="xp-badge" id="xp-display">0 XP</div>
+  <div class="nav-right">
+    <!-- Streak chip — shown by JS once streak > 0 -->
+    <div class="nav-streak-chip" id="nav-streak-chip"></div>
+    <!-- XP badge -->
+    <div class="xp-badge" id="xp-display">0 XP</div>
+    <!-- Profile icon — always visible -->
+    <button class="profile-icon-btn" id="profile-icon-btn"
+      onclick="onProfileIconClick()" title="Log in to save progress">
+      <!-- populated by auth.js -->
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none"
+        stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+      </svg>
+    </button>
+  </div>
 </nav>
+
 <main>
 <!-- HOME -->
 <div class="section active" id="section-home">
@@ -114,14 +190,10 @@
         <div class="chat-input-row-inner">
           <div class="attach-popup-wrap" id="attach-popup-wrap">
             <div id="attach-btn" class="attach-btn" onclick="toggleAttachMenu(event)">
-              <svg id="attach-icon" viewBox="0 0 24 24">
-                <path d="M12 5v14M5 12h14"/>
-              </svg>
+              <svg id="attach-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
             </div>
-            <!-- Menu items injected by JS depending on device type -->
             <div class="attach-menu" id="attach-menu" role="menu"></div>
           </div>
-          <!-- Three hidden inputs: image-only, any-file (desktop), camera (mobile) -->
           <input type="file" id="chat-file-input" accept="image/*" multiple style="display:none" onchange="handleChatAttachment(this)">
           <input type="file" id="chat-any-input" accept="image/*,application/pdf,.pdf" multiple style="display:none" onchange="handleChatAttachment(this)">
           <input type="file" id="chat-camera-input" accept="image/*" capture="environment" style="display:none" onchange="handleChatAttachment(this)">
@@ -136,6 +208,7 @@
   </div>
 </div>
 </main>
+
 <!-- LETTER MODAL -->
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
