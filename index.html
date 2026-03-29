@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 <link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="styles.css">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -123,7 +124,7 @@
           <input type="file" id="chat-file-input"   accept="image/*"                          style="display:none" onchange="handleChatAttachment(this)">
           <input type="file" id="chat-any-input"    accept="image/*,application/pdf,.pdf"     style="display:none" onchange="handleChatAttachment(this)">
           <input type="file" id="chat-camera-input" accept="image/*" capture="environment"    style="display:none" onchange="handleChatAttachment(this)">
-          <textarea class="chat-input" id="chat-input" placeholder="As\..." rows="1"
+          <textarea class="chat-input" id="chat-input" placeholder="Ask your Tamil tutor anything..." rows="1"
             onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"
             oninput="autoGrowTextarea(this)" onpaste="handleChatPaste(event)"></textarea>
           <button class="chat-send" id="chat-send" onclick="sendChat()">Send</button>
@@ -147,5 +148,6 @@
   </div>
 </div>
 <div class="xp-toast" id="xp-toast"></div>
+<script src="script.js"></script>
 </body>
 </html>
