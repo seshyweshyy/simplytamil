@@ -59,7 +59,12 @@ var _attachMenuOpen=false;
 
 (function buildAttachMenu(){
   var menu=document.getElementById('attach-menu');
-  var fileIcon='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+  var fileIcon = `
+<svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M21.44 11.05l-8.49 8.49a5 5 0 0 1-7.07-7.07l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.2 9.19a2 2 0 1 1-2.83-2.83l8.49-8.48"/>
+</svg>
+`;
 
   var btn=document.createElement('button');
   btn.className='attach-menu-item';btn.setAttribute('role','menuitem');
@@ -119,8 +124,51 @@ function compressImage(file,callback){
 }
 
 function handleChatAttachment(input){
-  var file=input.files[0];if(!file)return;input.value='';
-  if(!file.type.startsWith('image/')){appendChat('ai','⚠️ Only image files are supported for attachment.');return;}
+  var files = Array.from(input.files || []);
+  if(!files.length) return;
+  input.value = '';
+
+  files.forEach(function(file){
+
+    // IMAGE
+    if(file.type.startsWith('image/')){
+      compressImage(file,function(base64,mediaType,previewUrl){
+        chatAttachments.push({
+          type:'image',
+          base64:base64,
+          mediaType:mediaType,
+          name:file.name,
+          previewUrl:previewUrl
+        });
+        renderAttachmentPreviews();
+      });
+
+    // PDF
+    } else if(file.type === 'application/pdf'){
+      const reader = new FileReader();
+
+      reader.onload = function(e){
+        const base64 = e.target.result.split(',')[1];
+
+        chatAttachments.push({
+          type:'document',
+          base64:base64,
+          mediaType:'application/pdf',
+          name:file.name,
+          previewUrl:null
+        });
+
+        renderAttachmentPreviews();
+      };
+
+      reader.readAsDataURL(file);
+
+    } else {
+      appendChat('ai','⚠️ Only images or PDF files are supported.');
+    }
+
+  });
+}
   compressImage(file,function(base64,mediaType,previewUrl){
     chatAttachments.push({type:'image',base64:base64,mediaType:mediaType,name:file.name,previewUrl:previewUrl});
     renderAttachmentPreviews();
@@ -136,7 +184,23 @@ function renderAttachmentPreviews(){
   var preview=document.getElementById('chat-attachment-preview');
   if(!chatAttachments.length){preview.classList.remove('has-items');preview.innerHTML='';return;}
   preview.classList.add('has-items');
-  preview.innerHTML=chatAttachments.map(function(a,i){return '<div class="chat-attach-thumb"><img src="'+a.previewUrl+'" alt="attachment"><button class="remove-attach" onclick="removeAttachment('+i+')" aria-label="Remove">×</button></div>';}).join('');
+  preview.innerHTML = chatAttachments.map(function(a,i){
+  if(a.type === 'image'){
+    return `
+      <div class="chat-attach-thumb">
+        <img src="${a.previewUrl}">
+        <button class="remove-attach" onclick="removeAttachment(${i})">×</button>
+      </div>
+    `;
+  } else {
+    return `
+      <div class="chat-attach-thumb" style="display:flex;align-items:center;justify-content:center;font-size:10px;text-align:center;padding:4px;">
+        📄 ${a.name}
+        <button class="remove-attach" onclick="removeAttachment(${i})">×</button>
+      </div>
+    `;
+  }
+}).join('');
 }
 function removeAttachment(i){chatAttachments.splice(i,1);renderAttachmentPreviews();}
 
@@ -145,7 +209,19 @@ function sendChat(){
   if(!msg&&!chatAttachments.length)return;
   var sendBtn=document.getElementById('chat-send');
   var userContent=[];
-  chatAttachments.forEach(function(a){userContent.push({type:'image',source:{type:'base64',media_type:a.mediaType,data:a.base64}});});
+  chatAttachments.forEach(function(a){
+  if(a.type === 'image'){
+    userContent.push({
+      type:'image',
+      source:{type:'base64',media_type:a.mediaType,data:a.base64}
+    });
+  } else {
+    userContent.push({
+      type:'document',
+      source:{type:'base64',media_type:a.mediaType,data:a.base64}
+    });
+  }
+});
   if(msg)userContent.push({type:'text',text:msg});
   if(!userContent.length)return;
   var userDisplayParts=[];
