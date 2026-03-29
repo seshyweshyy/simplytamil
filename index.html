@@ -142,7 +142,11 @@ main{flex:1;padding:2rem;max-width:960px;margin:0 auto;width:100%}
 .quiz-type-card h4{font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.95rem;margin-bottom:0.25rem}
 .quiz-type-card p{font-size:0.8rem;color:var(--text2)}
 /* AI TUTOR */
-.tutor-wrap{display:flex;flex-direction:column;height:calc(100vh - 160px);max-width:700px;margin:0 auto}
+.tutor-wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 .chat-msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:0.75rem;padding-bottom:1rem;min-height:0}
 .chat-msg{max-width:80%;padding:0.8rem 1rem;border-radius:14px;font-size:0.9rem;line-height:1.6}
 .chat-msg.ai{background:var(--surface);border:1px solid var(--border);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px}
@@ -199,6 +203,34 @@ main{flex:1;padding:2rem;max-width:960px;margin:0 auto;width:100%}
   .chat-input{font-size:16px}.modal{padding:1.25rem;border-radius:16px}.modal-tamil{font-size:3.5rem}
   .section-header h2{font-size:1.4rem}.grammar-rule{padding:0.75rem}.score-circle{width:80px;height:80px;font-size:1.4rem}
   .attach-menu{min-width:160px}
+  /* Fix chat input positioning for mobile */
+  .chat-input-area {
+    position: sticky;
+    bottom: 0;
+    background: var(--bg);
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 50;
+  }
+
+  /* Ensure tutor takes full height */
+  #section-tutor {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  /* Make messages scroll properly */
+  .tutor-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .chat-msgs {
+    flex: 1;
+    overflow-y: auto;
+  }
 }
 </style>
 </head>
@@ -560,6 +592,26 @@ function speakTamil(text,btn){if(!text)return;var processed=pronunciationOverrid
 window.speechSynthesis&&window.speechSynthesis.getVoices();
 renderLetters();
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').then(function(reg){console.log('SW registered:',reg.scope);}).catch(function(err){console.log('SW registration failed:',err);});});}
+/* Mobile keyboard fix */
+(function () {
+  const inputArea = document.querySelector('.chat-input-area');
+
+  if (!window.visualViewport) return;
+
+  function adjustForKeyboard() {
+    const viewport = window.visualViewport;
+    const offset = window.innerHeight - viewport.height - viewport.offsetTop;
+
+    if (offset > 0) {
+      inputArea.style.transform = `translateY(-${offset}px)`;
+    } else {
+      inputArea.style.transform = 'translateY(0)';
+    }
+  }
+
+  window.visualViewport.addEventListener('resize', adjustForKeyboard);
+  window.visualViewport.addEventListener('scroll', adjustForKeyboard);
+})();
 </script>
 </body>
 </html>
