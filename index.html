@@ -395,34 +395,15 @@ var chatHistory=[];
 var chatAttachments=[];
 var _attachMenuOpen=false;
 
-/* ── Build popup menu based on device ────────────────────────────────────
-   Desktop : "Upload image"  +  "Upload file"
-   Mobile  : "Upload image"  +  "Take photo"
-   ──────────────────────────────────────────────────────────────────────── */
 (function buildAttachMenu(){
   var menu=document.getElementById('attach-menu');
-  var imgIcon='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
-  var camIcon='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>';
   var fileIcon='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
 
-  // Row 1 — always "Upload image"
-  var btn1=document.createElement('button');
-  btn1.className='attach-menu-item';btn1.setAttribute('role','menuitem');
-  btn1.innerHTML=imgIcon+' Upload image';
-  btn1.onclick=function(){pickFile('image/*','img');};
-  menu.appendChild(btn1);
-
-  // Row 2 — "Take photo" on mobile, "Upload file" on desktop
-  var btn2=document.createElement('button');
-  btn2.className='attach-menu-item';btn2.setAttribute('role','menuitem');
-  if(IS_MOBILE){
-    btn2.innerHTML=camIcon+' Take photo';
-    btn2.onclick=function(){pickFile('image/*','cam');};
-  } else {
-    btn2.innerHTML=fileIcon+' Upload file';
-    btn2.onclick=function(){pickFile('image/*,application/pdf,.pdf','any');};
-  }
-  menu.appendChild(btn2);
+  var btn=document.createElement('button');
+  btn.className='attach-menu-item';btn.setAttribute('role','menuitem');
+  btn.innerHTML=fileIcon+' Upload file or photo';
+  btn.onclick=function(){pickFile('image/*,application/pdf,.pdf','any');};
+  menu.appendChild(btn);
 })();
 
 function toggleAttachMenu(e){
