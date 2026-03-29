@@ -378,3 +378,25 @@
   .save-nudge-banner { bottom: 5rem; border-radius: 12px; }
   .nav-streak-chip { display: none; }
 }
+
+.auth-google-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.68rem;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.auth-google-btn:hover {
+  border-color: #4285F4;
+  background: var(--surface3);
+}

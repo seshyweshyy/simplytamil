@@ -376,3 +376,12 @@ function _showToast(msg) {
   t.textContent = msg; t.style.display = 'block';
   setTimeout(() => { t.style.display = 'none'; t.textContent = prev; }, 2200);
 }
+
+async function handleGoogleSignIn() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  try {
+    await _auth.signInWithPopup(provider);
+  } catch (e) {
+    setAuthError('Google sign-in failed. Please try again.');
+  }
+}
