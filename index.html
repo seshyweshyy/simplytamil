@@ -311,7 +311,7 @@ main{flex:1;padding:2rem;max-width:960px;margin:0 auto;width:100%}
           <input type="file" id="chat-file-input"   accept="image/*"                          style="display:none" onchange="handleChatAttachment(this)">
           <input type="file" id="chat-any-input"    accept="image/*,application/pdf,.pdf"     style="display:none" onchange="handleChatAttachment(this)">
           <input type="file" id="chat-camera-input" accept="image/*" capture="environment"    style="display:none" onchange="handleChatAttachment(this)">
-          <textarea class="chat-input" id="chat-input" placeholder="Asg..." rows="1"
+          <textarea class="chat-input" id="chat-input" placeholder="Ask your Tamil tutor anything..." rows="1"
             onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"
             oninput="autoGrowTextarea(this)" onpaste="handleChatPaste(event)"></textarea>
           <button class="chat-send" id="chat-send" onclick="sendChat()">Send</button>
