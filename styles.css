@@ -154,9 +154,9 @@ main{flex:1;padding:2rem;max-width:960px;margin:0 auto;width:100%}
 .chat-attach-btn{background:none;border:1px solid var(--border2);border-radius:8px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text3);transition:all 0.15s;flex-shrink:0}
 .chat-attach-btn:hover{background:var(--surface2);border-color:var(--accent);color:var(--accent)}
 .chat-attach-btn.active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent)}
-.attach-menu{position:absolute;bottom:calc(100% + 8px);left:0;background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:6px;min-width:180px;box-shadow:0 8px 32px rgba(0,0,0,0.5);z-index:200;opacity:0;transform:translateY(6px) scale(0.97);pointer-events:none;transition:opacity 0.15s ease,transform 0.15s ease;transform-origin:bottom left}
+.attach-menu{position:absolute;bottom:calc(100% + 8px);left:0;background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:6px;min-width:240px;box-shadow:0 8px 32px rgba(0,0,0,0.5);z-index:200;opacity:0;transform:translateY(6px) scale(0.97);pointer-events:none;transition:opacity 0.15s ease,transform 0.15s ease;transform-origin:bottom left}
 .attach-menu.open{opacity:1;transform:translateY(0) scale(1);pointer-events:all}
-.attach-menu-item{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.88rem;padding:9px 12px;border-radius:8px;cursor:pointer;text-align:left;transition:background 0.12s}
+.attach-menu-item{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.88rem;padding:10px 14px;white-space:nowrap;border-radius:8px;cursor:pointer;text-align:left;transition:background 0.12s}
 .attach-menu-item:hover{background:var(--surface2)}
 .attach-menu-item svg{flex-shrink:0;color:var(--text2)}
 .quick-prompts{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.75rem}
@@ -186,28 +186,33 @@ main{flex:1;padding:2rem;max-width:960px;margin:0 auto;width:100%}
   .chat-msg{max-width:92%}.quick-prompts{gap:0.35rem}.quick-prompt-btn{font-size:0.72rem;padding:0.3rem 0.6rem}
   .chat-input{font-size:16px}.modal{padding:1.25rem;border-radius:16px}.modal-tamil{font-size:3.5rem}
   .section-header h2{font-size:1.4rem}.grammar-rule{padding:0.75rem}.score-circle{width:80px;height:80px;font-size:1.4rem}
-  .attach-menu{min-width:160px}
-  /* Fix chat input positioning for mobile */
-  .chat-input-area {
-    position: sticky;
-    bottom: 0;
-    background: var(--bg);
-    padding-bottom: env(safe-area-inset-bottom);
-    z-index: 50;
+  .attach-menu{min-width:200px}
+  .attach-menu-item{
+    white-space: nowrap;
+    padding: 9px 12px;
   }
-  
-  /* Make messages scroll properly */
-  .tutor-wrap {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
+}
+/* Fix chat input positioning for mobile */
+.chat-input-area {
+position: sticky;
+bottom: 0;
+background: var(--bg);
+padding-bottom: env(safe-area-inset-bottom);
+z-index: 50;
+}
 
-  .chat-msgs {
-    flex: 1;
-    overflow-y: auto;
-  }
+/* Make messages scroll properly */
+.tutor-wrap {
+flex: 1;
+display: flex;
+flex-direction: column;
+height: 100%;
+}
+
+.chat-msgs {
+flex: 1;
+overflow-y: auto;
+}
 
 #section-tutor.active {
   display: flex;
