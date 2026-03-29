@@ -234,3 +234,108 @@ overflow-y: auto;
   color:var(--text2);
   cursor:pointer;
 }
+
+.attach-modal-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:12px;
+}
+
+.attach-modal-item{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:8px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.attach-modal-item img{
+  width:100%;
+  height:110px;
+  object-fit:cover;
+  border-radius:8px;
+}
+
+.attach-modal-item.pdf{
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.pdf-icon{
+  font-size:32px;
+}
+
+.pdf-name{
+  font-size:0.7rem;
+  color:var(--text2);
+  word-break:break-word;
+}
+
+.attach-remove-btn{
+  background:var(--red-bg);
+  border:1px solid var(--red);
+  color:var(--red);
+  border-radius:6px;
+  padding:4px;
+  font-size:0.7rem;
+  cursor:pointer;
+}
+
+.attach-remove-btn:hover{
+  background:var(--red);
+  color:#000;
+}
+
+.chat-upload-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(80px,1fr));
+  gap:6px;
+  margin-bottom:6px;
+  max-width:240px;
+}
+
+.chat-upload-grid img{
+  width:100%;
+  height:70px;
+  object-fit:cover;
+  border-radius:6px;
+}
+
+.chat-pdf-pill{
+  font-size:0.65rem;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:4px;
+}
+
+.preview-img{
+  width:100%;
+  max-height:70vh;
+  object-fit:contain;
+  border-radius:12px;
+}
+
+.pdf-preview-wrap iframe{
+  width:100%;
+  height:75vh;
+  border:none;
+  border-radius:10px;
+}
+
+@media(max-width:640px){
+  .pdf-preview-wrap iframe{
+    height:55vh;
+  }
+}
+
+.chat-attach-thumb.pdf{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  background:var(--surface2);
+}

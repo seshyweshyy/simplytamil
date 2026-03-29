@@ -101,7 +101,8 @@ function pickFile(accept,mode){
     input=document.getElementById('chat-file-input');
     input.accept=accept;
   }
-  input.click();
+  input.value = null;
+  setTimeout(()=>input.click(), 0);
 }
 
 function compressImage(file,callback){
@@ -128,7 +129,7 @@ function handleChatAttachment(input){
   if(!files.length) return;
   input.value = '';
 
-  files.forEach(function(file){
+  files.forEach(function(file, index){
 
     // IMAGE
     if(file.type.startsWith('image/')){
@@ -140,7 +141,9 @@ function handleChatAttachment(input){
           name:file.name,
           previewUrl:previewUrl
         });
-        renderAttachmentPreviews();
+        if(index === files.length - 1){
+         renderAttachmentPreviews();
+}
       });
 
     // PDF
@@ -190,6 +193,16 @@ function renderAttachmentPreviews(){
   const visible = chatAttachments.slice(0, MAX_VISIBLE);
   const remaining = chatAttachments.length - MAX_VISIBLE;
 
+  const pdfIcon = `
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7z"/>
+    <path d="M14 2v5h5"/>
+    <path d="M9 15h6"/>
+    <path d="M9 11h6"/>
+  </svg>
+  `;
+
   preview.innerHTML = visible.map(function(a,i){
     if(a.type === 'image'){
       return `
@@ -200,11 +213,11 @@ function renderAttachmentPreviews(){
       `;
     } else {
       return `
-        <div class="chat-attach-thumb" onclick="openAttachmentPreview(${i})" style="display:flex;align-items:center;justify-content:center;font-size:10px;text-align:center;padding:4px;">
-          📄 ${a.name}
+        <div class="chat-attach-thumb pdf" onclick="openAttachmentPreview(${i})">
+          ${pdfIcon}
           <button class="remove-attach" onclick="event.stopPropagation();removeAttachment(${i})">×</button>
         </div>
-      `;
+`;
     }
   }).join('');
 
@@ -240,7 +253,17 @@ function sendChat(){
   if(msg)userContent.push({type:'text',text:msg});
   if(!userContent.length)return;
   var userDisplayParts=[];
-  chatAttachments.forEach(function(a){userDisplayParts.push('<img src="'+a.previewUrl+'" style="max-width:200px;max-height:150px;border-radius:8px;display:block;margin-bottom:4px">');});
+  userDisplayParts.push(`
+    <div class="chat-upload-grid">
+      ${chatAttachments.map(a=>{
+        if(a.type==='image'){
+          return `<img src="${a.previewUrl}">`;
+        } else {
+          return `<div class="chat-pdf-pill">📄 ${a.name}</div>`;
+        }
+      }).join('')}
+    </div>
+  `);
   if(msg)userDisplayParts.push(msg.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'));
   var userDiv=document.createElement('div');userDiv.className='chat-msg user';userDiv.innerHTML=userDisplayParts.join('');
   document.getElementById('chat-msgs').appendChild(userDiv);
@@ -340,12 +363,11 @@ function openAttachmentPreview(index){
   const content = document.getElementById('attachment-modal-content');
 
   if(a.type === 'image'){
-    content.innerHTML = `<img src="${a.previewUrl}" style="width:100%;border-radius:12px;">`;
+    content.innerHTML = `<img src="${a.previewUrl}" class="preview-img">`;
   } else {
     content.innerHTML = `
-      <div style="text-align:center">
-        <p style="margin-bottom:10px">📄 ${a.name}</p>
-        <iframe src="data:application/pdf;base64,${a.base64}" style="width:100%;height:400px;border:none;border-radius:8px;"></iframe>
+      <div class="pdf-preview-wrap">
+        <iframe src="data:application/pdf;base64,${a.base64}"></iframe>
       </div>
     `;
   }
@@ -361,23 +383,28 @@ function openAllAttachmentsModal(){
   const modal = document.getElementById('attachment-modal');
   const content = document.getElementById('attachment-modal-content');
 
-  content.innerHTML = chatAttachments.map(function(a,i){
-    if(a.type === 'image'){
-      return `
-        <div style="margin-bottom:10px">
-          <img src="${a.previewUrl}" style="width:100%;border-radius:8px;">
-          <button onclick="removeAttachment(${i});openAllAttachmentsModal()" style="margin-top:5px">Remove</button>
-        </div>
-      `;
-    } else {
-      return `
-        <div style="margin-bottom:10px">
-          <p>📄 ${a.name}</p>
-          <button onclick="removeAttachment(${i});openAllAttachmentsModal()">Remove</button>
-        </div>
-      `;
-    }
-  }).join('');
+  content.innerHTML = `
+    <div class="attach-modal-grid">
+      ${chatAttachments.map(function(a,i){
+        if(a.type === 'image'){
+          return `
+            <div class="attach-modal-item">
+              <img src="${a.previewUrl}">
+              <button class="attach-remove-btn" onclick="removeAttachment(${i});openAllAttachmentsModal()">Remove</button>
+            </div>
+          `;
+        } else {
+          return `
+            <div class="attach-modal-item pdf">
+              <div class="pdf-icon">📄</div>
+              <div class="pdf-name">${a.name}</div>
+              <button class="attach-remove-btn" onclick="removeAttachment(${i});openAllAttachmentsModal()">Remove</button>
+            </div>
+          `;
+        }
+      }).join('')}
+    </div>
+  `;
 
   modal.classList.add('open');
 }
