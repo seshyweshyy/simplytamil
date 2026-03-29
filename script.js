@@ -177,25 +177,45 @@ function handleChatPaste(e){
 
 function renderAttachmentPreviews(){
   var preview=document.getElementById('chat-attachment-preview');
-  if(!chatAttachments.length){preview.classList.remove('has-items');preview.innerHTML='';return;}
+
+  if(!chatAttachments.length){
+    preview.classList.remove('has-items');
+    preview.innerHTML='';
+    return;
+  }
+
   preview.classList.add('has-items');
-  preview.innerHTML = chatAttachments.map(function(a,i){
-  if(a.type === 'image'){
-    return `
-      <div class="chat-attach-thumb">
-        <img src="${a.previewUrl}">
-        <button class="remove-attach" onclick="removeAttachment(${i})">×</button>
-      </div>
-    `;
-  } else {
-    return `
-      <div class="chat-attach-thumb" style="display:flex;align-items:center;justify-content:center;font-size:10px;text-align:center;padding:4px;">
-        📄 ${a.name}
-        <button class="remove-attach" onclick="removeAttachment(${i})">×</button>
+
+  const MAX_VISIBLE = 3; // adjust if you want
+  const visible = chatAttachments.slice(0, MAX_VISIBLE);
+  const remaining = chatAttachments.length - MAX_VISIBLE;
+
+  preview.innerHTML = visible.map(function(a,i){
+    if(a.type === 'image'){
+      return `
+        <div class="chat-attach-thumb" onclick="openAttachmentPreview(${i})">
+          <img src="${a.previewUrl}">
+          <button class="remove-attach" onclick="event.stopPropagation();removeAttachment(${i})">×</button>
+        </div>
+      `;
+    } else {
+      return `
+        <div class="chat-attach-thumb" onclick="openAttachmentPreview(${i})" style="display:flex;align-items:center;justify-content:center;font-size:10px;text-align:center;padding:4px;">
+          📄 ${a.name}
+          <button class="remove-attach" onclick="event.stopPropagation();removeAttachment(${i})">×</button>
+        </div>
+      `;
+    }
+  }).join('');
+
+  // overflow badge
+  if(remaining > 0){
+    preview.innerHTML += `
+      <div class="chat-attach-overflow" onclick="openAllAttachmentsModal()">
+        +${remaining}
       </div>
     `;
   }
-}).join('');
 }
 function removeAttachment(i){chatAttachments.splice(i,1);renderAttachmentPreviews();}
 
@@ -313,3 +333,51 @@ if('serviceWorker' in navigator){window.addEventListener('load',function(){navig
   window.visualViewport.addEventListener('resize', adjustForKeyboard);
   window.visualViewport.addEventListener('scroll', adjustForKeyboard);
 })();
+
+function openAttachmentPreview(index){
+  const a = chatAttachments[index];
+  const modal = document.getElementById('attachment-modal');
+  const content = document.getElementById('attachment-modal-content');
+
+  if(a.type === 'image'){
+    content.innerHTML = `<img src="${a.previewUrl}" style="width:100%;border-radius:12px;">`;
+  } else {
+    content.innerHTML = `
+      <div style="text-align:center">
+        <p style="margin-bottom:10px">📄 ${a.name}</p>
+        <iframe src="data:application/pdf;base64,${a.base64}" style="width:100%;height:400px;border:none;border-radius:8px;"></iframe>
+      </div>
+    `;
+  }
+
+  modal.classList.add('open');
+}
+
+function closeAttachmentModal(){
+  document.getElementById('attachment-modal').classList.remove('open');
+}
+
+function openAllAttachmentsModal(){
+  const modal = document.getElementById('attachment-modal');
+  const content = document.getElementById('attachment-modal-content');
+
+  content.innerHTML = chatAttachments.map(function(a,i){
+    if(a.type === 'image'){
+      return `
+        <div style="margin-bottom:10px">
+          <img src="${a.previewUrl}" style="width:100%;border-radius:8px;">
+          <button onclick="removeAttachment(${i});openAllAttachmentsModal()" style="margin-top:5px">Remove</button>
+        </div>
+      `;
+    } else {
+      return `
+        <div style="margin-bottom:10px">
+          <p>📄 ${a.name}</p>
+          <button onclick="removeAttachment(${i});openAllAttachmentsModal()">Remove</button>
+        </div>
+      `;
+    }
+  }).join('');
+
+  modal.classList.add('open');
+}

@@ -219,4 +219,18 @@ overflow-y: auto;
   flex-direction: column;
   height: 100dvh; /* better for mobile than 100vh */
 }
+
+/* Attachment overflow badge */
+.chat-attach-overflow {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-width:52px;
+  height:52px;
+  border-radius:8px;
+  border:1px solid var(--border2);
+  background:var(--surface2);
+  font-size:0.75rem;
+  color:var(--text2);
+  cursor:pointer;
 }
