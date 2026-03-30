@@ -268,9 +268,9 @@ const _nudgeMessages = {
 };
 
 function triggerSaveNudge(type) {
-  if (_currentUser) return;              // already logged in
+  if (_currentUser) return;
   _nudgeCount++;
-  if (_nudgeCount > 4) return;           // don't spam
+  if (_nudgeCount > 4) return;
 
   const msg = _nudgeMessages[type] || "Log in to save your progress";
   let banner = document.getElementById('save-nudge-banner');
@@ -281,11 +281,19 @@ function triggerSaveNudge(type) {
     document.body.appendChild(banner);
   }
   banner.innerHTML = `
-    <span class="snb-icon">☁️</span>
+    <span class="snb-icon">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+      </svg>
+    </span>
     <span class="snb-msg">${msg}</span>
-    <button class="snb-login" onclick="openAuthModal('${msg}');dismissNudge()">Log in</button>
+    <button class="snb-login">Log in</button>
     <button class="snb-dismiss" onclick="dismissNudge()">×</button>
   `;
+  banner.querySelector('.snb-login').addEventListener('click', () => {
+    openAuthModal(msg);
+    dismissNudge();
+  });
   banner.classList.add('visible');
   clearTimeout(_nudgeTimeout);
   _nudgeTimeout = setTimeout(dismissNudge, 7000);
