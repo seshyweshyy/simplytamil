@@ -293,7 +293,9 @@ function triggerSaveNudge(type) {
 
 function dismissNudge() {
   const b = document.getElementById('save-nudge-banner');
-  if (b) b.classList.remove('visible');
+  if (!b) return;
+  b.classList.remove('visible');
+  setTimeout(() => { if (b.parentNode) b.parentNode.removeChild(b); }, 400);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -356,16 +358,17 @@ function checkAndUpdateStreak() {
   const last      = localStorage.getItem('tamil_last_active');
   let   streak    = parseInt(localStorage.getItem('tamil_streak') || '0');
   const yesterday = new Date(Date.now() - 86_400_000).toDateString();
+  let   nudge     = false;
 
   if (last === today) { /* already counted */ }
-  else if (last === yesterday) { streak++; }
+  else if (last === yesterday) { streak++; nudge = true; }
   else { streak = 1; }
 
   localStorage.setItem('tamil_streak',      streak);
   localStorage.setItem('tamil_last_active', today);
   if (_currentUser) saveCloudProgress();
   if (typeof updateStreakDisplay === 'function') updateStreakDisplay();
-  if (streak > 1) triggerSaveNudge('streak');
+  if (nudge && streak > 1) triggerSaveNudge('streak');
   return streak;
 }
 
