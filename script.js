@@ -302,31 +302,12 @@ function appendChat(role,text){
 function scrollChat(){var c=document.getElementById('chat-msgs');c.scrollTop=c.scrollHeight;}
 function sendQuick(msg){document.getElementById('chat-input').value=msg;sendChat();}
 
-function showSection(id, fromPop){
+function showSection(id){
   document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active')});
   document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active')});
   document.getElementById('section-'+id).classList.add('active');
   document.querySelectorAll('.nav-tab').forEach(function(t){if(t.getAttribute('onclick').indexOf("'"+id+"'")>=0)t.classList.add('active');});
-  if(!fromPop) history.pushState({section:id}, '', '#'+id);
 }
-
-window.addEventListener('popstate', function(e){
-  var id = e.state && e.state.section ? e.state.section : 'home';
-  showSection(id, true);
-});
-
-// Handle page load with a hash (e.g. bookmarked URL or back to tab)
-(function(){
-  var hash = location.hash.replace('#','');
-  var valid = ['home','alphabet','vocab','phrases','grammar','quiz','tutor'];
-  var id = valid.indexOf(hash) >= 0 ? hash : 'home';
-  if(id === 'home') {
-    history.replaceState({section:'home'}, '', location.pathname);
-  } else {
-    history.replaceState({section:id}, '', '#'+id);
-    showSection(id, true);
-  }
-})();
 
 function speakerSVG(){return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10v4h3l4 3V7l-4 3H5z"/><path class="wave1" d="M16 9.5c0.8 0.8 0.8 3.5 0 5" style="opacity:0;transition:opacity 0.2s ease"/><path class="wave2" d="M18 7.5c1.8 1.8 1.8 7 0 9" style="opacity:0;transition:opacity 0.25s ease 0.07s"/></svg>';}
 function autoGrowTextarea(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,140)+'px';}
