@@ -407,24 +407,19 @@ function _showToast(msg) {
 async function handleGoogleSignIn() {
   const provider = new firebase.auth.GoogleAuthProvider();
   try {
-    await _auth.signInWithRedirect(provider);
-  } catch (e) {
-    setAuthError('Google sign-in failed. Please try again.');
-  }
-}
-
-// Handle the redirect result when the page loads back
-_auth && _auth.getRedirectResult && _auth.getRedirectResult().then(result => {
-  if (result && result.user) {
-    _currentUser = result.user;
-    loadCloudProgress().then(() => {
+    const result = await _auth.signInWithPopup(provider);
+    if (result.user) {
+      _currentUser = result.user;
+      await loadCloudProgress();
       closeAuthModal();
       _showToast('Signed in with Google ✓');
-    });
+    }
+  } catch (e) {
+    if (e.code !== 'auth/popup-closed-by-user') {
+      setAuthError('Google sign-in failed. Please try again.');
+    }
   }
-}).catch(e => {
-  if (e.code !== 'auth/no-auth-event') console.error(e);
-});
+}
 
 /* ═══════════════════════════════════════════════════════════════
    CHAT HISTORY SAVE / LOAD
