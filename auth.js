@@ -22,12 +22,12 @@
    ============================================================ */
 
 const firebaseConfig = {
-  apiKey:            "AIzaSyC8Nq80jtvSIhD3twz__tUHrbaGUZx7xio",
-  authDomain:        "simplytamil-f8938.firebaseapp.com",
-  projectId:         "simplytamil-f8938",
-  storageBucket:     "simplytamil-f8938.firebasestorage.app",
+  apiKey: "AIzaSyC8Nq80jtvSIhD3twz__tUHrbaGUZx7xio",
+  authDomain: "simplytamil-f8938.firebaseapp.com",
+  projectId: "simplytamil-f8938",
+  storageBucket: "simplytamil-f8938.firebasestorage.app",
   messagingSenderId: "654137216348",
-  appId:             "1:654137216348:web:6f07de7521542619cf0599"
+  appId: "1:654137216348:web:6f07de7521542619cf0599"
 };
 
 /* ── Globals ─────────────────────────────────────────────────── */
