@@ -73,9 +73,12 @@ function updateProfileIcon() {
   const btn = document.getElementById('profile-icon-btn');
   if (!btn) return;
   if (_currentUser) {
+    const photoData = localStorage.getItem('tamil_photo_data') || '';
     const initial = (_currentUser.displayName || _currentUser.email || '?')
                       .slice(0, 1).toUpperCase();
-    btn.innerHTML = `<span class="pi-initials">${initial}</span>`;
+    btn.innerHTML = photoData
+      ? `<img src="${photoData}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+      : `<span class="pi-initials">${initial}</span>`;
     btn.classList.add('signed-in');
     btn.title = _currentUser.displayName || _currentUser.email;
   } else {
@@ -309,6 +312,7 @@ async function saveCloudProgress() {
     lastActive:     localStorage.getItem('tamil_last_active')             || '',
     displayName:    _currentUser.displayName || '',
     chatHistory: localStorage.getItem('tamil_save_chat') === 'false' ? [] : JSON.parse(localStorage.getItem('tamil_chat_history') || '[]'),
+    photoData: localStorage.getItem('tamil_photo_data') || '',
     updatedAt:      firebase.firestore.FieldValue.serverTimestamp()
   };
   await _db.collection('users').doc(_currentUser.uid).set(payload, { merge: true });
@@ -329,6 +333,7 @@ async function loadCloudProgress() {
   if (d.chatHistory) {
     localStorage.setItem('tamil_chat_history', JSON.stringify(d.chatHistory));
   }
+  if (d.photoData !== undefined) localStorage.setItem('tamil_photo_data', d.photoData);
   if (typeof loadChatHistory === 'function') loadChatHistory();
 
   // Push into live globals defined in script.js
@@ -460,7 +465,7 @@ function toggleChatHistorySetting(btn) {
 function openProfileSettings() {
   closeProfileDropdown();
   const name = _currentUser.displayName || '';
-  const photoURL = _currentUser.photoURL || '';
+  const photoURL = localStorage.getItem('tamil_photo_data') || '';
 
   const overlay = document.createElement('div');
   overlay.id = 'profile-settings-overlay';
@@ -550,7 +555,7 @@ async function removeProfilePhoto() {
 }
 
 async function saveProfileSettings() {
-  const name = document.getElementById('ps-name-input').value.trim();
+  const name  = document.getElementById('ps-name-input').value.trim();
   const errEl = document.getElementById('ps-error');
   const btn   = document.getElementById('ps-save-btn');
 
@@ -561,26 +566,34 @@ async function saveProfileSettings() {
   errEl.style.display = 'none';
 
   try {
-    let photoURL = _currentUser.photoURL || '';
+    // Get current photo stored in Firestore (not Firebase Auth)
+    const snap = await _db.collection('users').doc(_currentUser.uid).get();
+    let photoData = snap.exists ? (snap.data().photoData || '') : '';
 
-    // Handle photo — store as base64 in Firestore (simple approach for small images)
     if (window._pendingPhotoDataUrl) {
-      photoURL = window._pendingPhotoDataUrl;
+      photoData = window._pendingPhotoDataUrl;
       window._pendingPhotoDataUrl = null;
     } else if (window._removePhoto) {
-      photoURL = '';
+      photoData = '';
       window._removePhoto = false;
     }
 
-    await _currentUser.updateProfile({ displayName: name, photoURL });
+    // Only update displayName in Firebase Auth (no photoURL — avoid the URL restriction)
+    await _currentUser.updateProfile({ displayName: name });
+
+    // Store everything including photo in Firestore
     await _db.collection('users').doc(_currentUser.uid).set(
-      { displayName: name, photoURL }, { merge: true }
+      { displayName: name, photoData }, { merge: true }
     );
+
+    // Cache locally so the UI updates immediately
+    localStorage.setItem('tamil_photo_data', photoData);
 
     updateProfileIcon();
     closeProfileSettings();
     _showToast('Profile updated ✓');
   } catch(e) {
+    console.error(e);
     errEl.textContent = 'Failed to save. Please try again.';
     errEl.style.display = 'block';
     btn.disabled = false;
