@@ -146,6 +146,7 @@ var VOWELS=[
   }
 ];
 
+
 var CONSONANTS=[
   {
     t:'க',
@@ -335,6 +336,7 @@ var CONSONANTS=[
     ]
   }
 ];
+
 
 var NUMBERS=[{t:'௧',r:'ondru',name:'1 — one',guide:'Pronounced "on-dru".',words:[{t:'ஒன்று',r:'ondru',e:'one'}]},{t:'௨',r:'irandu',name:'2 — two',guide:'Pronounced "i-ran-du".',words:[{t:'இரண்டு',r:'irandu',e:'two'}]},{t:'௩',r:'moonru',name:'3 — three',guide:'Pronounced "mōon-ru".',words:[{t:'மூன்று',r:'mūnru',e:'three'}]},{t:'௪',r:'naangu',name:'4 — four',guide:'Pronounced "nāan-gu".',words:[{t:'நான்கு',r:'nāngu',e:'four'}]},{t:'௫',r:'aindu',name:'5 — five',guide:'Pronounced "ain-du".',words:[{t:'ஐந்து',r:'aindu',e:'five'}]},{t:'௬',r:'aaru',name:'6 — six',guide:'Pronounced "ā-ru".',words:[{t:'ஆறு',r:'āru',e:'six'}]},{t:'௭',r:'ezhu',name:'7 — seven',guide:'Pronounced "ē-zhu".',words:[{t:'ஏழு',r:'ēzhu',e:'seven'}]},{t:'௮',r:'ettu',name:'8 — eight',guide:'Pronounced "et-tu".',words:[{t:'எட்டு',r:'ettu',e:'eight'}]},{t:'௯',r:'onbadu',name:'9 — nine',guide:'Pronounced "on-ba-du".',words:[{t:'ஒன்பது',r:'onbadu',e:'nine'}]},{t:'௰',r:'pattu',name:'10 — ten',guide:'Pronounced "pat-tu".',words:[{t:'பத்து',r:'pattu',e:'ten'}]},{t:'௱',r:'nooru',name:'100 — hundred',guide:'Pronounced "nū-ru".',words:[{t:'நூறு',r:'nūru',e:'hundred'}]},{t:'௲',r:'aayiram',name:'1000 — thousand',guide:'Pronounced "ā-yi-ram".',words:[{t:'ஆயிரம்',r:'āyiram',e:'thousand'}]}];
 var PROPER_COMPOUNDS=[{t:'கா',r:'kā',name:'ka+ā',guide:'க + ா = கா.',words:[{t:'காடு',r:'kāḍu',e:'forest'},{t:'கால்',r:'kāl',e:'leg/foot'}]},{t:'கி',r:'ki',name:'ka+i',guide:'க + ி = கி.',words:[{t:'கிடை',r:'kiḍai',e:'to get/receive'}]},{t:'கீ',r:'kī',name:'ka+ī',guide:'க + ீ = கீ.',words:[{t:'கீழ்',r:'kīḻ',e:'below/down'}]},{t:'கு',r:'ku',name:'ka+u',guide:'க + ு = கு.',words:[{t:'குழந்தை',r:'kuḻandai',e:'child'}]},{t:'கூ',r:'kū',name:'ka+ū',guide:'க + ூ = கூ.',words:[{t:'கூட',r:'kūḍa',e:'together/also'}]},{t:'கெ',r:'ke',name:'ka+e',guide:'க + ெ = கெ.',words:[{t:'கெட்ட',r:'keṭṭa',e:'bad/spoiled'}]},{t:'கே',r:'kē',name:'ka+ē',guide:'க + ே = கே.',words:[{t:'கேள்',r:'kēḷ',e:'ask/listen'}]},{t:'கை',r:'kai',name:'ka+ai',guide:'க + ை = கை.',words:[{t:'கை',r:'kai',e:'hand'}]},{t:'கொ',r:'ko',name:'ka+o',guide:'க + ொ = கொ.',words:[{t:'கொடு',r:'koḍu',e:'give'}]},{t:'கோ',r:'kō',name:'ka+ō',guide:'க + ோ = கோ.',words:[{t:'கோயில்',r:'kōyil',e:'temple'}]},{t:'கௌ',r:'kau',name:'ka+au',guide:'க + ௌ = கௌ. Rare.',words:[]},{t:'சா',r:'cā',name:'ca+ā',guide:'ச + ா = சா.',words:[{t:'சாப்பாடு',r:'cāppāḍu',e:'food/meal'}]},{t:'சி',r:'ci',name:'ca+i',guide:'ச + ி = சி.',words:[]},{t:'சீ',r:'cī',name:'ca+ī',guide:'ச + ீ = சீ.',words:[]},{t:'சு',r:'cu',name:'ca+u',guide:'ச + ு = சு.',words:[]},{t:'நா',r:'nā',name:'na+ā',guide:'ந + ா = நா.',words:[{t:'நாடு',r:'nāḍu',e:'country'}]},{t:'நி',r:'ni',name:'na+i',guide:'ந + ி = நி.',words:[]},{t:'தா',r:'tā',name:'ta+ā',guide:'த + ா = தா.',words:[{t:'தாய்',r:'tāy',e:'mother'}]},{t:'வா',r:'vā',name:'va+ā',guide:'வ + ா = வா.',words:[{t:'வாழை',r:'vāḻai',e:'banana'}]},{t:'மா',r:'mā',name:'ma+ā',guide:'ம + ா = மா.',words:[{t:'மாம்பழம்',r:'māmpaḻam',e:'mango'}]},{t:'பா',r:'pā',name:'pa+ā',guide:'ப + ா = பா.',words:[{t:'பால்',r:'pāl',e:'milk'}]}];
