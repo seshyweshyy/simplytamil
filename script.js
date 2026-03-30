@@ -1,6 +1,7 @@
-var XP=parseInt(localStorage.getItem('tamil_xp')||0);
-var learnedLetters=JSON.parse(localStorage.getItem('tamil_learned')||'[]');
-var currentLetter=null;
+var XP = parseInt(localStorage.getItem('tamil_xp')||0);
+var learnedLetters = JSON.parse(localStorage.getItem('tamil_learned')||'[]');
+var currentLetter = null;
+
 function saveXP(){
   localStorage.setItem('tamil_xp',XP);
   document.getElementById('xp-display').textContent=XP+' XP';
@@ -12,8 +13,8 @@ function addXP(n){
   if(n>=5&&typeof triggerSaveNudge==='function')triggerSaveNudge('xp');
 }
 
-function showToast(msg)
-{var t=document.getElementById('xp-toast');
+function showToast(msg){
+  var t=document.getElementById('xp-toast');
   t.textContent=msg;t.style.display='block';setTimeout(function(){t.style.display='none'},2000);
 }
 document.getElementById('xp-display').textContent=XP+' XP';
@@ -26,7 +27,7 @@ document.getElementById('xp-display').textContent=XP+' XP';
 var IS_MOBILE = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
              || ('ontouchstart' in window && navigator.maxTouchPoints > 1);
 
-var VOWELS=[
+var VOWELS = [
   {
     t:'அ',
     r:'a',
@@ -147,7 +148,7 @@ var VOWELS=[
 ];
 
 
-var CONSONANTS=[
+var CONSONANTS = [
   {
     t:'க',
     r:'k/g',
