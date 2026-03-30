@@ -23,7 +23,7 @@
 
 const firebaseConfig = {
   apiKey:            "AIzaSyC8Nq80jtvSIhD3twz__tUHrbaGUZx7xio",
-  authDomain:        "seshyweshyy.com",
+  authDomain:        "simplytamil-f8938.firebaseapp.com",
   projectId:         "simplytamil-f8938",
   storageBucket:     "simplytamil-f8938.firebasestorage.app",
   messagingSenderId: "654137216348",

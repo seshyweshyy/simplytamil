@@ -320,8 +320,12 @@ window.addEventListener('popstate', function(e){
   var hash = location.hash.replace('#','');
   var valid = ['home','alphabet','vocab','phrases','grammar','quiz','tutor'];
   var id = valid.indexOf(hash) >= 0 ? hash : 'home';
-  history.replaceState({section:id}, '', '#'+id);
-  if(id !== 'home') showSection(id, true);
+  if(id === 'home') {
+    history.replaceState({section:'home'}, '', location.pathname);
+  } else {
+    history.replaceState({section:id}, '', '#'+id);
+    showSection(id, true);
+  }
 })();
 
 function speakerSVG(){return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10v4h3l4 3V7l-4 3H5z"/><path class="wave1" d="M16 9.5c0.8 0.8 0.8 3.5 0 5" style="opacity:0;transition:opacity 0.2s ease"/><path class="wave2" d="M18 7.5c1.8 1.8 1.8 7 0 9" style="opacity:0;transition:opacity 0.25s ease 0.07s"/></svg>';}
