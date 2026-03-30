@@ -417,3 +417,97 @@
   height: 1px;
   background: var(--border);
 }
+
+/* ── Profile Settings Modal ──────────────────────────────────── */
+.ps-avatar-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+.ps-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--accent-bg);
+  border: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.ps-avatar-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.ps-avatar-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  color: var(--text2);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.ps-avatar-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.ps-avatar-btn.danger {
+  color: var(--red);
+  border-color: rgba(248,113,113,0.25);
+}
+.ps-avatar-btn.danger:hover {
+  background: var(--red-bg);
+  border-color: var(--red);
+}
+
+/* ── Profile settings toggle ─────────────────────────────────── */
+.ps-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 0.85rem;
+}
+.ps-toggle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.ps-toggle-label {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text);
+}
+.ps-toggle-sub {
+  font-size: 0.72rem;
+  color: var(--text3);
+  line-height: 1.4;
+}
+.ps-toggle-btn {
+  flex-shrink: 0;
+  min-width: 46px;
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.ps-toggle-btn.off {
+  background: var(--surface3);
+  color: var(--text3);
+}

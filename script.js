@@ -265,7 +265,7 @@ function sendChat(){
       else if(errStr.indexOf('invalid_request')>=0)friendly='⚠️ The request was invalid — this image format may not be supported. Try a JPEG or PNG.';
       else if(errStr.indexOf('overloaded')>=0||errStr.indexOf('529')>=0)friendly='⚠️ The AI is busy right now. Please wait a moment and try again.';
       appendChat('ai',friendly);chatHistory.pop();
-    } else {chatHistory.push({role:'assistant',content:data.reply});appendChat('ai',data.reply);addXP(2);}
+    } else {chatHistory.push({role:'assistant',content:data.reply});appendChat('ai',data.reply);addXP(2);if(typeof saveChatHistory==='function')saveChatHistory();}
   })
   .catch(function(err){
     typingEl.remove();
@@ -329,6 +329,7 @@ function updateStreakDisplay() {
   }
 }
 updateStreakDisplay();
+if(typeof loadChatHistory==='function') loadChatHistory();
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(reg){console.log('SW registered:',reg.scope);}).catch(function(err){console.log('SW registration failed:',err);});});}
 /* Mobile keyboard fix */
 (function () {

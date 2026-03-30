@@ -205,7 +205,12 @@ function showProfileDropdown() {
   drop.className = 'profile-dropdown';
   drop.innerHTML = `
     <div class="pd-header">
-      <div class="pd-avatar">${name.slice(0,1).toUpperCase()}</div>
+      <div class="pd-avatar" style="${_currentUser.photoURL ? 'padding:0;overflow:hidden;' : ''}">
+        ${_currentUser.photoURL
+          ? `<img src="${_currentUser.photoURL}" style="width:100%;height:100%;object-fit:cover;">`
+          : name.slice(0,1).toUpperCase()
+        }
+      </div>
       <div class="pd-info">
         <div class="pd-name">${name}</div>
         <div class="pd-email">${_currentUser.email}</div>
@@ -218,6 +223,10 @@ function showProfileDropdown() {
     </div>
     <div class="pd-quiz-row">Best scores: ${bestStr}</div>
     <div class="pd-divider"></div>
+    <button class="pd-action-btn" onclick="openProfileSettings()">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      Edit profile
+    </button>
     <button class="pd-action-btn" onclick="saveCloudProgress().then(()=>{ closeProfileDropdown(); _showToast('Saved ✓'); })">
       <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
       Save progress now
@@ -299,6 +308,7 @@ async function saveCloudProgress() {
     streak:         parseInt(localStorage.getItem('tamil_streak')         || '0'),
     lastActive:     localStorage.getItem('tamil_last_active')             || '',
     displayName:    _currentUser.displayName || '',
+    chatHistory: localStorage.getItem('tamil_save_chat') === 'false' ? [] : JSON.parse(localStorage.getItem('tamil_chat_history') || '[]'),
     updatedAt:      firebase.firestore.FieldValue.serverTimestamp()
   };
   await _db.collection('users').doc(_currentUser.uid).set(payload, { merge: true });
@@ -316,6 +326,10 @@ async function loadCloudProgress() {
   setLS('tamil_quiz_best',      d.quizBest);
   setLS('tamil_streak',         d.streak);
   setLS('tamil_last_active',    d.lastActive);
+  if (d.chatHistory) {
+    localStorage.setItem('tamil_chat_history', JSON.stringify(d.chatHistory));
+  }
+  if (typeof loadChatHistory === 'function') loadChatHistory();
 
   // Push into live globals defined in script.js
   if (typeof XP !== 'undefined') {
@@ -397,3 +411,179 @@ _auth && _auth.getRedirectResult && _auth.getRedirectResult().then(result => {
 }).catch(e => {
   if (e.code !== 'auth/no-auth-event') console.error(e);
 });
+
+/* ═══════════════════════════════════════════════════════════════
+   CHAT HISTORY SAVE / LOAD
+   ═══════════════════════════════════════════════════════════════ */
+function saveChatHistory() {
+  if (localStorage.getItem('tamil_save_chat') === 'false') return;
+  const MAX_MSGS = 20;
+  const msgs = chatHistory.slice(-MAX_MSGS);
+  localStorage.setItem('tamil_chat_history', JSON.stringify(msgs));
+  if (_currentUser) saveCloudProgress();
+}
+
+function loadChatHistory() {
+  const saved = localStorage.getItem('tamil_chat_history');
+  if (!saved) return;
+  try {
+    const msgs = JSON.parse(saved);
+    if (!msgs.length) return;
+    chatHistory = msgs;
+    // Re-render saved messages in the UI
+    const container = document.getElementById('chat-msgs');
+    // Clear default welcome message
+    container.innerHTML = '';
+    msgs.forEach(m => {
+      if (typeof m.content === 'string') {
+        appendChat(m.role, m.content);
+      }
+    });
+  } catch(e) { console.error('Chat history load failed', e); }
+}
+
+function toggleChatHistorySetting(btn) {
+  const current = localStorage.getItem('tamil_save_chat') !== 'false';
+  const newVal = !current;
+  localStorage.setItem('tamil_save_chat', newVal ? 'true' : 'false');
+  btn.textContent = newVal ? 'On' : 'Off';
+  btn.classList.toggle('off', !newVal);
+  if (!newVal) {
+    // clear saved history when turning off
+    localStorage.removeItem('tamil_chat_history');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PROFILE SETTINGS
+   ═══════════════════════════════════════════════════════════════ */
+function openProfileSettings() {
+  closeProfileDropdown();
+  const name = _currentUser.displayName || '';
+  const photoURL = _currentUser.photoURL || '';
+
+  const overlay = document.createElement('div');
+  overlay.id = 'profile-settings-overlay';
+  overlay.className = 'auth-modal-overlay open';
+  overlay.onclick = e => { if (e.target === overlay) closeProfileSettings(); };
+
+  overlay.innerHTML = `
+    <div class="auth-card" style="max-width:420px">
+      <button class="auth-card-close" onclick="closeProfileSettings()">×</button>
+      <div class="auth-logo-strip">
+        <div class="auth-logo-mark">Edit <span>Profile</span></div>
+      </div>
+
+      <div class="ps-avatar-wrap">
+        <div class="ps-avatar" id="ps-avatar-preview">
+          ${photoURL
+            ? `<img src="${photoURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+            : `<span style="font-size:2rem;font-weight:600;color:var(--accent)">${(name||'?').slice(0,1).toUpperCase()}</span>`
+          }
+        </div>
+        <div class="ps-avatar-actions">
+          <button class="ps-avatar-btn" onclick="document.getElementById('ps-photo-input').click()">Upload photo</button>
+          ${photoURL ? `<button class="ps-avatar-btn danger" onclick="removeProfilePhoto()">Remove</button>` : ''}
+        </div>
+        <input type="file" id="ps-photo-input" accept="image/*" style="display:none" onchange="handleProfilePhotoUpload(this)">
+        <p style="font-size:0.72rem;color:var(--text3);text-align:center;margin-top:0.4rem">Max 1MB · JPG or PNG</p>
+      </div>
+
+      <div class="auth-field">
+        <label class="auth-label">Display Name</label>
+        <input id="ps-name-input" type="text" class="auth-input"
+          value="${name}"
+          placeholder="Your name"
+          maxlength="32">
+      </div>
+
+      <div class="ps-toggle-row">
+        <div class="ps-toggle-info">
+          <span class="ps-toggle-label">Save chat history</span>
+          <span class="ps-toggle-sub">Syncs your last 20 tutor messages across devices</span>
+        </div>
+        <button class="ps-toggle-btn" id="ps-chat-toggle" onclick="toggleChatHistorySetting(this)">
+          ${localStorage.getItem('tamil_save_chat') === 'false' ? 'Off' : 'On'}
+        </button>
+      </div>
+
+      <div class="auth-error-msg" id="ps-error" style="display:none"></div>
+
+      <button class="auth-submit-btn" id="ps-save-btn" onclick="saveProfileSettings()">
+        Save Changes
+      </button>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+}
+
+function closeProfileSettings() {
+  const el = document.getElementById('profile-settings-overlay');
+  if (el) el.remove();
+}
+
+function handleProfilePhotoUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 1_048_576) {
+    document.getElementById('ps-error').textContent = 'Image must be under 1MB.';
+    document.getElementById('ps-error').style.display = 'block';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const preview = document.getElementById('ps-avatar-preview');
+    preview.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    // Store temporarily
+    window._pendingPhotoDataUrl = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function removeProfilePhoto() {
+  window._pendingPhotoDataUrl = null;
+  window._removePhoto = true;
+  const preview = document.getElementById('ps-avatar-preview');
+  const name = document.getElementById('ps-name-input').value || '?';
+  preview.innerHTML = `<span style="font-size:2rem;font-weight:600;color:var(--accent)">${name.slice(0,1).toUpperCase()}</span>`;
+}
+
+async function saveProfileSettings() {
+  const name = document.getElementById('ps-name-input').value.trim();
+  const errEl = document.getElementById('ps-error');
+  const btn   = document.getElementById('ps-save-btn');
+
+  if (!name) { errEl.textContent = 'Please enter a display name.'; errEl.style.display = 'block'; return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  errEl.style.display = 'none';
+
+  try {
+    let photoURL = _currentUser.photoURL || '';
+
+    // Handle photo — store as base64 in Firestore (simple approach for small images)
+    if (window._pendingPhotoDataUrl) {
+      photoURL = window._pendingPhotoDataUrl;
+      window._pendingPhotoDataUrl = null;
+    } else if (window._removePhoto) {
+      photoURL = '';
+      window._removePhoto = false;
+    }
+
+    await _currentUser.updateProfile({ displayName: name, photoURL });
+    await _db.collection('users').doc(_currentUser.uid).set(
+      { displayName: name, photoURL }, { merge: true }
+    );
+
+    updateProfileIcon();
+    closeProfileSettings();
+    _showToast('Profile updated ✓');
+  } catch(e) {
+    errEl.textContent = 'Failed to save. Please try again.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Save Changes';
+  }
+}
