@@ -41,12 +41,12 @@ var GRAMMAR_DATA=[{section:'Word Order',rules:[{title:'Subject-Object-Verb (SOV)
 function renderGrammar(){document.getElementById('grammar-content').innerHTML=GRAMMAR_DATA.map(function(sec){return '<div class="grammar-section"><h3>'+sec.section+'</h3>'+sec.rules.map(function(r){return '<div class="grammar-rule"><h4>'+r.title+'</h4><p>'+r.body+'</p>'+r.examples.map(function(ex){return '<div class="grammar-example"><div class="grammar-ex-tamil">'+ex.t+'</div><div class="grammar-ex-roman">'+ex.r+'</div><div class="grammar-ex-en">'+ex.e+'</div></div>';}).join('')+'</div>';}).join('')+'</div>';}).join('');}
 renderGrammar();
 var quizState={questions:[],current:0,score:0,answered:false,type:''};
-function buildLetterIdQuestions(){var qs=[];var pool=VOWELS.concat(CONSONANTS);var shuffled=pool.sort(function(){return Math.random()-0.5}).slice(0,10);shuffled.forEach(function(l){var wrongs=pool.filter(function(x){return x.t!==l.t}).sort(function(){return Math.random()-0.5}).slice(0,3);var opts=[l.r].concat(wrongs.map(function(w){return w.r})).sort(function(){return Math.random()-0.5});qs.push({type:'mcq',prompt:'What sound does this letter make?',big:l.t,sub:l.r,answer:l.r,options:opts,isHintAnswer:true});});return qs;}
+function buildLetterIdQuestions(){var qs=[];var pool=VOWELS.concat(CONSONANTS);var shuffled=pool.sort(function(){return Math.random()-0.5}).slice(0,10);shuffled.forEach(function(l){var wrongs=pool.filter(function(x){return x.t!==l.t}).sort(function(){return Math.random()-0.5}).slice(0,3);var opts=[l.r].concat(wrongs.map(function(w){return w.r})).sort(function(){return Math.random()-0.5});qs.push({type:'mcq',prompt:'What sound does this letter make?',big:l.t,answer:l.r,options:opts,isHintAnswer:true});});return qs;}
 function buildWordMatchQuestions(){var pool=VOCAB.sort(function(){return Math.random()-0.5}).slice(0,10);return pool.map(function(v){var wrongs=VOCAB.filter(function(x){return x.t!==v.t}).sort(function(){return Math.random()-0.5}).slice(0,3);var opts=[v.e].concat(wrongs.map(function(w){return w.e})).sort(function(){return Math.random()-0.5});return{type:'mcq',prompt:'What does this Tamil word mean?',big:v.t,sub:v.r,answer:v.e,options:opts};});}
 function buildPhraseFillQuestions(){var pool=PHRASES.sort(function(){return Math.random()-0.5}).slice(0,8);return pool.map(function(p){var wrongs=PHRASES.filter(function(x){return x.t!==p.t}).sort(function(){return Math.random()-0.5}).slice(0,3);var opts=[p.e].concat(wrongs.map(function(w){return w.e})).sort(function(){return Math.random()-0.5});return{type:'mcq',prompt:'What does this phrase mean?',big:p.t,sub:p.r,answer:p.e,options:opts};});}
 function buildMixedQuestions(){return buildLetterIdQuestions().slice(0,4).concat(buildWordMatchQuestions().slice(0,4)).concat(buildPhraseFillQuestions().slice(0,4)).sort(function(){return Math.random()-0.5});}
 function startQuiz(type){var qs=type==='letter-id'?buildLetterIdQuestions():type==='word-match'?buildWordMatchQuestions():type==='phrase-fill'?buildPhraseFillQuestions():buildMixedQuestions();quizState={questions:qs,current:0,score:0,answered:false,type:type};document.getElementById('quiz-start').style.display='none';document.getElementById('quiz-main').style.display='block';renderQuizQ();}
-function renderQuizQ(){var s=quizState;if(s.current>=s.questions.length){renderQuizScore();return;}var q=s.questions[s.current];var dots=s.questions.map(function(_,i){return '<div class="quiz-prog-dot'+(i<s.current?' done':i===s.current?' current':'')+'"></div>';}).join('');var html='<button class="quiz-back-btn" onclick="confirmQuitQuiz()">← Back</button>'+'<div class="quiz-progress">'+dots+'</div>'+'<div class="quiz-q">'+q.prompt+'</div>'+(q.sub?'<div class="quiz-q-sub">'+q.sub+'</div>':'')+'<div class="quiz-big-tamil">'+q.big+'</div>'
+function renderQuizQ(){var s=quizState;if(s.current>=s.questions.length){renderQuizScore();return;}var q=s.questions[s.current];var dots=s.questions.map(function(_,i){return '<div class="quiz-prog-dot'+(i<s.current?' done':i===s.current?' current':'')+'"></div>';}).join('');var html='<button class="quiz-back-btn" onclick="confirmQuitQuiz()">← Back</button>'+'<div class="quiz-progress">'+dots+'</div>'+'<div class="quiz-q">'+q.prompt+'</div>'+'<div class="quiz-big-tamil">'+q.big+'</div>'
 +(localStorage.getItem('tamil_quiz_hints')!=='false' && q.sub && !q.isHintAnswer
   ? '<div class="quiz-hint">'+q.sub+'</div>'
   : '')
@@ -59,7 +59,27 @@ function answerQuiz(btn,chosen){var s=quizState;if(s.answered)return;s.answered=
 function renderQuizScore(){var s=quizState;var pct=Math.round((s.score/s.questions.length)*100);if(typeof saveQuizBest==='function') saveQuizBest(s.type, pct);var msg=pct>=80?'Excellent work!':pct>=50?'Good effort — keep practising!':'Keep going — you\'ll get there!';document.getElementById('quiz-main').innerHTML='<div class="quiz-score"><div class="score-circle">'+pct+'%</div><h2>'+msg+'</h2><p>You got '+s.score+' out of '+s.questions.length+' correct.</p><div style="display:flex;gap:0.75rem;justify-content:center"><button class="quiz-btn" onclick="startQuiz(\''+s.type+'\')">Try again</button><button class="quiz-btn secondary" onclick="document.getElementById(\'quiz-start\').style.display=\'block\';document.getElementById(\'quiz-main\').style.display=\'none\'">Choose quiz type</button></div></div>';}
 
 function confirmQuitQuiz(){
-  if(confirm('Leave this quiz? Your progress will be lost.')) quitQuiz();
+  var overlay = document.createElement('div');
+  overlay.id = 'quit-quiz-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1rem';
+  overlay.innerHTML = `
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:2rem;max-width:360px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,0.5)">
+      <h3 style="font-family:'DM Sans',sans-serif;font-size:1.05rem;font-weight:600;color:var(--text);margin-bottom:0.5rem">Leave this quiz?</h3>
+      <p style="font-size:0.85rem;color:var(--text2);margin-bottom:1.5rem">Your progress will be lost and you'll return to the quiz menu.</p>
+      <div style="display:flex;gap:0.75rem;justify-content:flex-end">
+        <button onclick="document.getElementById('quit-quiz-overlay').remove()"
+          style="background:var(--surface2);border:1px solid var(--border2);border-radius:10px;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:0.9rem;padding:0.6rem 1.2rem;cursor:pointer">
+          Cancel
+        </button>
+        <button onclick="document.getElementById('quit-quiz-overlay').remove();quitQuiz()"
+          style="background:var(--red-bg);border:1px solid var(--red);border-radius:10px;color:var(--red);font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;padding:0.6rem 1.2rem;cursor:pointer">
+          Leave quiz
+        </button>
+      </div>
+    </div>
+  `;
+  overlay.onclick = function(e){ if(e.target===overlay) overlay.remove(); };
+  document.body.appendChild(overlay);
 }
 function quitQuiz(){
   quizState={questions:[],current:0,score:0,answered:false,type:''};
