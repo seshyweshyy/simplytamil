@@ -7,15 +7,20 @@ function saveXP(){
   document.getElementById('xp-display').textContent=XP+' XP';
 }
 
-function addXP(n){
-  XP+=n;saveXP();
-  showToast('+'+n+' XP');
-  if(n>=5&&typeof triggerSaveNudge==='function')triggerSaveNudge('xp');
+function addXP(n) {
+  XP += n;
+  saveXP();
+  showToast('+' + n + ' XP');
+  if (n >= 5 && typeof triggerSaveNudge === 'function') {
+    triggerSaveNudge('xp');
+  }
 }
 
-function showToast(msg){
-  var t=document.getElementById('xp-toast');
-  t.textContent=msg;t.style.display='block';setTimeout(function(){t.style.display='none'},2000);
+function showToast(msg) {
+  var t = document.getElementById('xp-toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(function() { t.style.display = 'none'; }, 2000);
 }
 document.getElementById('xp-display').textContent=XP+' XP';
 
@@ -339,19 +344,138 @@ var CONSONANTS = [
 ];
 
 
-var NUMBERS=[{t:'௧',r:'ondru',name:'1 — one',guide:'Pronounced "on-dru".',words:[{t:'ஒன்று',r:'ondru',e:'one'}]},{t:'௨',r:'irandu',name:'2 — two',guide:'Pronounced "i-ran-du".',words:[{t:'இரண்டு',r:'irandu',e:'two'}]},{t:'௩',r:'moonru',name:'3 — three',guide:'Pronounced "mōon-ru".',words:[{t:'மூன்று',r:'mūnru',e:'three'}]},{t:'௪',r:'naangu',name:'4 — four',guide:'Pronounced "nāan-gu".',words:[{t:'நான்கு',r:'nāngu',e:'four'}]},{t:'௫',r:'aindu',name:'5 — five',guide:'Pronounced "ain-du".',words:[{t:'ஐந்து',r:'aindu',e:'five'}]},{t:'௬',r:'aaru',name:'6 — six',guide:'Pronounced "ā-ru".',words:[{t:'ஆறு',r:'āru',e:'six'}]},{t:'௭',r:'ezhu',name:'7 — seven',guide:'Pronounced "ē-zhu".',words:[{t:'ஏழு',r:'ēzhu',e:'seven'}]},{t:'௮',r:'ettu',name:'8 — eight',guide:'Pronounced "et-tu".',words:[{t:'எட்டு',r:'ettu',e:'eight'}]},{t:'௯',r:'onbadu',name:'9 — nine',guide:'Pronounced "on-ba-du".',words:[{t:'ஒன்பது',r:'onbadu',e:'nine'}]},{t:'௰',r:'pattu',name:'10 — ten',guide:'Pronounced "pat-tu".',words:[{t:'பத்து',r:'pattu',e:'ten'}]},{t:'௱',r:'nooru',name:'100 — hundred',guide:'Pronounced "nū-ru".',words:[{t:'நூறு',r:'nūru',e:'hundred'}]},{t:'௲',r:'aayiram',name:'1000 — thousand',guide:'Pronounced "ā-yi-ram".',words:[{t:'ஆயிரம்',r:'āyiram',e:'thousand'}]}];
-var PROPER_COMPOUNDS=[{t:'கா',r:'kā',name:'ka+ā',guide:'க + ா = கா.',words:[{t:'காடு',r:'kāḍu',e:'forest'},{t:'கால்',r:'kāl',e:'leg/foot'}]},{t:'கி',r:'ki',name:'ka+i',guide:'க + ி = கி.',words:[{t:'கிடை',r:'kiḍai',e:'to get/receive'}]},{t:'கீ',r:'kī',name:'ka+ī',guide:'க + ீ = கீ.',words:[{t:'கீழ்',r:'kīḻ',e:'below/down'}]},{t:'கு',r:'ku',name:'ka+u',guide:'க + ு = கு.',words:[{t:'குழந்தை',r:'kuḻandai',e:'child'}]},{t:'கூ',r:'kū',name:'ka+ū',guide:'க + ூ = கூ.',words:[{t:'கூட',r:'kūḍa',e:'together/also'}]},{t:'கெ',r:'ke',name:'ka+e',guide:'க + ெ = கெ.',words:[{t:'கெட்ட',r:'keṭṭa',e:'bad/spoiled'}]},{t:'கே',r:'kē',name:'ka+ē',guide:'க + ே = கே.',words:[{t:'கேள்',r:'kēḷ',e:'ask/listen'}]},{t:'கை',r:'kai',name:'ka+ai',guide:'க + ை = கை.',words:[{t:'கை',r:'kai',e:'hand'}]},{t:'கொ',r:'ko',name:'ka+o',guide:'க + ொ = கொ.',words:[{t:'கொடு',r:'koḍu',e:'give'}]},{t:'கோ',r:'kō',name:'ka+ō',guide:'க + ோ = கோ.',words:[{t:'கோயில்',r:'kōyil',e:'temple'}]},{t:'கௌ',r:'kau',name:'ka+au',guide:'க + ௌ = கௌ. Rare.',words:[]},{t:'சா',r:'cā',name:'ca+ā',guide:'ச + ா = சா.',words:[{t:'சாப்பாடு',r:'cāppāḍu',e:'food/meal'}]},{t:'சி',r:'ci',name:'ca+i',guide:'ச + ி = சி.',words:[]},{t:'சீ',r:'cī',name:'ca+ī',guide:'ச + ீ = சீ.',words:[]},{t:'சு',r:'cu',name:'ca+u',guide:'ச + ு = சு.',words:[]},{t:'நா',r:'nā',name:'na+ā',guide:'ந + ா = நா.',words:[{t:'நாடு',r:'nāḍu',e:'country'}]},{t:'நி',r:'ni',name:'na+i',guide:'ந + ி = நி.',words:[]},{t:'தா',r:'tā',name:'ta+ā',guide:'த + ா = தா.',words:[{t:'தாய்',r:'tāy',e:'mother'}]},{t:'வா',r:'vā',name:'va+ā',guide:'வ + ா = வா.',words:[{t:'வாழை',r:'vāḻai',e:'banana'}]},{t:'மா',r:'mā',name:'ma+ā',guide:'ம + ா = மா.',words:[{t:'மாம்பழம்',r:'māmpaḻam',e:'mango'}]},{t:'பா',r:'pā',name:'pa+ā',guide:'ப + ா = பா.',words:[{t:'பால்',r:'pāl',e:'milk'}]}];
-var currentLetterTab='vowels';
-function showLetterTab(tab,btn){currentLetterTab=tab;document.querySelectorAll('#section-alphabet .tab-btn').forEach(function(b){b.classList.remove('active')});if(btn)btn.classList.add('active');renderLetters();}
-function renderLetters(){var grid=document.getElementById('letter-grid');var data=currentLetterTab==='vowels'?VOWELS:currentLetterTab==='consonants'?CONSONANTS:currentLetterTab==='numbers'?NUMBERS:PROPER_COMPOUNDS;window._letterData=data;grid.innerHTML=data.map(function(l,i){var learned=learnedLetters.indexOf(l.t)>=0;return '<div class="letter-card'+(learned?' learned':'')+'" onclick="openModal('+i+')">'+'<button class="speak-btn" onclick="event.stopPropagation();speakTamil(\''+l.t+'\',this)">'+speakerSVG()+'</button>'+'<span class="letter-tamil">'+l.t+'</span>'+'<div class="letter-roman">'+l.r+'</div>'+'<div class="letter-name">'+l.name+'</div>'+'</div>';}).join('');}
-function openModal(i){var l=window._letterData[i];currentLetter=l;document.getElementById('modal-tamil').textContent=l.t;document.getElementById('modal-type').textContent=l.name;document.getElementById('modal-guide').textContent=l.guide;var ws=l.words||[];document.getElementById('modal-words-section').style.display=ws.length?'block':'none';document.getElementById('modal-words').innerHTML=ws.map(function(w){var safe=w.t.replace(/'/g,"\\'");return '<div class="word-ex"><span class="word-ex-tamil">'+w.t+'</span><button class="speak-btn" onclick="speakTamil(\''+safe+'\',this)" style="position:static;flex-shrink:0;margin:0 8px;">'+speakerSVG()+'</button><div class="word-ex-right"><div class="word-ex-roman">'+w.r+'</div><div class="word-ex-en">'+w.e+'</div></div></div>';}).join('');var learned=learnedLetters.indexOf(l.t)>=0;document.getElementById('mark-btn').textContent=learned?'✓ Learned — tap to undo':'Mark as learned';document.getElementById('mark-btn').style.background=learned?'var(--green)':'';document.getElementById('mark-btn').style.color=learned?'#000':'';document.getElementById('modal-roman').innerHTML=l.r+' <button class="speak-btn" onclick="speakTamil(\''+l.t+'\',this)" style="position:static;display:inline-flex;vertical-align:middle;margin-left:6px;width:28px;height:28px;border-radius:8px;">'+speakerSVG()+'</button>';document.getElementById('modal').classList.add('open');}
-function closeModal(){document.getElementById('modal').classList.remove('open');}
-function markLearned(){if(!currentLetter)return;var idx=learnedLetters.indexOf(currentLetter.t);if(idx<0){learnedLetters.push(currentLetter.t);
-localStorage.setItem('tamil_learned',JSON.stringify(learnedLetters));
-if(typeof triggerSaveNudge==='function') triggerSaveNudge('learned');
-if(typeof saveCloudProgress==='function') saveCloudProgress();
-addXP(5);document.getElementById('mark-btn').textContent='✓ Learned — tap to undo';document.getElementById('mark-btn').style.background='var(--green)';document.getElementById('mark-btn').style.color='#000';}else{learnedLetters.splice(idx,1);localStorage.setItem('tamil_learned',JSON.stringify(learnedLetters));document.getElementById('mark-btn').textContent='Mark as learned';document.getElementById('mark-btn').style.background='';document.getElementById('mark-btn').style.color='';XP=Math.max(0,XP-5);saveXP();}renderLetters();updateProgress();}
-function updateProgress(){var total=VOWELS.length+CONSONANTS.length;var pct=Math.round((learnedLetters.length/total)*100);document.getElementById('pb-alpha').style.width=pct+'%';}
+var NUMBERS = [
+  { t: '௧', r: 'ondru',   name: '1 — one',        guide: 'Pronounced "on-dru".',      words: [{ t: 'ஒன்று',   r: 'ondru',   e: 'one'      }] },
+  { t: '௨', r: 'irandu',  name: '2 — two',        guide: 'Pronounced "i-ran-du".',    words: [{ t: 'இரண்டு',  r: 'irandu',  e: 'two'      }] },
+  { t: '௩', r: 'moonru',  name: '3 — three',      guide: 'Pronounced "mōon-ru".',     words: [{ t: 'மூன்று',  r: 'mūnru',   e: 'three'    }] },
+  { t: '௪', r: 'naangu',  name: '4 — four',       guide: 'Pronounced "nāan-gu".',     words: [{ t: 'நான்கு',  r: 'nāngu',   e: 'four'     }] },
+  { t: '௫', r: 'aindu',   name: '5 — five',       guide: 'Pronounced "ain-du".',      words: [{ t: 'ஐந்து',   r: 'aindu',   e: 'five'     }] },
+  { t: '௬', r: 'aaru',    name: '6 — six',        guide: 'Pronounced "ā-ru".',        words: [{ t: 'ஆறு',     r: 'āru',     e: 'six'      }] },
+  { t: '௭', r: 'ezhu',    name: '7 — seven',      guide: 'Pronounced "ē-zhu".',       words: [{ t: 'ஏழு',     r: 'ēzhu',    e: 'seven'    }] },
+  { t: '௮', r: 'ettu',    name: '8 — eight',      guide: 'Pronounced "et-tu".',       words: [{ t: 'எட்டு',   r: 'ettu',    e: 'eight'    }] },
+  { t: '௯', r: 'onbadu',  name: '9 — nine',       guide: 'Pronounced "on-ba-du".',    words: [{ t: 'ஒன்பது',  r: 'onbadu',  e: 'nine'     }] },
+  { t: '௰', r: 'pattu',   name: '10 — ten',       guide: 'Pronounced "pat-tu".',      words: [{ t: 'பத்து',   r: 'pattu',   e: 'ten'      }] },
+  { t: '௱', r: 'nooru',   name: '100 — hundred',  guide: 'Pronounced "nū-ru".',       words: [{ t: 'நூறு',    r: 'nūru',    e: 'hundred'  }] },
+  { t: '௲', r: 'aayiram', name: '1000 — thousand', guide: 'Pronounced "ā-yi-ram".',   words: [{ t: 'ஆயிரம்',  r: 'āyiram',  e: 'thousand' }] }
+];
+
+
+var PROPER_COMPOUNDS = [
+  { t: 'கா',  r: 'kā',  name: 'ka+ā',  guide: 'க + ா = கா.',        words: [{ t: 'காடு',      r: 'kāḍu',    e: 'forest'          }, { t: 'கால்', r: 'kāl', e: 'leg/foot' }] },
+  { t: 'கி',  r: 'ki',  name: 'ka+i',  guide: 'க + ி = கி.',        words: [{ t: 'கிடை',      r: 'kiḍai',   e: 'to get/receive'  }] },
+  { t: 'கீ',  r: 'kī',  name: 'ka+ī',  guide: 'க + ீ = கீ.',        words: [{ t: 'கீழ்',      r: 'kīḻ',     e: 'below/down'      }] },
+  { t: 'கு',  r: 'ku',  name: 'ka+u',  guide: 'க + ு = கு.',        words: [{ t: 'குழந்தை',   r: 'kuḻandai', e: 'child'           }] },
+  { t: 'கூ',  r: 'kū',  name: 'ka+ū',  guide: 'க + ூ = கூ.',        words: [{ t: 'கூட',       r: 'kūḍa',    e: 'together/also'   }] },
+  { t: 'கெ',  r: 'ke',  name: 'ka+e',  guide: 'க + ெ = கெ.',        words: [{ t: 'கெட்ட',     r: 'keṭṭa',   e: 'bad/spoiled'     }] },
+  { t: 'கே',  r: 'kē',  name: 'ka+ē',  guide: 'க + ே = கே.',        words: [{ t: 'கேள்',      r: 'kēḷ',     e: 'ask/listen'      }] },
+  { t: 'கை',  r: 'kai', name: 'ka+ai', guide: 'க + ை = கை.',        words: [{ t: 'கை',        r: 'kai',     e: 'hand'            }] },
+  { t: 'கொ',  r: 'ko',  name: 'ka+o',  guide: 'க + ொ = கொ.',        words: [{ t: 'கொடு',      r: 'koḍu',    e: 'give'            }] },
+  { t: 'கோ',  r: 'kō',  name: 'ka+ō',  guide: 'க + ோ = கோ.',        words: [{ t: 'கோயில்',    r: 'kōyil',   e: 'temple'          }] },
+  { t: 'கௌ',  r: 'kau', name: 'ka+au', guide: 'க + ௌ = கௌ. Rare.',  words: [] },
+  { t: 'சா',  r: 'cā',  name: 'ca+ā',  guide: 'ச + ா = சா.',        words: [{ t: 'சாப்பாடு',  r: 'cāppāḍu', e: 'food/meal'       }] },
+  { t: 'சி',  r: 'ci',  name: 'ca+i',  guide: 'ச + ி = சி.',        words: [] },
+  { t: 'சீ',  r: 'cī',  name: 'ca+ī',  guide: 'ச + ீ = சீ.',        words: [] },
+  { t: 'சு',  r: 'cu',  name: 'ca+u',  guide: 'ச + ு = சு.',        words: [] },
+  { t: 'நா',  r: 'nā',  name: 'na+ā',  guide: 'ந + ா = நா.',        words: [{ t: 'நாடு',      r: 'nāḍu',    e: 'country'         }] },
+  { t: 'நி',  r: 'ni',  name: 'na+i',  guide: 'ந + ி = நி.',        words: [] },
+  { t: 'தா',  r: 'tā',  name: 'ta+ā',  guide: 'த + ா = தா.',        words: [{ t: 'தாய்',      r: 'tāy',     e: 'mother'          }] },
+  { t: 'வா',  r: 'vā',  name: 'va+ā',  guide: 'வ + ா = வா.',        words: [{ t: 'வாழை',      r: 'vāḻai',   e: 'banana'          }] },
+  { t: 'மா',  r: 'mā',  name: 'ma+ā',  guide: 'ம + ா = மா.',        words: [{ t: 'மாம்பழம்',  r: 'māmpaḻam', e: 'mango'          }] },
+  { t: 'பா',  r: 'pā',  name: 'pa+ā',  guide: 'ப + ா = பா.',        words: [{ t: 'பால்',      r: 'pāl',     e: 'milk'            }] }
+];
+var currentLetterTab = 'vowels';
+
+function showLetterTab(tab, btn) {
+  currentLetterTab = tab;
+  document.querySelectorAll('#section-alphabet .tab-btn').forEach(function(b) {
+    b.classList.remove('active');
+  });
+  if (btn) btn.classList.add('active');
+  renderLetters();
+}
+
+function renderLetters() {
+  var grid = document.getElementById('letter-grid');
+  var data = currentLetterTab === 'vowels'     ? VOWELS
+           : currentLetterTab === 'consonants' ? CONSONANTS
+           : currentLetterTab === 'numbers'    ? NUMBERS
+           : PROPER_COMPOUNDS;
+  window._letterData = data;
+  grid.innerHTML = data.map(function(l, i) {
+    var learned = learnedLetters.indexOf(l.t) >= 0;
+    return '<div class="letter-card' + (learned ? ' learned' : '') + '" onclick="openModal(' + i + ')">'
+      + '<button class="speak-btn" onclick="event.stopPropagation();speakTamil(\'' + l.t + '\',this)">' + speakerSVG() + '</button>'
+      + '<span class="letter-tamil">' + l.t + '</span>'
+      + '<div class="letter-roman">' + l.r + '</div>'
+      + '<div class="letter-name">' + l.name + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+
+function openModal(i) {
+  var l = window._letterData[i];
+  currentLetter = l;
+  document.getElementById('modal-tamil').textContent = l.t;
+  document.getElementById('modal-type').textContent = l.name;
+  document.getElementById('modal-guide').textContent = l.guide;
+  var ws = l.words || [];
+  document.getElementById('modal-words-section').style.display = ws.length ? 'block' : 'none';
+  document.getElementById('modal-words').innerHTML = ws.map(function(w) {
+    var safe = w.t.replace(/'/g, "\\'");
+    return '<div class="word-ex">'
+      + '<span class="word-ex-tamil">' + w.t + '</span>'
+      + '<button class="speak-btn" onclick="speakTamil(\'' + safe + '\',this)" style="position:static;flex-shrink:0;margin:0 8px;">' + speakerSVG() + '</button>'
+      + '<div class="word-ex-right">'
+      + '<div class="word-ex-roman">' + w.r + '</div>'
+      + '<div class="word-ex-en">' + w.e + '</div>'
+      + '</div></div>';
+  }).join('');
+  var learned = learnedLetters.indexOf(l.t) >= 0;
+  document.getElementById('mark-btn').textContent = learned ? '✓ Learned — tap to undo' : 'Mark as learned';
+  document.getElementById('mark-btn').style.background = learned ? 'var(--green)' : '';
+  document.getElementById('mark-btn').style.color = learned ? '#000' : '';
+  document.getElementById('modal-roman').innerHTML = l.r
+    + '<button class="speak-btn" onclick="speakTamil(\'' + l.t + '\',this)" style="vertical-align:middle">'
+    + '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10v4h3l4 3V7l-4 3H5z"/></svg>'
+    + '</button>';
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+function markLearned() {
+  if (!currentLetter) return;
+  var idx = learnedLetters.indexOf(currentLetter.t);
+  if (idx < 0) {
+    learnedLetters.push(currentLetter.t);
+    localStorage.setItem('tamil_learned', JSON.stringify(learnedLetters));
+    if (typeof triggerSaveNudge === 'function') triggerSaveNudge('learned');
+    if (typeof saveCloudProgress === 'function') saveCloudProgress();
+    addXP(5);
+    document.getElementById('mark-btn').textContent = '✓ Learned — tap to undo';
+    document.getElementById('mark-btn').style.background = 'var(--green)';
+    document.getElementById('mark-btn').style.color = '#000';
+  } else {
+    learnedLetters.splice(idx, 1);
+    localStorage.setItem('tamil_learned', JSON.stringify(learnedLetters));
+    document.getElementById('mark-btn').textContent = 'Mark as learned';
+    document.getElementById('mark-btn').style.background = '';
+    document.getElementById('mark-btn').style.color = '';
+    XP = Math.max(0, XP - 5);
+    saveXP();
+  }
+  renderLetters();
+  updateProgress();
+}
+
+function updateProgress() {
+  var total = VOWELS.length + CONSONANTS.length;
+  var pct = Math.round((learnedLetters.length / total) * 100);
+  document.getElementById('pb-alpha').style.width = pct + '%';
+}
 updateProgress();
 var VOCAB=[{t:'அம்மா',r:'ammā',e:'mother',cat:'Family'},{t:'அப்பா',r:'appā',e:'father',cat:'Family'},{t:'அண்ணன்',r:'aṇṇaṉ',e:'older brother',cat:'Family'},{t:'அக்கா',r:'akkā',e:'older sister',cat:'Family'},{t:'தம்பி',r:'tampi',e:'younger brother',cat:'Family'},{t:'தங்கை',r:'taṅkai',e:'younger sister',cat:'Family'},{t:'தாத்தா',r:'tāttā',e:'grandfather',cat:'Family'},{t:'பாட்டி',r:'pāṭṭi',e:'grandmother',cat:'Family'},{t:'குழந்தை',r:'kuḻandai',e:'child',cat:'Family'},{t:'கணவன்',r:'kaṇavaṉ',e:'husband',cat:'Family'},{t:'மனைவி',r:'maṉaivi',e:'wife',cat:'Family'},{t:'உணவு',r:'uṇavu',e:'food',cat:'Food'},{t:'தண்ணீர்',r:'taṇṇīr',e:'water',cat:'Food'},{t:'சாப்பாடு',r:'cāppāḍu',e:'meal/rice dish',cat:'Food'},{t:'பால்',r:'pāl',e:'milk',cat:'Food'},{t:'காய்கறி',r:'kāykaṟi',e:'vegetables',cat:'Food'},{t:'பழம்',r:'paḻam',e:'fruit',cat:'Food'},{t:'மாம்பழம்',r:'māmpaḻam',e:'mango',cat:'Food'},{t:'வாழைப்பழம்',r:'vāḻaippaḻam',e:'banana',cat:'Food'},{t:'தோசை',r:'tōcai',e:'dosa',cat:'Food'},{t:'இட்லி',r:'iṭli',e:'idli',cat:'Food'},{t:'சாம்பார்',r:'cāmpār',e:'sambar',cat:'Food'},{t:'கடை',r:'kaḍai',e:'shop/store',cat:'Places'},{t:'வீடு',r:'vīḍu',e:'house',cat:'Places'},{t:'பள்ளி',r:'paḷḷi',e:'school',cat:'Places'},{t:'மருத்துவமனை',r:'maruttuvamanai',e:'hospital',cat:'Places'},{t:'கோயில்',r:'kōyil',e:'temple',cat:'Places'},{t:'நகரம்',r:'nakaram',e:'city',cat:'Places'},{t:'கடற்கரை',r:'kaḍaṟkarai',e:'beach',cat:'Places'},{t:'சாலை',r:'cālai',e:'road',cat:'Places'},{t:'சிவப்பு',r:'civappu',e:'red',cat:'Colours'},{t:'நீலம்',r:'nīlam',e:'blue',cat:'Colours'},{t:'பச்சை',r:'paccai',e:'green',cat:'Colours'},{t:'மஞ்சள்',r:'mañcaḷ',e:'yellow',cat:'Colours'},{t:'கறுப்பு',r:'kaṟuppu',e:'black',cat:'Colours'},{t:'வெள்ளை',r:'veḷḷai',e:'white',cat:'Colours'},{t:'ஆரஞ்சு',r:'ārancu',e:'orange',cat:'Colours'},{t:'ஒன்று',r:'oṉṟu',e:'one',cat:'Numbers'},{t:'இரண்டு',r:'iraṇḍu',e:'two',cat:'Numbers'},{t:'மூன்று',r:'mūṉṟu',e:'three',cat:'Numbers'},{t:'நான்கு',r:'nāṉku',e:'four',cat:'Numbers'},{t:'ஐந்து',r:'aintu',e:'five',cat:'Numbers'},{t:'ஆறு',r:'āṟu',e:'six',cat:'Numbers'},{t:'ஏழு',r:'ēḻu',e:'seven',cat:'Numbers'},{t:'எட்டு',r:'eṭṭu',e:'eight',cat:'Numbers'},{t:'ஒன்பது',r:'oṉpatu',e:'nine',cat:'Numbers'},{t:'பத்து',r:'pattu',e:'ten',cat:'Numbers'},{t:'நான்',r:'nāṉ',e:'I',cat:'Pronouns'},{t:'நீ',r:'nī',e:'you (informal)',cat:'Pronouns'},{t:'நீங்கள்',r:'nīṅkaḷ',e:'you (formal)',cat:'Pronouns'},{t:'அவன்',r:'avaṉ',e:'he (informal)',cat:'Pronouns'},{t:'அவள்',r:'avaḷ',e:'she (informal)',cat:'Pronouns'},{t:'அவர்',r:'avar',e:'he/she (formal)',cat:'Pronouns'},{t:'அது',r:'atu',e:'it/that',cat:'Pronouns'},{t:'நாம்',r:'nām',e:'we (inclusive)',cat:'Pronouns'},{t:'அவர்கள்',r:'avarkaḷ',e:'they (formal)',cat:'Pronouns'},{t:'செல்',r:'cel',e:'to go',cat:'Verbs'},{t:'வா',r:'vā',e:'to come',cat:'Verbs'},{t:'சாப்பிடு',r:'cāppiḍu',e:'to eat',cat:'Verbs'},{t:'குடி',r:'kuḍi',e:'to drink',cat:'Verbs'},{t:'படி',r:'paḍi',e:'to study/read',cat:'Verbs'},{t:'பேசு',r:'pēcu',e:'to speak',cat:'Verbs'},{t:'கேள்',r:'kēḷ',e:'to ask/hear',cat:'Verbs'},{t:'பார்',r:'pār',e:'to see/look',cat:'Verbs'},{t:'தா',r:'tā',e:'to give',cat:'Verbs'},{t:'வாங்கு',r:'vāṅku',e:'to buy/take',cat:'Verbs'},{t:'நல்ல',r:'nalla',e:'good',cat:'Adjectives'},{t:'கெட்ட',r:'keṭṭa',e:'bad',cat:'Adjectives'},{t:'பெரிய',r:'periya',e:'big',cat:'Adjectives'},{t:'சின்ன',r:'ciṉṉa',e:'small',cat:'Adjectives'},{t:'புது',r:'putu',e:'new',cat:'Adjectives'},{t:'பழைய',r:'paḻaiya',e:'old',cat:'Adjectives'},{t:'அழகான',r:'aḻakāṉa',e:'beautiful',cat:'Adjectives'},{t:'வலிமையான',r:'valimaiān',e:'strong',cat:'Adjectives'},{t:'இப்போது',r:'ippōtu',e:'now',cat:'Time'},{t:'நாளை',r:'nāḷai',e:'tomorrow',cat:'Time'},{t:'நேற்று',r:'nēṟṟu',e:'yesterday',cat:'Time'},{t:'இன்று',r:'iṉṟu',e:'today',cat:'Time'},{t:'காலை',r:'kālai',e:'morning',cat:'Time'},{t:'மாலை',r:'mālai',e:'evening',cat:'Time'},{t:'இரவு',r:'iravu',e:'night',cat:'Time'},{t:'வாரம்',r:'vāram',e:'week',cat:'Time'},{t:'மாதம்',r:'mātam',e:'month',cat:'Time'},{t:'வருடம்',r:'varuḍam',e:'year',cat:'Time'}];
 var vocabCat='All';
