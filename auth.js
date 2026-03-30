@@ -198,7 +198,8 @@ function showProfileDropdown() {
   const streak = parseInt(localStorage.getItem('tamil_streak') || '0');
   const xp     = parseInt(localStorage.getItem('tamil_xp')     || '0');
   const best   = JSON.parse(localStorage.getItem('tamil_quiz_best') || '{}');
-  const name   = _currentUser.displayName || _currentUser.email.split('@')[0];
+  const name     = _currentUser.displayName || _currentUser.email.split('@')[0];
+  const photoData = localStorage.getItem('tamil_photo_data') || '';
   const bestStr = Object.keys(best).length
     ? Object.entries(best).map(([k,v]) => `${k}: ${v}%`).join(' · ')
     : 'No quizzes yet';
@@ -208,9 +209,9 @@ function showProfileDropdown() {
   drop.className = 'profile-dropdown';
   drop.innerHTML = `
     <div class="pd-header">
-      <div class="pd-avatar" style="${_currentUser.photoURL ? 'padding:0;overflow:hidden;' : ''}">
-        ${_currentUser.photoURL
-          ? `<img src="${_currentUser.photoURL}" style="width:100%;height:100%;object-fit:cover;">`
+      <div class="pd-avatar" style="${photoData ? 'padding:0;overflow:hidden;' : ''}">
+        ${photoData
+          ? `<img src="${photoData}" style="width:100%;height:100%;object-fit:cover;">`
           : name.slice(0,1).toUpperCase()
         }
       </div>
