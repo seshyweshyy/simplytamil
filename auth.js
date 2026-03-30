@@ -466,7 +466,7 @@ function openProfileSettings() {
     <div class="auth-card" style="max-width:420px">
       <button class="auth-card-close" onclick="closeProfileSettings()">×</button>
       <div class="auth-logo-strip">
-        <div class="auth-logo-mark">Edit <span>Profile</span></div>
+        <div class="auth-logo-mark">Profile <span>Settings</span></div>
       </div>
 
       <div class="ps-avatar-wrap">
