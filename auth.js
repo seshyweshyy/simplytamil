@@ -163,6 +163,14 @@ async function handleSignOut() {
   await saveCloudProgress();
   await _auth.signOut();
   _currentUser = null;
+  // Reset local state to zero
+  XP = 0;
+  learnedLetters = [];
+  localStorage.setItem('tamil_xp', '0');
+  localStorage.setItem('tamil_learned', '[]');
+  if (typeof saveXP === 'function') saveXP();
+  if (typeof renderLetters === 'function') renderLetters();
+  if (typeof updateProgress === 'function') updateProgress();
   updateProfileIcon();
   _showToast('Signed out');
 }
