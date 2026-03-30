@@ -181,7 +181,7 @@ function showProfileDropdown() {
   const best   = JSON.parse(localStorage.getItem('tamil_quiz_best') || '{}');
   const name     = _currentUser.displayName || _currentUser.email.split('@')[0];
   const photoData = localStorage.getItem('tamil_photo_data') || '';
-  const quizLabels = {'letter-id':'Letter ID','word-match':'Word Match','phrase-fill':'Phrase Fill','mixed':'Mixed'};
+  const quizLabels = {'letter-id':'Letter ID','word-match':'Word Match','phrase-fill':'Phrase Fill','mixed':'Mixed','ai':'AI Generated'};
   const bestHTML = Object.keys(best).length
     ? Object.entries(best).map(([k,v]) => `
         <div class="pd-quiz-score">
