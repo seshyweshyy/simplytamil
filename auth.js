@@ -1,25 +1,6 @@
 /* ============================================================
    SimplyTamil — Firebase Auth & Cloud Save
-   ============================================================
-   SETUP (5 min):
-   1. Go to https://console.firebase.google.com
-   2. New project → Add Web App → copy the config object
-   3. Authentication → Sign-in method → enable Email/Password
-   4. Firestore Database → Create database (production mode)
-   5. Firestore → Rules tab → paste:
-
-      rules_version = '2';
-      service cloud.firestore {
-        match /databases/{database}/documents {
-          match /users/{userId} {
-            allow read, write: if request.auth != null
-                               && request.auth.uid == userId;
-          }
-        }
-      }
-
-   6. Replace firebaseConfig below with YOUR project values.
-   ============================================================ */
+   ============================================================= */
 
 const firebaseConfig = {
   apiKey:            "AIzaSyC8Nq80jtvSIhD3twz__tUHrbaGUZx7xio",
@@ -200,9 +181,14 @@ function showProfileDropdown() {
   const best   = JSON.parse(localStorage.getItem('tamil_quiz_best') || '{}');
   const name     = _currentUser.displayName || _currentUser.email.split('@')[0];
   const photoData = localStorage.getItem('tamil_photo_data') || '';
-  const bestStr = Object.keys(best).length
-    ? Object.entries(best).map(([k,v]) => `${k}: ${v}%`).join(' · ')
-    : 'No quizzes yet';
+  const quizLabels = {'letter-id':'Letter ID','word-match':'Word Match','phrase-fill':'Phrase Fill','mixed':'Mixed'};
+  const bestHTML = Object.keys(best).length
+    ? Object.entries(best).map(([k,v]) => `
+        <div class="pd-quiz-score">
+          <span class="pd-quiz-label">${quizLabels[k]||k}</span>
+          <span class="pd-quiz-pct" style="color:${v>=80?'var(--green)':v>=50?'var(--gold)':'var(--red)'}">${v}%</span>
+        </div>`).join('')
+    : '<div style="font-size:0.75rem;color:var(--text3);padding:0.2rem 0">No quizzes completed yet</div>';
 
   const drop = document.createElement('div');
   drop.id = 'profile-dropdown';
@@ -225,7 +211,10 @@ function showProfileDropdown() {
       <div class="pd-stat"><div class="pd-stat-val">⭐ ${xp}</div><div class="pd-stat-lbl">total XP</div></div>
       <div class="pd-stat"><div class="pd-stat-val">${Object.keys(JSON.parse(localStorage.getItem('tamil_learned')||'[]')).length || JSON.parse(localStorage.getItem('tamil_learned')||'[]').length}</div><div class="pd-stat-lbl">letters learned</div></div>
     </div>
-    <div class="pd-quiz-row">Best scores: ${bestStr}</div>
+    <div class="pd-quiz-row">
+      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin-bottom:0.4rem">Best scores</div>
+      ${bestHTML}
+    </div>
     <div class="pd-divider"></div>
     <button class="pd-action-btn" onclick="openProfileSettings()">
       <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -513,6 +502,17 @@ function openProfileSettings() {
         </button>
       </div>
 
+      <div class="ps-toggle-row">
+        <div class="ps-toggle-info">
+          <span class="ps-toggle-label">Quiz hints</span>
+          <span class="ps-toggle-sub">Show romanisation under Tamil words during quizzes</span>
+        </div>
+        <button class="ps-toggle-btn ${localStorage.getItem('tamil_quiz_hints') === 'false' ? 'off' : ''}"
+          id="ps-hints-toggle" onclick="toggleHintsSetting(this)">
+          ${localStorage.getItem('tamil_quiz_hints') === 'false' ? 'Off' : 'On'}
+        </button>
+      </div>
+
       <div class="auth-error-msg" id="ps-error" style="display:none"></div>
 
       <button class="auth-submit-btn" id="ps-save-btn" onclick="saveProfileSettings()">
@@ -600,4 +600,12 @@ async function saveProfileSettings() {
     btn.disabled = false;
     btn.textContent = 'Save Changes';
   }
+}
+
+function toggleHintsSetting(btn) {
+  const current = localStorage.getItem('tamil_quiz_hints') !== 'false';
+  const newVal = !current;
+  localStorage.setItem('tamil_quiz_hints', newVal ? 'true' : 'false');
+  btn.textContent = newVal ? 'On' : 'Off';
+  btn.classList.toggle('off', !newVal);
 }

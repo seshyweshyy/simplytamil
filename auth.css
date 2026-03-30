@@ -511,3 +511,12 @@
   background: var(--surface3);
   color: var(--text3);
 }
+
+.pd-quiz-score {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.2rem 0;
+}
+.pd-quiz-label { font-size: 0.78rem; color: var(--text2); }
+.pd-quiz-pct   { font-size: 0.78rem; font-weight: 600; }

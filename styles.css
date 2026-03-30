@@ -371,3 +371,32 @@ overflow-y: auto;
   transform:rotate(45deg);
   stroke:var(--accent);
 }
+
+.quiz-back-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text3);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.quiz-back-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.quiz-hint {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text3);
+  font-style: italic;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}

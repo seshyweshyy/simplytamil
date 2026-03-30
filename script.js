@@ -41,14 +41,31 @@ var GRAMMAR_DATA=[{section:'Word Order',rules:[{title:'Subject-Object-Verb (SOV)
 function renderGrammar(){document.getElementById('grammar-content').innerHTML=GRAMMAR_DATA.map(function(sec){return '<div class="grammar-section"><h3>'+sec.section+'</h3>'+sec.rules.map(function(r){return '<div class="grammar-rule"><h4>'+r.title+'</h4><p>'+r.body+'</p>'+r.examples.map(function(ex){return '<div class="grammar-example"><div class="grammar-ex-tamil">'+ex.t+'</div><div class="grammar-ex-roman">'+ex.r+'</div><div class="grammar-ex-en">'+ex.e+'</div></div>';}).join('')+'</div>';}).join('')+'</div>';}).join('');}
 renderGrammar();
 var quizState={questions:[],current:0,score:0,answered:false,type:''};
-function buildLetterIdQuestions(){var qs=[];var pool=VOWELS.concat(CONSONANTS);var shuffled=pool.sort(function(){return Math.random()-0.5}).slice(0,10);shuffled.forEach(function(l){var wrongs=pool.filter(function(x){return x.t!==l.t}).sort(function(){return Math.random()-0.5}).slice(0,3);var opts=[l.r].concat(wrongs.map(function(w){return w.r})).sort(function(){return Math.random()-0.5});qs.push({type:'mcq',prompt:'What sound does this letter make?',big:l.t,answer:l.r,options:opts});});return qs;}
-function buildWordMatchQuestions(){var pool=VOCAB.sort(function(){return Math.random()-0.5}).slice(0,10);return pool.map(function(v){var wrongs=VOCAB.filter(function(x){return x.t!==v.t}).sort(function(){return Math.random()-0.5}).slice(0,3);var opts=[v.e].concat(wrongs.map(function(w){return w.e})).sort(function(){return Math.random()-0.5});return{type:'mcq',prompt:'What does this Tamil word mean?',big:v.t,answer:v.e,options:opts};});}
+function buildLetterIdQuestions(){var qs=[];var pool=VOWELS.concat(CONSONANTS);var shuffled=pool.sort(function(){return Math.random()-0.5}).slice(0,10);shuffled.forEach(function(l){var wrongs=pool.filter(function(x){return x.t!==l.t}).sort(function(){return Math.random()-0.5}).slice(0,3);var opts=[l.r].concat(wrongs.map(function(w){return w.r})).sort(function(){return Math.random()-0.5});qs.push({type:'mcq',prompt:'What sound does this letter make?',big:l.t,sub:l.r,answer:l.r,options:opts,isHintAnswer:true});});return qs;}
+function buildWordMatchQuestions(){var pool=VOCAB.sort(function(){return Math.random()-0.5}).slice(0,10);return pool.map(function(v){var wrongs=VOCAB.filter(function(x){return x.t!==v.t}).sort(function(){return Math.random()-0.5}).slice(0,3);var opts=[v.e].concat(wrongs.map(function(w){return w.e})).sort(function(){return Math.random()-0.5});return{type:'mcq',prompt:'What does this Tamil word mean?',big:v.t,sub:v.r,answer:v.e,options:opts};});}
 function buildPhraseFillQuestions(){var pool=PHRASES.sort(function(){return Math.random()-0.5}).slice(0,8);return pool.map(function(p){var wrongs=PHRASES.filter(function(x){return x.t!==p.t}).sort(function(){return Math.random()-0.5}).slice(0,3);var opts=[p.e].concat(wrongs.map(function(w){return w.e})).sort(function(){return Math.random()-0.5});return{type:'mcq',prompt:'What does this phrase mean?',big:p.t,sub:p.r,answer:p.e,options:opts};});}
 function buildMixedQuestions(){return buildLetterIdQuestions().slice(0,4).concat(buildWordMatchQuestions().slice(0,4)).concat(buildPhraseFillQuestions().slice(0,4)).sort(function(){return Math.random()-0.5});}
 function startQuiz(type){var qs=type==='letter-id'?buildLetterIdQuestions():type==='word-match'?buildWordMatchQuestions():type==='phrase-fill'?buildPhraseFillQuestions():buildMixedQuestions();quizState={questions:qs,current:0,score:0,answered:false,type:type};document.getElementById('quiz-start').style.display='none';document.getElementById('quiz-main').style.display='block';renderQuizQ();}
-function renderQuizQ(){var s=quizState;if(s.current>=s.questions.length){renderQuizScore();return;}var q=s.questions[s.current];var dots=s.questions.map(function(_,i){return '<div class="quiz-prog-dot'+(i<s.current?' done':i===s.current?' current':'')+'"></div>';}).join('');var html='<div class="quiz-progress">'+dots+'</div>'+'<div class="quiz-q">'+q.prompt+'</div>'+(q.sub?'<div class="quiz-q-sub">'+q.sub+'</div>':'')+'<div class="quiz-big-tamil">'+q.big+'</div>'+'<div class="quiz-options">'+q.options.map(function(o){return '<button class="quiz-opt" onclick="answerQuiz(this,\''+o.replace(/'/g,"\\'")+'\')">'+(o)+'</button>';}).join('')+'</div>'+'<div id="quiz-feedback" style="display:none"></div>';document.getElementById('quiz-main').innerHTML=html;s.answered=false;}
+function renderQuizQ(){var s=quizState;if(s.current>=s.questions.length){renderQuizScore();return;}var q=s.questions[s.current];var dots=s.questions.map(function(_,i){return '<div class="quiz-prog-dot'+(i<s.current?' done':i===s.current?' current':'')+'"></div>';}).join('');var html='<button class="quiz-back-btn" onclick="confirmQuitQuiz()">← Back</button>'+'<div class="quiz-progress">'+dots+'</div>'+'<div class="quiz-q">'+q.prompt+'</div>'+(q.sub?'<div class="quiz-q-sub">'+q.sub+'</div>':'')+'<div class="quiz-big-tamil">'+q.big+'</div>'
++(localStorage.getItem('tamil_quiz_hints')!=='false' && q.sub && !q.isHintAnswer
+  ? '<div class="quiz-hint">'+q.sub+'</div>'
+  : '')
++(localStorage.getItem('tamil_quiz_hints')!=='false' && q.sub
+  ? '<div class="quiz-hint">'+q.sub+'</div>'
+  : localStorage.getItem('tamil_quiz_hints')!=='false' && q.big && /[\u0B80-\u0BFF]/.test(q.big)
+    ? '<div class="quiz-hint" id="quiz-hint-auto"></div>'
+    : '')+'<div class="quiz-options">'+q.options.map(function(o){return '<button class="quiz-opt" onclick="answerQuiz(this,\''+o.replace(/'/g,"\\'")+'\')">'+(o)+'</button>';}).join('')+'</div>'+'<div id="quiz-feedback" style="display:none"></div>';document.getElementById('quiz-main').innerHTML=html;s.answered=false;}
 function answerQuiz(btn,chosen){var s=quizState;if(s.answered)return;s.answered=true;var q=s.questions[s.current];var correct=chosen===q.answer;document.querySelectorAll('.quiz-opt').forEach(function(b){b.disabled=true;});btn.classList.add(correct?'correct':'wrong');if(!correct){document.querySelectorAll('.quiz-opt').forEach(function(b){if(b.textContent===q.answer)b.classList.add('reveal');});}if(correct){s.score++;addXP(10);}var fb=document.getElementById('quiz-feedback');fb.style.display='block';fb.className='quiz-feedback '+(correct?'correct':'wrong');var speakBtn='';if(q.big){var safe=q.big.replace(/'/g,"\\'");speakBtn='<button class="speak-btn" style="position:static;margin-top:10px;" onclick="speakTamil(\''+safe+'\',this)"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10v4h3l4 3V7l-4 3H5z"/><path d="M14 9a3 3 0 0 1 0 6"/><path d="M17 7a6 6 0 0 1 0 10"/></svg></button>';}fb.innerHTML=(correct?'Correct! Well done.':'Not quite — the answer is: '+q.answer)+'<br><br>'+'Tamil: '+(q.big||'')+speakBtn;var nextBtn=document.createElement('button');nextBtn.className='quiz-btn';nextBtn.style.marginTop='0.5rem';nextBtn.textContent=s.current<s.questions.length-1?'Next question':'See results';nextBtn.onclick=function(){s.current++;renderQuizQ();};document.getElementById('quiz-main').appendChild(nextBtn);}
 function renderQuizScore(){var s=quizState;var pct=Math.round((s.score/s.questions.length)*100);if(typeof saveQuizBest==='function') saveQuizBest(s.type, pct);var msg=pct>=80?'Excellent work!':pct>=50?'Good effort — keep practising!':'Keep going — you\'ll get there!';document.getElementById('quiz-main').innerHTML='<div class="quiz-score"><div class="score-circle">'+pct+'%</div><h2>'+msg+'</h2><p>You got '+s.score+' out of '+s.questions.length+' correct.</p><div style="display:flex;gap:0.75rem;justify-content:center"><button class="quiz-btn" onclick="startQuiz(\''+s.type+'\')">Try again</button><button class="quiz-btn secondary" onclick="document.getElementById(\'quiz-start\').style.display=\'block\';document.getElementById(\'quiz-main\').style.display=\'none\'">Choose quiz type</button></div></div>';}
+
+function confirmQuitQuiz(){
+  if(confirm('Leave this quiz? Your progress will be lost.')) quitQuiz();
+}
+function quitQuiz(){
+  quizState={questions:[],current:0,score:0,answered:false,type:''};
+  document.getElementById('quiz-start').style.display='block';
+  document.getElementById('quiz-main').style.display='none';
+}
 
 /* =====================================================
    AI TUTOR
@@ -442,3 +459,45 @@ document.addEventListener('click', function(e){
     closeAttachMenu();
   }
 });
+
+async function buildAIQuestions(){
+  var topics=['vocabulary','grammar','phrases','script'];
+  var topic=topics[Math.floor(Math.random()*topics.length)];
+  var typingEl=document.createElement('div');
+  typingEl.className='chat-typing';
+  typingEl.textContent='Generating quiz…';
+  document.getElementById('quiz-main').appendChild(typingEl);
+
+  try {
+    var res = await fetch('https://tamil-backend.onrender.com/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:[{
+        role:'user',
+        content:`Generate 5 multiple choice quiz questions about Tamil ${topic}. 
+Return ONLY valid JSON in this exact format, no other text:
+[{"prompt":"question text","big":"Tamil word or letter","sub":"romanisation","answer":"correct answer","options":["option1","option2","option3","option4"]}]
+Make sure options contains exactly 4 items and answer is one of them.`
+      }]})
+    });
+    var data = await res.json();
+    typingEl.remove();
+    var text = data.reply.replace(/```json|```/g,'').trim();
+    var questions = JSON.parse(text);
+    return questions.map(function(q){
+      return {type:'mcq',prompt:q.prompt,big:q.big||'',sub:q.sub||'',answer:q.answer,options:q.options};
+    });
+  } catch(e) {
+    typingEl.remove();
+    return buildMixedQuestions(); // fallback to regular quiz
+  }
+}
+
+async function startAIQuiz(){
+  document.getElementById('quiz-start').style.display='none';
+  document.getElementById('quiz-main').style.display='block';
+  document.getElementById('quiz-main').innerHTML='<div class="chat-typing" style="margin:2rem auto;text-align:center">Generating quiz…</div>';
+  var qs = await buildAIQuestions();
+  quizState={questions:qs,current:0,score:0,answered:false,type:'ai'};
+  renderQuizQ();
+}
