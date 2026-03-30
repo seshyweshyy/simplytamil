@@ -477,8 +477,104 @@ function updateProgress() {
   document.getElementById('pb-alpha').style.width = pct + '%';
 }
 updateProgress();
-var VOCAB=[{t:'அம்மா',r:'ammā',e:'mother',cat:'Family'},{t:'அப்பா',r:'appā',e:'father',cat:'Family'},{t:'அண்ணன்',r:'aṇṇaṉ',e:'older brother',cat:'Family'},{t:'அக்கா',r:'akkā',e:'older sister',cat:'Family'},{t:'தம்பி',r:'tampi',e:'younger brother',cat:'Family'},{t:'தங்கை',r:'taṅkai',e:'younger sister',cat:'Family'},{t:'தாத்தா',r:'tāttā',e:'grandfather',cat:'Family'},{t:'பாட்டி',r:'pāṭṭi',e:'grandmother',cat:'Family'},{t:'குழந்தை',r:'kuḻandai',e:'child',cat:'Family'},{t:'கணவன்',r:'kaṇavaṉ',e:'husband',cat:'Family'},{t:'மனைவி',r:'maṉaivi',e:'wife',cat:'Family'},{t:'உணவு',r:'uṇavu',e:'food',cat:'Food'},{t:'தண்ணீர்',r:'taṇṇīr',e:'water',cat:'Food'},{t:'சாப்பாடு',r:'cāppāḍu',e:'meal/rice dish',cat:'Food'},{t:'பால்',r:'pāl',e:'milk',cat:'Food'},{t:'காய்கறி',r:'kāykaṟi',e:'vegetables',cat:'Food'},{t:'பழம்',r:'paḻam',e:'fruit',cat:'Food'},{t:'மாம்பழம்',r:'māmpaḻam',e:'mango',cat:'Food'},{t:'வாழைப்பழம்',r:'vāḻaippaḻam',e:'banana',cat:'Food'},{t:'தோசை',r:'tōcai',e:'dosa',cat:'Food'},{t:'இட்லி',r:'iṭli',e:'idli',cat:'Food'},{t:'சாம்பார்',r:'cāmpār',e:'sambar',cat:'Food'},{t:'கடை',r:'kaḍai',e:'shop/store',cat:'Places'},{t:'வீடு',r:'vīḍu',e:'house',cat:'Places'},{t:'பள்ளி',r:'paḷḷi',e:'school',cat:'Places'},{t:'மருத்துவமனை',r:'maruttuvamanai',e:'hospital',cat:'Places'},{t:'கோயில்',r:'kōyil',e:'temple',cat:'Places'},{t:'நகரம்',r:'nakaram',e:'city',cat:'Places'},{t:'கடற்கரை',r:'kaḍaṟkarai',e:'beach',cat:'Places'},{t:'சாலை',r:'cālai',e:'road',cat:'Places'},{t:'சிவப்பு',r:'civappu',e:'red',cat:'Colours'},{t:'நீலம்',r:'nīlam',e:'blue',cat:'Colours'},{t:'பச்சை',r:'paccai',e:'green',cat:'Colours'},{t:'மஞ்சள்',r:'mañcaḷ',e:'yellow',cat:'Colours'},{t:'கறுப்பு',r:'kaṟuppu',e:'black',cat:'Colours'},{t:'வெள்ளை',r:'veḷḷai',e:'white',cat:'Colours'},{t:'ஆரஞ்சு',r:'ārancu',e:'orange',cat:'Colours'},{t:'ஒன்று',r:'oṉṟu',e:'one',cat:'Numbers'},{t:'இரண்டு',r:'iraṇḍu',e:'two',cat:'Numbers'},{t:'மூன்று',r:'mūṉṟu',e:'three',cat:'Numbers'},{t:'நான்கு',r:'nāṉku',e:'four',cat:'Numbers'},{t:'ஐந்து',r:'aintu',e:'five',cat:'Numbers'},{t:'ஆறு',r:'āṟu',e:'six',cat:'Numbers'},{t:'ஏழு',r:'ēḻu',e:'seven',cat:'Numbers'},{t:'எட்டு',r:'eṭṭu',e:'eight',cat:'Numbers'},{t:'ஒன்பது',r:'oṉpatu',e:'nine',cat:'Numbers'},{t:'பத்து',r:'pattu',e:'ten',cat:'Numbers'},{t:'நான்',r:'nāṉ',e:'I',cat:'Pronouns'},{t:'நீ',r:'nī',e:'you (informal)',cat:'Pronouns'},{t:'நீங்கள்',r:'nīṅkaḷ',e:'you (formal)',cat:'Pronouns'},{t:'அவன்',r:'avaṉ',e:'he (informal)',cat:'Pronouns'},{t:'அவள்',r:'avaḷ',e:'she (informal)',cat:'Pronouns'},{t:'அவர்',r:'avar',e:'he/she (formal)',cat:'Pronouns'},{t:'அது',r:'atu',e:'it/that',cat:'Pronouns'},{t:'நாம்',r:'nām',e:'we (inclusive)',cat:'Pronouns'},{t:'அவர்கள்',r:'avarkaḷ',e:'they (formal)',cat:'Pronouns'},{t:'செல்',r:'cel',e:'to go',cat:'Verbs'},{t:'வா',r:'vā',e:'to come',cat:'Verbs'},{t:'சாப்பிடு',r:'cāppiḍu',e:'to eat',cat:'Verbs'},{t:'குடி',r:'kuḍi',e:'to drink',cat:'Verbs'},{t:'படி',r:'paḍi',e:'to study/read',cat:'Verbs'},{t:'பேசு',r:'pēcu',e:'to speak',cat:'Verbs'},{t:'கேள்',r:'kēḷ',e:'to ask/hear',cat:'Verbs'},{t:'பார்',r:'pār',e:'to see/look',cat:'Verbs'},{t:'தா',r:'tā',e:'to give',cat:'Verbs'},{t:'வாங்கு',r:'vāṅku',e:'to buy/take',cat:'Verbs'},{t:'நல்ல',r:'nalla',e:'good',cat:'Adjectives'},{t:'கெட்ட',r:'keṭṭa',e:'bad',cat:'Adjectives'},{t:'பெரிய',r:'periya',e:'big',cat:'Adjectives'},{t:'சின்ன',r:'ciṉṉa',e:'small',cat:'Adjectives'},{t:'புது',r:'putu',e:'new',cat:'Adjectives'},{t:'பழைய',r:'paḻaiya',e:'old',cat:'Adjectives'},{t:'அழகான',r:'aḻakāṉa',e:'beautiful',cat:'Adjectives'},{t:'வலிமையான',r:'valimaiān',e:'strong',cat:'Adjectives'},{t:'இப்போது',r:'ippōtu',e:'now',cat:'Time'},{t:'நாளை',r:'nāḷai',e:'tomorrow',cat:'Time'},{t:'நேற்று',r:'nēṟṟu',e:'yesterday',cat:'Time'},{t:'இன்று',r:'iṉṟu',e:'today',cat:'Time'},{t:'காலை',r:'kālai',e:'morning',cat:'Time'},{t:'மாலை',r:'mālai',e:'evening',cat:'Time'},{t:'இரவு',r:'iravu',e:'night',cat:'Time'},{t:'வாரம்',r:'vāram',e:'week',cat:'Time'},{t:'மாதம்',r:'mātam',e:'month',cat:'Time'},{t:'வருடம்',r:'varuḍam',e:'year',cat:'Time'}];
-var vocabCat='All';
+
+var VOCAB = [
+  // Family
+  { t: 'அம்மா',       r: 'ammā',          e: 'mother',         cat: 'Family'     },
+  { t: 'அப்பா',       r: 'appā',          e: 'father',         cat: 'Family'     },
+  { t: 'அண்ணன்',      r: 'aṇṇaṉ',        e: 'older brother',  cat: 'Family'     },
+  { t: 'அக்கா',       r: 'akkā',          e: 'older sister',   cat: 'Family'     },
+  { t: 'தம்பி',       r: 'tampi',         e: 'younger brother', cat: 'Family'    },
+  { t: 'தங்கை',       r: 'taṅkai',        e: 'younger sister', cat: 'Family'     },
+  { t: 'தாத்தா',      r: 'tāttā',         e: 'grandfather',    cat: 'Family'     },
+  { t: 'பாட்டி',      r: 'pāṭṭi',         e: 'grandmother',    cat: 'Family'     },
+  { t: 'குழந்தை',     r: 'kuḻandai',      e: 'child',          cat: 'Family'     },
+  { t: 'கணவன்',       r: 'kaṇavaṉ',       e: 'husband',        cat: 'Family'     },
+  { t: 'மனைவி',       r: 'maṉaivi',       e: 'wife',           cat: 'Family'     },
+  // Food
+  { t: 'உணவு',        r: 'uṇavu',         e: 'food',           cat: 'Food'       },
+  { t: 'தண்ணீர்',     r: 'taṇṇīr',        e: 'water',          cat: 'Food'       },
+  { t: 'சாப்பாடு',    r: 'cāppāḍu',       e: 'meal/rice dish', cat: 'Food'       },
+  { t: 'பால்',        r: 'pāl',           e: 'milk',           cat: 'Food'       },
+  { t: 'காய்கறி',     r: 'kāykaṟi',       e: 'vegetables',     cat: 'Food'       },
+  { t: 'பழம்',        r: 'paḻam',         e: 'fruit',          cat: 'Food'       },
+  { t: 'மாம்பழம்',    r: 'māmpaḻam',      e: 'mango',          cat: 'Food'       },
+  { t: 'வாழைப்பழம்',  r: 'vāḻaippaḻam',  e: 'banana',         cat: 'Food'       },
+  { t: 'தோசை',        r: 'tōcai',         e: 'dosa',           cat: 'Food'       },
+  { t: 'இட்லி',       r: 'iṭli',          e: 'idli',           cat: 'Food'       },
+  { t: 'சாம்பார்',    r: 'cāmpār',        e: 'sambar',         cat: 'Food'       },
+  // Places
+  { t: 'கடை',         r: 'kaḍai',         e: 'shop/store',     cat: 'Places'     },
+  { t: 'வீடு',        r: 'vīḍu',          e: 'house',          cat: 'Places'     },
+  { t: 'பள்ளி',       r: 'paḷḷi',         e: 'school',         cat: 'Places'     },
+  { t: 'மருத்துவமனை', r: 'maruttuvamanai', e: 'hospital',      cat: 'Places'     },
+  { t: 'கோயில்',      r: 'kōyil',         e: 'temple',         cat: 'Places'     },
+  { t: 'நகரம்',       r: 'nakaram',       e: 'city',           cat: 'Places'     },
+  { t: 'கடற்கரை',     r: 'kaḍaṟkarai',    e: 'beach',          cat: 'Places'     },
+  { t: 'சாலை',        r: 'cālai',         e: 'road',           cat: 'Places'     },
+  // Colours
+  { t: 'சிவப்பு',     r: 'civappu',       e: 'red',            cat: 'Colours'    },
+  { t: 'நீலம்',       r: 'nīlam',         e: 'blue',           cat: 'Colours'    },
+  { t: 'பச்சை',       r: 'paccai',        e: 'green',          cat: 'Colours'    },
+  { t: 'மஞ்சள்',      r: 'mañcaḷ',        e: 'yellow',         cat: 'Colours'    },
+  { t: 'கறுப்பு',     r: 'kaṟuppu',       e: 'black',          cat: 'Colours'    },
+  { t: 'வெள்ளை',      r: 'veḷḷai',        e: 'white',          cat: 'Colours'    },
+  { t: 'ஆரஞ்சு',      r: 'ārancu',        e: 'orange',         cat: 'Colours'    },
+  // Numbers
+  { t: 'ஒன்று',       r: 'oṉṟu',         e: 'one',            cat: 'Numbers'    },
+  { t: 'இரண்டு',      r: 'iraṇḍu',        e: 'two',            cat: 'Numbers'    },
+  { t: 'மூன்று',      r: 'mūṉṟu',        e: 'three',          cat: 'Numbers'    },
+  { t: 'நான்கு',      r: 'nāṉku',        e: 'four',           cat: 'Numbers'    },
+  { t: 'ஐந்து',       r: 'aintu',         e: 'five',           cat: 'Numbers'    },
+  { t: 'ஆறு',         r: 'āṟu',           e: 'six',            cat: 'Numbers'    },
+  { t: 'ஏழு',         r: 'ēḻu',           e: 'seven',          cat: 'Numbers'    },
+  { t: 'எட்டு',       r: 'eṭṭu',          e: 'eight',          cat: 'Numbers'    },
+  { t: 'ஒன்பது',      r: 'oṉpatu',        e: 'nine',           cat: 'Numbers'    },
+  { t: 'பத்து',       r: 'pattu',         e: 'ten',            cat: 'Numbers'    },
+  // Pronouns
+  { t: 'நான்',        r: 'nāṉ',           e: 'I',              cat: 'Pronouns'   },
+  { t: 'நீ',          r: 'nī',            e: 'you (informal)', cat: 'Pronouns'   },
+  { t: 'நீங்கள்',     r: 'nīṅkaḷ',        e: 'you (formal)',   cat: 'Pronouns'   },
+  { t: 'அவன்',        r: 'avaṉ',          e: 'he (informal)',  cat: 'Pronouns'   },
+  { t: 'அவள்',        r: 'avaḷ',          e: 'she (informal)', cat: 'Pronouns'   },
+  { t: 'அவர்',        r: 'avar',          e: 'he/she (formal)', cat: 'Pronouns'  },
+  { t: 'அது',         r: 'atu',           e: 'it/that',        cat: 'Pronouns'   },
+  { t: 'நாம்',        r: 'nām',           e: 'we (inclusive)', cat: 'Pronouns'   },
+  { t: 'அவர்கள்',     r: 'avarkaḷ',       e: 'they (formal)',  cat: 'Pronouns'   },
+  // Verbs
+  { t: 'செல்',        r: 'cel',           e: 'to go',          cat: 'Verbs'      },
+  { t: 'வா',          r: 'vā',            e: 'to come',        cat: 'Verbs'      },
+  { t: 'சாப்பிடு',    r: 'cāppiḍu',       e: 'to eat',         cat: 'Verbs'      },
+  { t: 'குடி',        r: 'kuḍi',          e: 'to drink',       cat: 'Verbs'      },
+  { t: 'படி',         r: 'paḍi',          e: 'to study/read',  cat: 'Verbs'      },
+  { t: 'பேசு',        r: 'pēcu',          e: 'to speak',       cat: 'Verbs'      },
+  { t: 'கேள்',        r: 'kēḷ',           e: 'to ask/hear',    cat: 'Verbs'      },
+  { t: 'பார்',        r: 'pār',           e: 'to see/look',    cat: 'Verbs'      },
+  { t: 'தா',          r: 'tā',            e: 'to give',        cat: 'Verbs'      },
+  { t: 'வாங்கு',      r: 'vāṅku',         e: 'to buy/take',    cat: 'Verbs'      },
+  // Adjectives
+  { t: 'நல்ல',        r: 'nalla',         e: 'good',           cat: 'Adjectives' },
+  { t: 'கெட்ட',       r: 'keṭṭa',         e: 'bad',            cat: 'Adjectives' },
+  { t: 'பெரிய',       r: 'periya',        e: 'big',            cat: 'Adjectives' },
+  { t: 'சின்ன',       r: 'ciṉṉa',        e: 'small',          cat: 'Adjectives' },
+  { t: 'புது',        r: 'putu',          e: 'new',            cat: 'Adjectives' },
+  { t: 'பழைய',        r: 'paḻaiya',       e: 'old',            cat: 'Adjectives' },
+  { t: 'அழகான',       r: 'aḻakāṉa',      e: 'beautiful',      cat: 'Adjectives' },
+  { t: 'வலிமையான',    r: 'valimaiān',     e: 'strong',         cat: 'Adjectives' },
+  // Time
+  { t: 'இப்போது',     r: 'ippōtu',        e: 'now',            cat: 'Time'       },
+  { t: 'நாளை',        r: 'nāḷai',         e: 'tomorrow',       cat: 'Time'       },
+  { t: 'நேற்று',      r: 'nēṟṟu',        e: 'yesterday',      cat: 'Time'       },
+  { t: 'இன்று',       r: 'iṉṟu',          e: 'today',          cat: 'Time'       },
+  { t: 'காலை',        r: 'kālai',         e: 'morning',        cat: 'Time'       },
+  { t: 'மாலை',        r: 'mālai',         e: 'evening',        cat: 'Time'       },
+  { t: 'இரவு',        r: 'iravu',         e: 'night',          cat: 'Time'       },
+  { t: 'வாரம்',       r: 'vāram',         e: 'week',           cat: 'Time'       },
+  { t: 'மாதம்',       r: 'mātam',         e: 'month',          cat: 'Time'       },
+  { t: 'வருடம்',      r: 'varuḍam',       e: 'year',           cat: 'Time'       }
+];
+var vocabCat = 'All';
+
 function renderVocab(){var cats=['All'].concat([...new Set(VOCAB.map(function(v){return v.cat}))]);document.getElementById('vocab-cats').innerHTML=cats.map(function(c){return '<button class="tab-btn'+(c===vocabCat?' active':'')+'" onclick="setVocabCat(\''+c+'\')">'+(c==='All'?'All':c)+'</button>';}).join('');var data=vocabCat==='All'?VOCAB:VOCAB.filter(function(v){return v.cat===vocabCat});document.getElementById('vocab-grid').innerHTML=data.map(function(v){var tSafe=v.t.replace(/'/g,"\\'");return '<div class="vocab-card" onclick="flipCard(this)">'+'<div class="vocab-front">'+'<div class="vocab-cat">'+v.cat+'</div>'+'<div class="vocab-tamil">'+v.t+'</div>'+'<button class="speak-btn" onclick="event.stopPropagation();speakTamil(\''+tSafe+'\',this)">'+speakerSVG()+'</button>'+'<div class="letter-roman" style="font-size:0.8rem;color:var(--text3)">'+v.r+'</div>'+'</div>'+'<div class="vocab-back"><div class="vocab-english">'+v.e+'</div><div class="vocab-roman-back">'+v.r+'</div></div>'+'</div>';}).join('');}
 function setVocabCat(c){vocabCat=c;renderVocab();}
 function flipCard(el){if(el.classList.contains('flipped')){el.classList.remove('flipped');}else{el.classList.add('flipped');addXP(1);}}
