@@ -582,7 +582,7 @@ function buildWordMatchQuestions() {
                       .slice(0, 3);
     var opts = [v.e].concat(wrongs.map(function(w) { return w.e; }))
                     .sort(function() { return Math.random() - 0.5; });
-    return { type: 'mcq', prompt: 'What does this Tamil word mean?', big: v.t, hint: v.r, answer: v.e, options: opts };
+    return { type: 'mcq', prompt: 'What does this Tamil word mean?', big: v.t, hint: v.r, answer: v.e, options: opts, inputType: Math.random() < 0.3 ? 'text' : 'mcq' };
   });
 }
 
@@ -594,7 +594,7 @@ function buildPhraseFillQuestions() {
                         .slice(0, 3);
     var opts = [p.e].concat(wrongs.map(function(w) { return w.e; }))
                     .sort(function() { return Math.random() - 0.5; });
-    return { type: 'mcq', prompt: 'What does this phrase mean?', big: p.t, hint: p.r, answer: p.e, options: opts };
+    return { type: 'mcq', prompt: 'What does this phrase mean?', big: p.t, hint: p.r, answer: p.e, options: opts, inputType: Math.random() < 0.3 ? 'text' : 'mcq' };
   });
 }
 
@@ -623,40 +623,73 @@ function renderQuizQ() {
   var dots = s.questions.map(function(_, i) {
     return '<div class="quiz-prog-dot' + (i < s.current ? ' done' : i === s.current ? ' current' : '') + '"></div>';
   }).join('');
+
   var html = '<button class="quiz-back-btn" onclick="confirmQuitQuiz()">← Back</button>'
     + '<div class="quiz-progress">' + dots + '</div>'
     + '<div class="quiz-q">' + q.prompt + '</div>'
     + '<div class="quiz-big-tamil">' + q.big + '</div>'
     + (localStorage.getItem('tamil_quiz_hints') !== 'false' && q.hint && !q.isHintAnswer
-        ? '<div class="quiz-hint">'+q.hint+'</div>'
-        : '')
-    + '<div class="quiz-options">'
-    + q.options.map(function(o) {
-        return '<button class="quiz-opt" onclick="answerQuiz(this,\'' + o.replace(/'/g, "\\'") + '\')">' + o + '</button>';
-      }).join('')
-    + '</div>'
-    + '<div id="quiz-feedback" style="display:none"></div>';
+        ? '<div class="quiz-hint">' + q.hint + '</div>'
+        : '');
+
+  if (q.inputType === 'text') {
+    html += '<div class="quiz-type-in">'
+      + '<input type="text" id="quiz-text-input" placeholder="Type your answer…" '
+      + 'onkeydown="if(event.key===\'Enter\')submitTextAnswer()">'
+      + '<button onclick="submitTextAnswer()">Check</button>'
+      + '</div>';
+  } else {
+    html += '<div class="quiz-options">'
+      + q.options.map(function(o) {
+          return '<button class="quiz-opt" onclick="answerQuiz(this,\'' + o.replace(/'/g, "\\'") + '\')">' + o + '</button>';
+        }).join('')
+      + '</div>';
+  }
+
+  html += '<div id="quiz-feedback" style="display:none"></div>';
   document.getElementById('quiz-main').innerHTML = html;
   s.answered = false;
+
+  if (q.inputType === 'text') {
+    setTimeout(function() {
+      var inp = document.getElementById('quiz-text-input');
+      if (inp) inp.focus();
+    }, 50);
+  }
+}
+
+function submitTextAnswer() {
+  var s = quizState;
+  if (s.answered) return;
+  var input = document.getElementById('quiz-text-input');
+  if (!input) return;
+  var typed = input.value.trim().toLowerCase();
+  var correct = typed === s.questions[s.current].answer.toLowerCase();
+  input.disabled = true;
+  document.querySelector('.quiz-type-in button').disabled = true;
+  s.answered = true;
+  showQuizFeedback(correct);
 }
 
 function answerQuiz(btn, chosen) {
   var s = quizState;
   if (s.answered) return;
   s.answered = true;
-  var q = s.questions[s.current];
-  var correct = chosen === q.answer;
+  var correct = chosen === s.questions[s.current].answer;
   document.querySelectorAll('.quiz-opt').forEach(function(b) { b.disabled = true; });
   btn.classList.add(correct ? 'correct' : 'wrong');
   if (!correct) {
     document.querySelectorAll('.quiz-opt').forEach(function(b) {
-      if (b.textContent === q.answer) b.classList.add('reveal');
+      if (b.textContent === s.questions[s.current].answer) b.classList.add('reveal');
     });
   }
-  if (correct) {
-    s.score++;
-    addXP(10);
-  }
+  showQuizFeedback(correct);
+}
+
+function showQuizFeedback(correct) {
+  var s = quizState;
+  var q = s.questions[s.current];
+  if (correct) { s.score++; addXP(10); }
   var fb = document.getElementById('quiz-feedback');
   fb.style.display = 'block';
   fb.className = 'quiz-feedback ' + (correct ? 'correct' : 'wrong');
@@ -665,9 +698,7 @@ function answerQuiz(btn, chosen) {
     var safe = q.big.replace(/'/g, "\\'");
     speakBtn = '<button class="speak-btn" style="position:static;margin-top:10px;" onclick="speakTamil(\'' + safe + '\',this)">'
       + '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
-      + '<path d="M5 10v4h3l4 3V7l-4 3H5z"/>'
-      + '<path d="M14 9a3 3 0 0 1 0 6"/>'
-      + '<path d="M17 7a6 6 0 0 1 0 10"/>'
+      + '<path d="M5 10v4h3l4 3V7l-4 3H5z"/><path d="M14 9a3 3 0 0 1 0 6"/><path d="M17 7a6 6 0 0 1 0 10"/>'
       + '</svg></button>';
   }
   fb.innerHTML = (correct ? 'Correct! Well done.' : 'Not quite — the answer is: ' + q.answer)
