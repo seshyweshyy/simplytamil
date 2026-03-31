@@ -575,18 +575,266 @@ var VOCAB = [
 ];
 var vocabCat = 'All';
 
-function renderVocab(){var cats=['All'].concat([...new Set(VOCAB.map(function(v){return v.cat}))]);document.getElementById('vocab-cats').innerHTML=cats.map(function(c){return '<button class="tab-btn'+(c===vocabCat?' active':'')+'" onclick="setVocabCat(\''+c+'\')">'+(c==='All'?'All':c)+'</button>';}).join('');var data=vocabCat==='All'?VOCAB:VOCAB.filter(function(v){return v.cat===vocabCat});document.getElementById('vocab-grid').innerHTML=data.map(function(v){var tSafe=v.t.replace(/'/g,"\\'");return '<div class="vocab-card" onclick="flipCard(this)">'+'<div class="vocab-front">'+'<div class="vocab-cat">'+v.cat+'</div>'+'<div class="vocab-tamil">'+v.t+'</div>'+'<button class="speak-btn" onclick="event.stopPropagation();speakTamil(\''+tSafe+'\',this)">'+speakerSVG()+'</button>'+'<div class="letter-roman" style="font-size:0.8rem;color:var(--text3)">'+v.r+'</div>'+'</div>'+'<div class="vocab-back"><div class="vocab-english">'+v.e+'</div><div class="vocab-roman-back">'+v.r+'</div></div>'+'</div>';}).join('');}
-function setVocabCat(c){vocabCat=c;renderVocab();}
-function flipCard(el){if(el.classList.contains('flipped')){el.classList.remove('flipped');}else{el.classList.add('flipped');addXP(1);}}
-renderVocab();autoResizeTamilText();
-var PHRASES=[{t:'வணக்கம்',r:'Vaṇakkam',e:'Hello / Greetings',ctx:'The universal Tamil greeting. Used any time of day.',cat:'Greetings'},{t:'நலமா?',r:'Nalamā?',e:'Are you well?',ctx:'Informal way to ask "how are you?"',cat:'Greetings'},{t:'நலம்',r:'Nalam',e:'I am well / Fine',ctx:'Reply to நலமா',cat:'Greetings'},{t:'என் பெயர் ...',r:'En peyar ...',e:'My name is ...',ctx:'Fill in your name after "peyar"',cat:'Greetings'},{t:'உங்கள் பெயர் என்ன?',r:'Uṅkaḷ peyar eṉṉa?',e:'What is your name? (formal)',ctx:'Polite form — use with elders/strangers',cat:'Greetings'},{t:'நன்றி',r:'Naṉṟi',e:'Thank you',ctx:'Essential phrase.',cat:'Greetings'},{t:'மன்னிக்கவும்',r:'Maṉṉikkavum',e:'Excuse me / Sorry',ctx:'Use to apologise or get attention',cat:'Greetings'},{t:'சரி',r:'Cari',e:'OK / Alright',ctx:'Very common filler.',cat:'Greetings'},{t:'போகிறேன்',r:'Pōkiṟēṉ',e:'I am going / Goodbye',ctx:'Casual goodbye.',cat:'Greetings'},{t:'எவ்வளவு?',r:'Evvaḷavu?',e:'How much?',ctx:'First thing you need in any shop!',cat:'Shopping'},{t:'விலை என்ன?',r:'Vilai eṉṉa?',e:'What is the price?',ctx:'More formal way to ask the price',cat:'Shopping'},{t:'கொஞ்சம் கம்மி பண்ணுங்க',r:'Koñcam kammi paṇṇuṅka',e:'Please reduce a little',ctx:'For bargaining at markets',cat:'Shopping'},{t:'வேண்டும்',r:'Vēṇḍum',e:'I want / I need',ctx:'Attach to a noun',cat:'Shopping'},{t:'வேண்டாம்',r:'Vēṇḍām',e:"I don't want / No thanks",ctx:'Polite way to decline',cat:'Shopping'},{t:'எங்கே?',r:'Eṅkē?',e:'Where?',ctx:'Basic question word for directions',cat:'Travel'},{t:'எப்படி போவது?',r:'Eppaḍi pōvatu?',e:'How do I get there?',ctx:'Ask for directions anywhere',cat:'Travel'},{t:'நேரடியாக போ',r:'Nēraḍiyāka pō',e:'Go straight ahead',ctx:'Direction instruction',cat:'Travel'},{t:'வலது பக்கம்',r:'Valatu pakkam',e:'Right side / To the right',ctx:'Directions',cat:'Travel'},{t:'இடது பக்கம்',r:'Iḍatu pakkam',e:'Left side / To the left',ctx:'Directions',cat:'Travel'},{t:'பஸ் நிறுத்தம் எங்கே?',r:'Bas niṟuttam eṅkē?',e:'Where is the bus stop?',ctx:'Essential for getting around',cat:'Travel'},{t:'டிக்கெட் வேண்டும்',r:'Ṭikkeṭ vēṇḍum',e:'I need a ticket',ctx:'At bus/train stations',cat:'Travel'},{t:'நான் தமிழ் கற்றுக்கொள்கிறேன்',r:'Nāṉ tamiḻ kaṟṟukkoḷkiṟēṉ',e:'I am learning Tamil',ctx:'A great phrase to impress locals!',cat:'Learning'},{t:'மீண்டும் சொல்லுங்கள்',r:'Mīṇḍum colluṅkaḷ',e:'Please say it again',ctx:"When you didn't understand",cat:'Learning'},{t:'தமிழில் எப்படி சொல்வது?',r:'Tamiḻil eppaḍi colvatu?',e:'How do you say it in Tamil?',ctx:'Ask a local for the Tamil word',cat:'Learning'},{t:'புரியவில்லை',r:'Puriyavillai',e:"I don't understand",ctx:"Essential — don't be shy!",cat:'Learning'},{t:'மெதுவாக பேசுங்கள்',r:'Metuvāka pēcuṅkaḷ',e:'Please speak slowly',ctx:'Ask someone to slow down',cat:'Learning'},{t:'டாக்டர் தேவை',r:'Ṭākṭar tēvai',e:'I need a doctor',ctx:'Medical emergency phrase',cat:'Emergency'},{t:'உதவி செய்யுங்கள்',r:'Utavi ceyyuṅkaḷ',e:'Please help me',ctx:'Calling for help',cat:'Emergency'},{t:'போலீஸ் அழையுங்கள்',r:'Pōlīs aḻaiyuṅkaḷ',e:'Call the police',ctx:'Emergency situation',cat:'Emergency'}];
-var phraseCat='Greetings';var _phraseData=[];
-function renderPhrases(){var cats=[...new Set(PHRASES.map(function(p){return p.cat}))];document.getElementById('phrase-cats').innerHTML=cats.map(function(c){return '<button class="tab-btn'+(c===phraseCat?' active':'')+'" onclick="setPhraseCat(\''+c+'\')">'+(c)+'</button>';}).join('');_phraseData=PHRASES.filter(function(p){return p.cat===phraseCat});document.getElementById('phrase-list').innerHTML=_phraseData.map(function(p){return '<div class="phrase-card" style="position:relative;">'+'<div class="phrase-cat-label">'+p.cat+'</div>'+'<div class="phrase-tamil">'+p.t+'</div>'+'<button class="speak-btn" onclick="event.stopPropagation();speakTamil(\''+p.t.replace(/'/g,"\\'")+'\',this)">'+speakerSVG()+'</button>'+'<div class="phrase-roman">'+p.r+'</div>'+'<div class="phrase-english">'+p.e+'</div>'+'<div class="phrase-context">'+p.ctx+'</div>'+'</div>';}).join('');}
-function setPhraseCat(c){phraseCat=c;renderPhrases();}
+function renderVocab() {
+  var cats = ['All'].concat([...new Set(VOCAB.map(function(v) { return v.cat; }))]);
+  document.getElementById('vocab-cats').innerHTML = cats.map(function(c) {
+    return '<button class="tab-btn' + (c === vocabCat ? ' active' : '') + '" onclick="setVocabCat(\'' + c + '\')">'
+      + (c === 'All' ? 'All' : c) + '</button>';
+  }).join('');
+  var data = vocabCat === 'All' ? VOCAB : VOCAB.filter(function(v) { return v.cat === vocabCat; });
+  document.getElementById('vocab-grid').innerHTML = data.map(function(v) {
+    var tSafe = v.t.replace(/'/g, "\\'");
+    return '<div class="vocab-card" onclick="flipCard(this)">'
+      + '<div class="vocab-front">'
+      + '<div class="vocab-cat">' + v.cat + '</div>'
+      + '<div class="vocab-tamil">' + v.t + '</div>'
+      + '<button class="speak-btn" onclick="event.stopPropagation();speakTamil(\'' + tSafe + '\',this)">' + speakerSVG() + '</button>'
+      + '<div class="letter-roman" style="font-size:0.8rem;color:var(--text3)">' + v.r + '</div>'
+      + '</div>'
+      + '<div class="vocab-back"><div class="vocab-english">' + v.e + '</div><div class="vocab-roman-back">' + v.r + '</div></div>'
+      + '</div>';
+  }).join('');
+}
+
+function setVocabCat(c) {
+  vocabCat = c;
+  renderVocab();
+}
+
+function flipCard(el) {
+  if (el.classList.contains('flipped')) {
+    el.classList.remove('flipped');
+  } else {
+    el.classList.add('flipped');
+    addXP(1);
+  }
+}
+
+renderVocab();
+autoResizeTamilText();
+var PHRASES = [
+  // Greetings
+  { t: 'வணக்கம்',                    r: 'Vaṇakkam',                  e: 'Hello / Greetings',          ctx: 'The universal Tamil greeting. Used any time of day.',  cat: 'Greetings' },
+  { t: 'நலமா?',                      r: 'Nalamā?',                   e: 'Are you well?',              ctx: 'Informal way to ask "how are you?"',                   cat: 'Greetings' },
+  { t: 'நலம்',                       r: 'Nalam',                     e: 'I am well / Fine',           ctx: 'Reply to நலமா',                                        cat: 'Greetings' },
+  { t: 'என் பெயர் ...',              r: 'En peyar ...',              e: 'My name is ...',             ctx: 'Fill in your name after "peyar"',                      cat: 'Greetings' },
+  { t: 'உங்கள் பெயர் என்ன?',        r: 'Uṅkaḷ peyar eṉṉa?',        e: 'What is your name? (formal)', ctx: 'Polite form — use with elders/strangers',             cat: 'Greetings' },
+  { t: 'நன்றி',                      r: 'Naṉṟi',                    e: 'Thank you',                  ctx: 'Essential phrase.',                                    cat: 'Greetings' },
+  { t: 'மன்னிக்கவும்',               r: 'Maṉṉikkavum',               e: 'Excuse me / Sorry',          ctx: 'Use to apologise or get attention',                    cat: 'Greetings' },
+  { t: 'சரி',                        r: 'Cari',                      e: 'OK / Alright',               ctx: 'Very common filler.',                                  cat: 'Greetings' },
+  { t: 'போகிறேன்',                   r: 'Pōkiṟēṉ',                  e: 'I am going / Goodbye',       ctx: 'Casual goodbye.',                                      cat: 'Greetings' },
+  // Shopping
+  { t: 'எவ்வளவு?',                   r: 'Evvaḷavu?',                 e: 'How much?',                  ctx: 'First thing you need in any shop!',                    cat: 'Shopping'  },
+  { t: 'விலை என்ன?',                 r: 'Vilai eṉṉa?',               e: 'What is the price?',         ctx: 'More formal way to ask the price',                     cat: 'Shopping'  },
+  { t: 'கொஞ்சம் கம்மி பண்ணுங்க',    r: 'Koñcam kammi paṇṇuṅka',    e: 'Please reduce a little',     ctx: 'For bargaining at markets',                            cat: 'Shopping'  },
+  { t: 'வேண்டும்',                   r: 'Vēṇḍum',                   e: 'I want / I need',            ctx: 'Attach to a noun',                                     cat: 'Shopping'  },
+  { t: 'வேண்டாம்',                   r: 'Vēṇḍām',                   e: "I don't want / No thanks",   ctx: 'Polite way to decline',                                cat: 'Shopping'  },
+  // Travel
+  { t: 'எங்கே?',                     r: 'Eṅkē?',                    e: 'Where?',                     ctx: 'Basic question word for directions',                   cat: 'Travel'    },
+  { t: 'எப்படி போவது?',              r: 'Eppaḍi pōvatu?',            e: 'How do I get there?',        ctx: 'Ask for directions anywhere',                          cat: 'Travel'    },
+  { t: 'நேரடியாக போ',               r: 'Nēraḍiyāka pō',            e: 'Go straight ahead',          ctx: 'Direction instruction',                                cat: 'Travel'    },
+  { t: 'வலது பக்கம்',               r: 'Valatu pakkam',             e: 'Right side / To the right',  ctx: 'Directions',                                           cat: 'Travel'    },
+  { t: 'இடது பக்கம்',               r: 'Iḍatu pakkam',              e: 'Left side / To the left',    ctx: 'Directions',                                           cat: 'Travel'    },
+  { t: 'பஸ் நிறுத்தம் எங்கே?',      r: 'Bas niṟuttam eṅkē?',       e: 'Where is the bus stop?',     ctx: 'Essential for getting around',                         cat: 'Travel'    },
+  { t: 'டிக்கெட் வேண்டும்',          r: 'Ṭikkeṭ vēṇḍum',           e: 'I need a ticket',            ctx: 'At bus/train stations',                                cat: 'Travel'    },
+  // Learning
+  { t: 'நான் தமிழ் கற்றுக்கொள்கிறேன்', r: 'Nāṉ tamiḻ kaṟṟukkoḷkiṟēṉ', e: 'I am learning Tamil',    ctx: 'A great phrase to impress locals!',                    cat: 'Learning'  },
+  { t: 'மீண்டும் சொல்லுங்கள்',       r: 'Mīṇḍum colluṅkaḷ',        e: 'Please say it again',        ctx: "When you didn't understand",                           cat: 'Learning'  },
+  { t: 'தமிழில் எப்படி சொல்வது?',    r: 'Tamiḻil eppaḍi colvatu?',  e: 'How do you say it in Tamil?', ctx: 'Ask a local for the Tamil word',                     cat: 'Learning'  },
+  { t: 'புரியவில்லை',                r: 'Puriyavillai',              e: "I don't understand",         ctx: "Essential — don't be shy!",                            cat: 'Learning'  },
+  { t: 'மெதுவாக பேசுங்கள்',         r: 'Metuvāka pēcuṅkaḷ',        e: 'Please speak slowly',        ctx: 'Ask someone to slow down',                             cat: 'Learning'  },
+  // Emergency
+  { t: 'டாக்டர் தேவை',              r: 'Ṭākṭar tēvai',             e: 'I need a doctor',            ctx: 'Medical emergency phrase',                             cat: 'Emergency' },
+  { t: 'உதவி செய்யுங்கள்',           r: 'Utavi ceyyuṅkaḷ',          e: 'Please help me',             ctx: 'Calling for help',                                     cat: 'Emergency' },
+  { t: 'போலீஸ் அழையுங்கள்',         r: 'Pōlīs aḻaiyuṅkaḷ',        e: 'Call the police',            ctx: 'Emergency situation',                                  cat: 'Emergency' }
+];
+var phraseCat = 'Greetings';
+var _phraseData = [];
+
+function renderPhrases() {
+  var cats = [...new Set(PHRASES.map(function(p) { return p.cat; }))];
+  document.getElementById('phrase-cats').innerHTML = cats.map(function(c) {
+    return '<button class="tab-btn' + (c === phraseCat ? ' active' : '') + '" onclick="setPhraseCat(\'' + c + '\')">' + c + '</button>';
+  }).join('');
+  _phraseData = PHRASES.filter(function(p) { return p.cat === phraseCat; });
+  document.getElementById('phrase-list').innerHTML = _phraseData.map(function(p) {
+    return '<div class="phrase-card" style="position:relative;">'
+      + '<div class="phrase-cat-label">' + p.cat + '</div>'
+      + '<div class="phrase-tamil">' + p.t + '</div>'
+      + '<button class="speak-btn" onclick="event.stopPropagation();speakTamil(\'' + p.t.replace(/'/g, "\\'") + '\',this)">' + speakerSVG() + '</button>'
+      + '<div class="phrase-roman">' + p.r + '</div>'
+      + '<div class="phrase-english">' + p.e + '</div>'
+      + '<div class="phrase-context">' + p.ctx + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function setPhraseCat(c) {
+  phraseCat = c;
+  renderPhrases();
+}
+
 renderPhrases();
-var GRAMMAR_DATA=[{section:'Word Order',rules:[{title:'Subject-Object-Verb (SOV)',body:'Tamil follows SOV order — the verb always comes last.',examples:[{t:'நான் தண்ணீர் குடிக்கிறேன்',r:'Nāṉ taṇṇīr kuḍikkiṟēṉ',e:'I water drink → I drink water'}]},{title:'Modifiers come before nouns',body:'Adjectives always appear before the noun they modify.',examples:[{t:'நல்ல உணவு',r:'Nalla uṇavu',e:'good food'}]}]},{section:'Nouns & Cases',rules:[{title:'No articles (a/an/the)',body:'Tamil has no articles. Context determines definiteness.',examples:[{t:'வீடு நல்லது',r:'Vīḍu nallatu',e:'The/a house is good'}]},{title:'Case suffixes (வேற்றுமை)',body:'Tamil adds suffixes to nouns to show grammatical role.',examples:[{t:'வீட்டில்',r:'vīṭṭil',e:'"in the house"'},{t:'வீட்டிற்கு',r:'vīṭṭiṟku',e:'"to the house"'}]},{title:'Nominative (subject)',body:'The base form of the noun is used as subject.',examples:[{t:'அவர் வருகிறார்',r:'Avar varukiṟār',e:'He/she is coming'}]},{title:'Accusative (direct object)',body:'Add -ஐ (-ai) to mark the direct object.',examples:[{t:'நான் பழத்தை சாப்பிட்டேன்',r:'Nāṉ paḻattai cāppiṭṭēṉ',e:'I ate the fruit'}]}]},{section:'Verbs',rules:[{title:'Verbs conjugate for tense AND person',body:'Tamil verbs change form based on tense and subject.',examples:[{t:'சாப்பிடுகிறேன்',r:'cāppikuṟēṉ',e:'I eat (present)'},{t:'சாப்பிட்டேன்',r:'cāppiṭṭēṉ',e:'I ate (past)'},{t:'சாப்பிடுவேன்',r:'cāppiḍuvēṉ',e:'I will eat (future)'}]},{title:'Present tense: add கிற + person suffix',body:'Present tense is formed by adding கிற to the verb stem.',examples:[{t:'வருகிறேன்',r:'varukiṟēṉ',e:'I am coming'},{t:'வருகிறார்',r:'varukiṟār',e:'He/She is coming (formal)'}]},{title:'Past tense',body:'Past tense uses a modified stem, then personal suffix.',examples:[{t:'போனேன்',r:'pōṉēṉ',e:'I went'},{t:'வந்தேன்',r:'vanttēṉ',e:'I came'}]},{title:'Future tense: add வ + personal suffix',body:'Future tense adds வ (va) after the verb stem.',examples:[{t:'வருவேன்',r:'varuvēṉ',e:'I will come'}]}]},{section:'Pronouns',rules:[{title:'Formal vs informal distinction',body:'Always use formal (நீங்கள், அவர்) with elders/strangers.',examples:[{t:'நீ — நீங்கள்',r:'nī — nīṅkaḷ',e:'you (informal) — you (formal)'}]},{title:'Inclusive vs exclusive "we"',body:'நாம் includes the listener; நாங்கள் excludes them.',examples:[{t:'நாம் போவோம்',r:'Nām pōvōm',e:"Let's go (inclusive)"},{t:'நாங்கள் போனோம்',r:'Nāṅkaḷ pōṉōm',e:'We went (exclusive)'}]}]},{section:'Postpositions',rules:[{title:'Postpositions, not prepositions',body:'Tamil uses postpositions — they come AFTER the noun.',examples:[{t:'மரத்தின் மேல்',r:'marattil mēl',e:'on the tree'},{t:'கடையில் இருந்து',r:'kaḍaiyil iruntu',e:'from the shop'}]}]},{section:'Negation',rules:[{title:'Negative verb forms',body:'Tamil uses special negative verb forms rather than a "not" word.',examples:[{t:'வரவில்லை',r:'varavillai',e:'did not come'},{t:'போகமாட்டேன்',r:'pōkamāṭṭēṉ',e:'I will not go'}]}]}];
-function renderGrammar(){document.getElementById('grammar-content').innerHTML=GRAMMAR_DATA.map(function(sec){return '<div class="grammar-section"><h3>'+sec.section+'</h3>'+sec.rules.map(function(r){return '<div class="grammar-rule"><h4>'+r.title+'</h4><p>'+r.body+'</p>'+r.examples.map(function(ex){return '<div class="grammar-example"><div class="grammar-ex-tamil">'+ex.t+'</div><div class="grammar-ex-roman">'+ex.r+'</div><div class="grammar-ex-en">'+ex.e+'</div></div>';}).join('')+'</div>';}).join('')+'</div>';}).join('');}
+
+var GRAMMAR_DATA = [
+  {
+    section: 'Word Order',
+    rules: [
+      {
+        title: 'Subject-Object-Verb (SOV)',
+        body: 'Tamil follows SOV order — the verb always comes last.',
+        examples: [
+          { t: 'நான் தண்ணீர் குடிக்கிறேன்', r: 'Nāṉ taṇṇīr kuḍikkiṟēṉ', e: 'I water drink → I drink water' }
+        ]
+      },
+      {
+        title: 'Modifiers come before nouns',
+        body: 'Adjectives always appear before the noun they modify.',
+        examples: [
+          { t: 'நல்ல உணவு', r: 'Nalla uṇavu', e: 'good food' }
+        ]
+      }
+    ]
+  },
+  {
+    section: 'Nouns & Cases',
+    rules: [
+      {
+        title: 'No articles (a/an/the)',
+        body: 'Tamil has no articles. Context determines definiteness.',
+        examples: [
+          { t: 'வீடு நல்லது', r: 'Vīḍu nallatu', e: 'The/a house is good' }
+        ]
+      },
+      {
+        title: 'Case suffixes (வேற்றுமை)',
+        body: 'Tamil adds suffixes to nouns to show grammatical role.',
+        examples: [
+          { t: 'வீட்டில்',   r: 'vīṭṭil',   e: '"in the house"' },
+          { t: 'வீட்டிற்கு', r: 'vīṭṭiṟku', e: '"to the house"' }
+        ]
+      },
+      {
+        title: 'Nominative (subject)',
+        body: 'The base form of the noun is used as subject.',
+        examples: [
+          { t: 'அவர் வருகிறார்', r: 'Avar varukiṟār', e: 'He/she is coming' }
+        ]
+      },
+      {
+        title: 'Accusative (direct object)',
+        body: 'Add -ஐ (-ai) to mark the direct object.',
+        examples: [
+          { t: 'நான் பழத்தை சாப்பிட்டேன்', r: 'Nāṉ paḻattai cāppiṭṭēṉ', e: 'I ate the fruit' }
+        ]
+      }
+    ]
+  },
+  {
+    section: 'Verbs',
+    rules: [
+      {
+        title: 'Verbs conjugate for tense AND person',
+        body: 'Tamil verbs change form based on tense and subject.',
+        examples: [
+          { t: 'சாப்பிடுகிறேன்', r: 'cāppikuṟēṉ',  e: 'I eat (present)'      },
+          { t: 'சாப்பிட்டேன்',   r: 'cāppiṭṭēṉ',   e: 'I ate (past)'         },
+          { t: 'சாப்பிடுவேன்',   r: 'cāppiḍuvēṉ',  e: 'I will eat (future)'  }
+        ]
+      },
+      {
+        title: 'Present tense: add கிற + person suffix',
+        body: 'Present tense is formed by adding கிற to the verb stem.',
+        examples: [
+          { t: 'வருகிறேன்', r: 'varukiṟēṉ', e: 'I am coming'              },
+          { t: 'வருகிறார்', r: 'varukiṟār', e: 'He/She is coming (formal)' }
+        ]
+      },
+      {
+        title: 'Past tense',
+        body: 'Past tense uses a modified stem, then personal suffix.',
+        examples: [
+          { t: 'போனேன்',  r: 'pōṉēṉ',   e: 'I went' },
+          { t: 'வந்தேன்', r: 'vanttēṉ', e: 'I came' }
+        ]
+      },
+      {
+        title: 'Future tense: add வ + personal suffix',
+        body: 'Future tense adds வ (va) after the verb stem.',
+        examples: [
+          { t: 'வருவேன்', r: 'varuvēṉ', e: 'I will come' }
+        ]
+      }
+    ]
+  },
+  {
+    section: 'Pronouns',
+    rules: [
+      {
+        title: 'Formal vs informal distinction',
+        body: 'Always use formal (நீங்கள், அவர்) with elders/strangers.',
+        examples: [
+          { t: 'நீ — நீங்கள்', r: 'nī — nīṅkaḷ', e: 'you (informal) — you (formal)' }
+        ]
+      },
+      {
+        title: 'Inclusive vs exclusive "we"',
+        body: 'நாம் includes the listener; நாங்கள் excludes them.',
+        examples: [
+          { t: 'நாம் போவோம்',    r: 'Nām pōvōm',      e: "Let's go (inclusive)"    },
+          { t: 'நாங்கள் போனோம்', r: 'Nāṅkaḷ pōṉōm',  e: 'We went (exclusive)'     }
+        ]
+      }
+    ]
+  },
+  {
+    section: 'Postpositions',
+    rules: [
+      {
+        title: 'Postpositions, not prepositions',
+        body: 'Tamil uses postpositions — they come AFTER the noun.',
+        examples: [
+          { t: 'மரத்தின் மேல்',    r: 'marattil mēl',    e: 'on the tree'     },
+          { t: 'கடையில் இருந்து',  r: 'kaḍaiyil iruntu', e: 'from the shop'   }
+        ]
+      }
+    ]
+  },
+  {
+    section: 'Negation',
+    rules: [
+      {
+        title: 'Negative verb forms',
+        body: 'Tamil uses special negative verb forms rather than a "not" word.',
+        examples: [
+          { t: 'வரவில்லை',    r: 'varavillai',   e: 'did not come'   },
+          { t: 'போகமாட்டேன்', r: 'pōkamāṭṭēṉ',  e: 'I will not go'  }
+        ]
+      }
+    ]
+  }
+];
+
+
+function renderGrammar() {
+  document.getElementById('grammar-content').innerHTML = GRAMMAR_DATA.map(function(sec) {
+    return '<div class="grammar-section"><h3>' + sec.section + '</h3>'
+      + sec.rules.map(function(r) {
+        return '<div class="grammar-rule"><h4>' + r.title + '</h4><p>' + r.body + '</p>'
+          + r.examples.map(function(ex) {
+            return '<div class="grammar-example">'
+              + '<div class="grammar-ex-tamil">' + ex.t + '</div>'
+              + '<div class="grammar-ex-roman">' + ex.r + '</div>'
+              + '<div class="grammar-ex-en">'   + ex.e + '</div>'
+              + '</div>';
+          }).join('')
+          + '</div>';
+      }).join('')
+      + '</div>';
+  }).join('');
+}
 renderGrammar();
+
 var quizState={questions:[],current:0,score:0,answered:false,type:''};
 function buildLetterIdQuestions(){var qs=[];var pool=VOWELS.concat(CONSONANTS);var shuffled=pool.sort(function(){return Math.random()-0.5}).slice(0,10);shuffled.forEach(function(l){var wrongs=pool.filter(function(x){return x.t!==l.t}).sort(function(){return Math.random()-0.5}).slice(0,3);var opts=[l.r].concat(wrongs.map(function(w){return w.r})).sort(function(){return Math.random()-0.5});qs.push({type:'mcq',prompt:'What sound does this letter make?',big:l.t,answer:l.r,options:opts,isHintAnswer:true});});return qs;}
 function buildWordMatchQuestions(){var pool=VOCAB.sort(function(){return Math.random()-0.5}).slice(0,10);return pool.map(function(v){var wrongs=VOCAB.filter(function(x){return x.t!==v.t}).sort(function(){return Math.random()-0.5}).slice(0,3);var opts=[v.e].concat(wrongs.map(function(w){return w.e})).sort(function(){return Math.random()-0.5});return{type:'mcq',prompt:'What does this Tamil word mean?',big:v.t,hint:v.r,answer:v.e,options:opts};});}
