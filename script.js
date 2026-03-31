@@ -1500,10 +1500,8 @@ function startConvMode(scenarioIndex) {
 
   // Inject scenario system message as a hidden first exchange
   // We do this by adding a user-turn that sets context, then let the AI open
-  chatHistory.push({
-    role: 'user',
-    content: '__CONV_MODE_START__: ' + scenario.systemMsg + ' Begin now — open the conversation naturally in Tamil.'
-  });
+  chatHistory = [];
+  chatHistory.__convSystem = scenario.systemMsg;
 
   showConvModeBar();
 
@@ -1570,3 +1568,9 @@ function endConvMode() {
   // Update placeholder
   document.getElementById('chat-input').placeholder = 'Ask your Tamil tutor anything…';
 }
+
+// Clear any stale conv mode state on load
+convModeActive = false;
+var staleBar = document.getElementById('conv-mode-bar');
+if (staleBar) staleBar.remove();
+updateConvModeBtn();
