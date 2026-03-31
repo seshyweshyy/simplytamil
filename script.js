@@ -33,316 +33,40 @@ var IS_MOBILE = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.
              || ('ontouchstart' in window && navigator.maxTouchPoints > 1);
 
 var VOWELS = [
-  {
-    t:'அ',
-    r:'a',
-    name:'short a',
-    guide:'Like the "a" in "about". Short and quick.',
-    words:[
-      {t:'அம்மா',r:'ammā',e:'mother'},
-      {t:'அன்பு',r:'anbu',e:'love'}
-    ]
-  },
-  {
-    t:'ஆ',
-    r:'ā',
-    name:'long a',
-    guide:'Like "ah" — held longer. The mouth opens wide.',
-    words:[
-      {t:'ஆமா',r:'āmā',e:'yes (informal)'},
-      {t:'ஆகாயம்',r:'ākāyam',e:'sky'}
-    ]
-  },
-  {
-    t:'இ',
-    r:'i',
-    name:'short i',
-    guide:'Like "i" in "bit". Short, front of mouth.',
-    words:[
-      {t:'இல்லை',r:'illai',e:'no'},
-      {t:'இந்தியா',r:'Indhiyā',e:'India'}
-    ]
-  },
-  {
-    t:'ஈ',
-    r:'ī',
-    name:'long i',
-    guide:'Like "ee" in "feet". Held longer.',
-    words:[
-      {t:'ஈ',r:'ī',e:'fly (insect)'},
-      {t:'ஈர்ப்பு',r:'īrppu',e:'gravity'}
-    ]
-  },
-  {
-    t:'உ',
-    r:'u',
-    name:'short u',
-    guide:'Like "u" in "put". Lips rounded, short.',
-    words:[
-      {t:'உணவு',r:'uṇavu',e:'food'},
-      {t:'உடல்',r:'uḍal',e:'body'}
-    ]
-  },
-  {
-    t:'ஊ',
-    r:'ū',
-    name:'long u',
-    guide:'Like "oo" in "food". Held longer.',
-    words:[{t:'ஊர்',r:'ūr',e:'village/town'},
-      {t:'ஊசி',r:'ūci',e:'needle'}
-    ]
-  },
-  {
-    t:'எ',
-    r:'e',
-    name:'short e',
-    guide:'Like "e" in "pet". Short and crisp.',
-    words:[
-      {t:'எலி',r:'eli',e:'rat'},
-      {t:'எங்கே',r:'eṅkē',e:'where'}
-    ]
-  },
-  {
-    t:'ஏ',
-    r:'ē',
-    name:'long e',guide:'Like "ay" in "say". Held longer.',
-    words:[
-      {t:'ஏன்',r:'ēn',e:'why'},
-      {t:'ஏணி',r:'ēṇi',e:'ladder'}
-    ]
-  },
-  {
-    t:'ஐ',
-    r:'ai',
-    name:'ai diphthong',
-    guide:'Like "ai" in "aisle". Two vowel sounds blended.',
-    words:[
-      {t:'ஐந்து',r:'aindu',e:'five'},
-      {t:'ஐயம்',r:'aiyam',e:'doubt'}
-    ]
-  },
-  {
-    t:'ஒ',
-    r:'o',
-    name:'short o',
-    guide:'Like "o" in "got" (British). Short and round.',
-    words:[
-      {t:'ஒன்று',r:'ondru',e:'one'},
-      {t:'ஒளி',r:'oḷi',e:'light'}
-    ]
-  },
-  {
-    t:'ஓ',
-    r:'ō',
-    name:'long o',
-    guide:'Like "o" in "go". Held longer.',
-    words:[
-      {t:'ஓடு',r:'ōḍu',e:'run (verb)'},
-      {t:'ஓவியம்',r:'ōviyam',e:'painting'}
-    ]
-  },
-  {
-    t:'ஔ',
-    r:'au',
-    name:'au diphthong',
-    guide:'Like "ow" in "cow". Two sounds blended. Rare in modern Tamil.',
-    words:[
-      {t:'ஔவியர்',r:'auviyar',e:'Auviyar (classical poet)'}
-    ]
-  }
+  { t: 'அ', r: 'a',  name: 'short a',       guide: 'Like the "a" in "about". Short and quick.',               words: [{ t: 'அம்மா',   r: 'ammā',   e: 'mother'                   }, { t: 'அன்பு',   r: 'anbu',   e: 'love'          }] },
+  { t: 'ஆ', r: 'ā',  name: 'long a',        guide: 'Like "ah" — held longer. The mouth opens wide.',          words: [{ t: 'ஆமா',    r: 'āmā',    e: 'yes (informal)'            }, { t: 'ஆகாயம்', r: 'ākāyam', e: 'sky'           }] },
+  { t: 'இ', r: 'i',  name: 'short i',       guide: 'Like "i" in "bit". Short, front of mouth.',               words: [{ t: 'இல்லை',  r: 'illai',  e: 'no'                        }, { t: 'இந்தியா', r: 'Indhiyā', e: 'India'        }] },
+  { t: 'ஈ', r: 'ī',  name: 'long i',        guide: 'Like "ee" in "feet". Held longer.',                       words: [{ t: 'ஈ',      r: 'ī',      e: 'fly (insect)'              }, { t: 'ஈர்ப்பு', r: 'īrppu',  e: 'gravity'      }] },
+  { t: 'உ', r: 'u',  name: 'short u',       guide: 'Like "u" in "put". Lips rounded, short.',                 words: [{ t: 'உணவு',   r: 'uṇavu',  e: 'food'                      }, { t: 'உடல்',   r: 'uḍal',   e: 'body'          }] },
+  { t: 'ஊ', r: 'ū',  name: 'long u',        guide: 'Like "oo" in "food". Held longer.',                       words: [{ t: 'ஊர்',    r: 'ūr',     e: 'village/town'              }, { t: 'ஊசி',    r: 'ūci',    e: 'needle'        }] },
+  { t: 'எ', r: 'e',  name: 'short e',       guide: 'Like "e" in "pet". Short and crisp.',                     words: [{ t: 'எலி',    r: 'eli',    e: 'rat'                       }, { t: 'எங்கே',  r: 'eṅkē',   e: 'where'         }] },
+  { t: 'ஏ', r: 'ē',  name: 'long e',        guide: 'Like "ay" in "say". Held longer.',                        words: [{ t: 'ஏன்',    r: 'ēn',     e: 'why'                       }, { t: 'ஏணி',    r: 'ēṇi',    e: 'ladder'        }] },
+  { t: 'ஐ', r: 'ai', name: 'ai diphthong',  guide: 'Like "ai" in "aisle". Two vowel sounds blended.',         words: [{ t: 'ஐந்து',  r: 'aindu',  e: 'five'                      }, { t: 'ஐயம்',   r: 'aiyam',  e: 'doubt'         }] },
+  { t: 'ஒ', r: 'o',  name: 'short o',       guide: 'Like "o" in "got" (British). Short and round.',           words: [{ t: 'ஒன்று',  r: 'ondru',  e: 'one'                       }, { t: 'ஒளி',    r: 'oḷi',    e: 'light'         }] },
+  { t: 'ஓ', r: 'ō',  name: 'long o',        guide: 'Like "o" in "go". Held longer.',                          words: [{ t: 'ஓடு',    r: 'ōḍu',    e: 'run (verb)'                }, { t: 'ஓவியம்', r: 'ōviyam', e: 'painting'      }] },
+  { t: 'ஔ', r: 'au', name: 'au diphthong',  guide: 'Like "ow" in "cow". Two sounds blended. Rare in modern Tamil.', words: [{ t: 'ஔவியர்', r: 'auviyar', e: 'Auviyar (classical poet)' }] }
 ];
-
 
 var CONSONANTS = [
-  {
-    t:'க',
-    r:'k/g',
-    name:'ka',
-    guide:'Hard "k" at start, softer "g" between vowels. Very common letter.',
-    words:[
-      {t:'கை',r:'kai',e:'hand'},
-      {t:'கல்',r:'kal',e:'stone'},
-      {t:'காட்டு',r:'kāṭṭu',e:'forest'}
-    ]
-  },
-  {
-    t:'ங',
-    r:'ng',
-    name:'nga',
-    guide:'Like "ng" in "ring". Only appears after க sounds. Rare at word start.',
-    words:[
-      {t:'அங்கே',r:'aṅkē',e:'there'},
-      {t:'சங்கம்',r:'caṅkam',e:'assembly'}
-    ]
-  },
-  {
-    t:'ச',
-    r:'ch/s/j',
-    name:'ca',
-    guide:'Sounds like "ch", "s", or "j" depending on position. Versatile consonant.',
-    words:[
-      {t:'சாப்பிடு',r:'cāppiḍu',e:'eat'},
-      {t:'சூரியன்',r:'cūriyaṉ',e:'sun'},
-      {t:'செல்',r:'cel',e:'go'}
-    ]
-  },
-  {
-    t:'ஞ',
-    r:'ny',
-    name:'nya',
-    guide:'Like "ny" in Spanish "mañana". Nasal + palatal sound.',
-    words:[
-      {t:'ஞாயிறு',r:'ñāyiṟu',e:'Sunday/sun'},
-      {t:'ஞானம்',r:'ñāṉam',e:'wisdom'}
-    ]
-  },
-  {
-    t:'ட',
-    r:'ṭ/ḍ',
-    name:'ṭa',
-    guide:'Retroflex "t" — tongue curls back to touch the roof of the mouth. Hard at start, soft between vowels.',
-    words:[
-      {t:'டீ',r:'ṭī',e:'tea'},
-      {t:'கோடி',r:'kōḍi',e:'crore/flag'}
-    ]
-  },
-  {
-    t:'ண',
-    r:'ṇ',
-    name:'ṇa',
-    guide:'Retroflex nasal — tongue curls back. Like "n" but with tongue curled back.',
-    words:[
-      {t:'வண்ணம்',r:'vaṇṇam',e:'colour'},
-      {t:'மண்',r:'maṇ',e:'soil/earth'}
-    ]
-  },
-  {
-    t:'த',
-    r:'th/dh',
-    name:'ta',
-    guide:'Dental "t" — tongue touches back of top teeth. Like a soft "th" in "the".',
-    words:[
-      {t:'தண்ணீர்',r:'taṇṇīr',e:'water'},
-      {t:'தாய்',r:'tāy',e:'mother'},
-      {t:'தமிழ்',r:'tamiḻ',e:'Tamil'}
-    ]
-  },
-  {
-    t:'ந',
-    r:'n',
-    name:'na',
-    guide:'Dental nasal — like "n" but with tongue against the teeth.',
-    words:[
-      {t:'நான்',r:'nāṉ',e:'I/me'},
-      {t:'நாடு',r:'nāḍu',e:'country'},
-      {t:'நல்ல',r:'nalla',e:'good'}
-    ]
-  },
-  {
-    t: 'ப',
-    r: 'p/b',
-    name: 'pa',
-    guide: 'Hard "p" at start, softer "b" between vowels.',
-    words: [
-      { t: 'பால்',  r: 'pāl',   e: 'milk'          },
-      { t: 'பூ',    r: 'pū',    e: 'flower'        },
-      { t: 'படம்',  r: 'paḍam', e: 'picture/film'  }
-    ]
-  },
-  {
-    t: 'ம',
-    r: 'm',
-    name: 'ma',
-    guide: 'Exactly like English "m". One of the most common Tamil letters.',
-    words: [
-      { t: 'மனிதன்', r: 'maṉitaṉ', e: 'human/man' },
-      { t: 'மழை',    r: 'maḻai',   e: 'rain'      },
-      { t: 'மரம்',   r: 'maram',   e: 'tree'      }
-    ]
-  },
-  {
-    t: 'ய',
-    r: 'y',
-    name: 'ya',
-    guide: 'Like English "y" in "yes". Glide consonant.',
-    words: [
-      { t: 'யார்',  r: 'yār',   e: 'who'      },
-      { t: 'யானை', r: 'yāṉai', e: 'elephant'  }
-    ]
-  },
-  {
-    t: 'ர',
-    r: 'r',
-    name: 'ra',
-    guide: 'Flap "r" — tongue briefly touches the ridge behind teeth.',
-    words: [
-      { t: 'ரோடு',   r: 'rōḍu',  e: 'road'  },
-      { t: 'ரத்தம்', r: 'rattam', e: 'blood' }
-    ]
-  },
-  {
-    t: 'ல',
-    r: 'l',
-    name: 'la',
-    guide: 'Dental "l" — tongue touches back of teeth.',
-    words: [
-      { t: 'லட்சணம்', r: 'laṭcaṇam', e: 'character' },
-      { t: 'லோக்கல்', r: 'lōkkal',   e: 'local'     }
-    ]
-  },
-  {
-    t: 'வ',
-    r: 'v/w',
-    name: 'va',
-    guide: 'Like English "v" but softer — sometimes almost like "w".',
-    words: [
-      { t: 'வீடு',  r: 'vīḍu',  e: 'house'      },
-      { t: 'வாழ்க', r: 'vāḻka', e: 'long live!' },
-      { t: 'வா',    r: 'vā',    e: 'come'        }
-    ]
-  },
-  {
-    t: 'ழ',
-    r: 'ḻ',
-    name: 'ḻa (unique!)',
-    guide: '🌟 UNIQUE TO TAMIL! No equivalent in any other language. Tongue curls far back, then flips forward.',
-    words: [
-      { t: 'தமிழ்', r: 'tamiḻ', e: 'Tamil (the language)' },
-      { t: 'வாழை',  r: 'vāḻai', e: 'banana'               },
-      { t: 'மழை',   r: 'maḻai', e: 'rain'                 }
-    ]
-  },
-  {
-    t: 'ள',
-    r: 'ḷ',
-    name: 'ḷa',
-    guide: 'Retroflex "l" — tongue curls back. Different from regular ல.',
-    words: [
-      { t: 'ஆள்',       r: 'āḷ',       e: 'person/man' },
-      { t: 'தமிழ்நாடு', r: 'tamiḻnāḍu', e: 'Tamil Nadu' }
-    ]
-  },
-  {
-    t: 'ற',
-    r: 'ṟ',
-    name: 'ṟa',
-    guide: 'Trill "r" — a rolled "r" similar to Spanish "rr".',
-    words: [
-      { t: 'நாற்று', r: 'nāṟṟu', e: 'seedling' }
-    ]
-  },
-  {
-    t: 'ன',
-    r: 'ṉ',
-    name: 'ṉa',
-    guide: 'Alveolar nasal — tongue tip touches the ridge.',
-    words: [
-      { t: 'தன்',  r: 'taṉ',  e: 'self/oneself' },
-      { t: 'இன்று', r: 'iṉṟu', e: 'today'        }
-    ]
-  }
+  { t: 'க', r: 'k/g',   name: 'ka',          guide: 'Hard "k" at start, softer "g" between vowels. Very common letter.',                                           words: [{ t: 'கை',       r: 'kai',      e: 'hand'                   }, { t: 'கல்',      r: 'kal',      e: 'stone'          }, { t: 'காட்டு',   r: 'kāṭṭu',    e: 'forest'              }] },
+  { t: 'ங', r: 'ng',    name: 'nga',          guide: 'Like "ng" in "ring". Only appears after க sounds. Rare at word start.',                                      words: [{ t: 'அங்கே',   r: 'aṅkē',    e: 'there'                  }, { t: 'சங்கம்',   r: 'caṅkam',   e: 'assembly'                      }] },
+  { t: 'ச', r: 'ch/s/j', name: 'ca',          guide: 'Sounds like "ch", "s", or "j" depending on position. Versatile consonant.',                                  words: [{ t: 'சாப்பிடு', r: 'cāppiḍu', e: 'eat'                    }, { t: 'சூரியன்',  r: 'cūriyaṉ',  e: 'sun'            }, { t: 'செல்',     r: 'cel',      e: 'go'                  }] },
+  { t: 'ஞ', r: 'ny',    name: 'nya',          guide: 'Like "ny" in Spanish "mañana". Nasal + palatal sound.',                                                       words: [{ t: 'ஞாயிறு',  r: 'ñāyiṟu',  e: 'Sunday/sun'             }, { t: 'ஞானம்',    r: 'ñāṉam',    e: 'wisdom'                        }] },
+  { t: 'ட', r: 'ṭ/ḍ',   name: 'ṭa',          guide: 'Retroflex "t" — tongue curls back to touch the roof of the mouth. Hard at start, soft between vowels.',      words: [{ t: 'டீ',      r: 'ṭī',      e: 'tea'                    }, { t: 'கோடி',     r: 'kōḍi',     e: 'crore/flag'                    }] },
+  { t: 'ண', r: 'ṇ',     name: 'ṇa',          guide: 'Retroflex nasal — tongue curls back. Like "n" but with tongue curled back.',                                  words: [{ t: 'வண்ணம்',  r: 'vaṇṇam',  e: 'colour'                 }, { t: 'மண்',      r: 'maṇ',      e: 'soil/earth'                    }] },
+  { t: 'த', r: 'th/dh', name: 'ta',          guide: 'Dental "t" — tongue touches back of top teeth. Like a soft "th" in "the".',                                  words: [{ t: 'தண்ணீர்', r: 'taṇṇīr',  e: 'water'                  }, { t: 'தாய்',     r: 'tāy',      e: 'mother'         }, { t: 'தமிழ்',    r: 'tamiḻ',    e: 'Tamil'               }] },
+  { t: 'ந', r: 'n',     name: 'na',          guide: 'Dental nasal — like "n" but with tongue against the teeth.',                                                  words: [{ t: 'நான்',    r: 'nāṉ',     e: 'I/me'                   }, { t: 'நாடு',     r: 'nāḍu',     e: 'country'        }, { t: 'நல்ல',     r: 'nalla',    e: 'good'                }] },
+  { t: 'ப', r: 'p/b',   name: 'pa',          guide: 'Hard "p" at start, softer "b" between vowels.',                                                               words: [{ t: 'பால்',    r: 'pāl',     e: 'milk'                   }, { t: 'பூ',       r: 'pū',       e: 'flower'         }, { t: 'படம்',     r: 'paḍam',    e: 'picture/film'        }] },
+  { t: 'ம', r: 'm',     name: 'ma',          guide: 'Exactly like English "m". One of the most common Tamil letters.',                                             words: [{ t: 'மனிதன்',  r: 'maṉitaṉ', e: 'human/man'              }, { t: 'மழை',      r: 'maḻai',    e: 'rain'           }, { t: 'மரம்',     r: 'maram',    e: 'tree'                }] },
+  { t: 'ய', r: 'y',     name: 'ya',          guide: 'Like English "y" in "yes". Glide consonant.',                                                                 words: [{ t: 'யார்',    r: 'yār',     e: 'who'                    }, { t: 'யானை',     r: 'yāṉai',    e: 'elephant'                      }] },
+  { t: 'ர', r: 'r',     name: 'ra',          guide: 'Flap "r" — tongue briefly touches the ridge behind teeth.',                                                   words: [{ t: 'ரோடு',    r: 'rōḍu',    e: 'road'                   }, { t: 'ரத்தம்',   r: 'rattam',   e: 'blood'                         }] },
+  { t: 'ல', r: 'l',     name: 'la',          guide: 'Dental "l" — tongue touches back of teeth.',                                                                  words: [{ t: 'லட்சணம்', r: 'laṭcaṇam', e: 'character'             }, { t: 'லோக்கல்',  r: 'lōkkal',   e: 'local'                         }] },
+  { t: 'வ', r: 'v/w',   name: 'va',          guide: 'Like English "v" but softer — sometimes almost like "w".',                                                    words: [{ t: 'வீடு',    r: 'vīḍu',    e: 'house'                  }, { t: 'வாழ்க',    r: 'vāḻka',    e: 'long live!'     }, { t: 'வா',       r: 'vā',       e: 'come'                }] },
+  { t: 'ழ', r: 'ḻ',     name: 'ḻa (unique!)', guide: '🌟 UNIQUE TO TAMIL! No equivalent in any other language. Tongue curls far back, then flips forward.',       words: [{ t: 'தமிழ்',   r: 'tamiḻ',   e: 'Tamil (the language)'   }, { t: 'வாழை',     r: 'vāḻai',    e: 'banana'         }, { t: 'மழை',      r: 'maḻai',    e: 'rain'                }] },
+  { t: 'ள', r: 'ḷ',     name: 'ḷa',          guide: 'Retroflex "l" — tongue curls back. Different from regular ல.',                                               words: [{ t: 'ஆள்',     r: 'āḷ',      e: 'person/man'             }, { t: 'தமிழ்நாடு', r: 'tamiḻnāḍu', e: 'Tamil Nadu'                 }] },
+  { t: 'ற', r: 'ṟ',     name: 'ṟa',          guide: 'Trill "r" — a rolled "r" similar to Spanish "rr".',                                                          words: [{ t: 'நாற்று',  r: 'nāṟṟu',   e: 'seedling'                                                                                                            }] },
+  { t: 'ன', r: 'ṉ',     name: 'ṉa',          guide: 'Alveolar nasal — tongue tip touches the ridge.',                                                             words: [{ t: 'தன்',     r: 'taṉ',     e: 'self/oneself'           }, { t: 'இன்று',    r: 'iṉṟu',     e: 'today'                         }] }
 ];
-
 
 var NUMBERS = [
   { t: '௧', r: 'ondru',   name: '1 — one',        guide: 'Pronounced "on-dru".',      words: [{ t: 'ஒன்று',   r: 'ondru',   e: 'one'      }] },
@@ -358,7 +82,6 @@ var NUMBERS = [
   { t: '௱', r: 'nooru',   name: '100 — hundred',  guide: 'Pronounced "nū-ru".',       words: [{ t: 'நூறு',    r: 'nūru',    e: 'hundred'  }] },
   { t: '௲', r: 'aayiram', name: '1000 — thousand', guide: 'Pronounced "ā-yi-ram".',   words: [{ t: 'ஆயிரம்',  r: 'āyiram',  e: 'thousand' }] }
 ];
-
 
 var PROPER_COMPOUNDS = [
   { t: 'கா',  r: 'kā',  name: 'ka+ā',  guide: 'க + ா = கா.',        words: [{ t: 'காடு',      r: 'kāḍu',    e: 'forest'          }, { t: 'கால்', r: 'kāl', e: 'leg/foot' }] },
