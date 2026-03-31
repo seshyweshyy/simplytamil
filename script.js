@@ -815,7 +815,6 @@ var GRAMMAR_DATA = [
   }
 ];
 
-
 function renderGrammar() {
   document.getElementById('grammar-content').innerHTML = GRAMMAR_DATA.map(function(sec) {
     return '<div class="grammar-section"><h3>' + sec.section + '</h3>'
@@ -835,19 +834,145 @@ function renderGrammar() {
 }
 renderGrammar();
 
-var quizState={questions:[],current:0,score:0,answered:false,type:''};
-function buildLetterIdQuestions(){var qs=[];var pool=VOWELS.concat(CONSONANTS);var shuffled=pool.sort(function(){return Math.random()-0.5}).slice(0,10);shuffled.forEach(function(l){var wrongs=pool.filter(function(x){return x.t!==l.t}).sort(function(){return Math.random()-0.5}).slice(0,3);var opts=[l.r].concat(wrongs.map(function(w){return w.r})).sort(function(){return Math.random()-0.5});qs.push({type:'mcq',prompt:'What sound does this letter make?',big:l.t,answer:l.r,options:opts,isHintAnswer:true});});return qs;}
-function buildWordMatchQuestions(){var pool=VOCAB.sort(function(){return Math.random()-0.5}).slice(0,10);return pool.map(function(v){var wrongs=VOCAB.filter(function(x){return x.t!==v.t}).sort(function(){return Math.random()-0.5}).slice(0,3);var opts=[v.e].concat(wrongs.map(function(w){return w.e})).sort(function(){return Math.random()-0.5});return{type:'mcq',prompt:'What does this Tamil word mean?',big:v.t,hint:v.r,answer:v.e,options:opts};});}
-function buildPhraseFillQuestions(){var pool=PHRASES.sort(function(){return Math.random()-0.5}).slice(0,8);return pool.map(function(p){var wrongs=PHRASES.filter(function(x){return x.t!==p.t}).sort(function(){return Math.random()-0.5}).slice(0,3);var opts=[p.e].concat(wrongs.map(function(w){return w.e})).sort(function(){return Math.random()-0.5});return{type:'mcq',prompt:'What does this phrase mean?',big:p.t,hint:p.r,answer:p.e,options:opts};});}
-function buildMixedQuestions(){return buildLetterIdQuestions().slice(0,4).concat(buildWordMatchQuestions().slice(0,4)).concat(buildPhraseFillQuestions().slice(0,4)).sort(function(){return Math.random()-0.5});}
-function startQuiz(type){var qs=type==='letter-id'?buildLetterIdQuestions():type==='word-match'?buildWordMatchQuestions():type==='phrase-fill'?buildPhraseFillQuestions():buildMixedQuestions();quizState={questions:qs,current:0,score:0,answered:false,type:type};document.getElementById('quiz-start').style.display='none';document.getElementById('quiz-main').style.display='block';renderQuizQ();}
-function renderQuizQ(){var s=quizState;if(s.current>=s.questions.length){renderQuizScore();return;}var q=s.questions[s.current];var dots=s.questions.map(function(_,i){return '<div class="quiz-prog-dot'+(i<s.current?' done':i===s.current?' current':'')+'"></div>';}).join('');var html='<button class="quiz-back-btn" onclick="confirmQuitQuiz()">← Back</button>'+'<div class="quiz-progress">'+dots+'</div>'+'<div class="quiz-q">'+q.prompt+'</div>'+'<div class="quiz-big-tamil">'+q.big+'</div>'
-+(localStorage.getItem('tamil_quiz_hints')!=='false' && q.hint && !q.isHintAnswer
-  ? '<div class="quiz-hint">'+q.hint+'</div>'
-  : '')
-  +'<div class="quiz-options">'+q.options.map(function(o){return '<button class="quiz-opt" onclick="answerQuiz(this,\''+o.replace(/'/g,"\\'")+'\')">'+(o)+'</button>';}).join('')+'</div>'+'<div id="quiz-feedback" style="display:none"></div>';document.getElementById('quiz-main').innerHTML=html;s.answered=false;}
-function answerQuiz(btn,chosen){var s=quizState;if(s.answered)return;s.answered=true;var q=s.questions[s.current];var correct=chosen===q.answer;document.querySelectorAll('.quiz-opt').forEach(function(b){b.disabled=true;});btn.classList.add(correct?'correct':'wrong');if(!correct){document.querySelectorAll('.quiz-opt').forEach(function(b){if(b.textContent===q.answer)b.classList.add('reveal');});}if(correct){s.score++;addXP(10);}var fb=document.getElementById('quiz-feedback');fb.style.display='block';fb.className='quiz-feedback '+(correct?'correct':'wrong');var speakBtn='';if(q.big){var safe=q.big.replace(/'/g,"\\'");speakBtn='<button class="speak-btn" style="position:static;margin-top:10px;" onclick="speakTamil(\''+safe+'\',this)"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10v4h3l4 3V7l-4 3H5z"/><path d="M14 9a3 3 0 0 1 0 6"/><path d="M17 7a6 6 0 0 1 0 10"/></svg></button>';}fb.innerHTML=(correct?'Correct! Well done.':'Not quite — the answer is: '+q.answer)+'<br><br>'+'Tamil: '+(q.big||'')+speakBtn;var nextBtn=document.createElement('button');nextBtn.className='quiz-btn';nextBtn.style.marginTop='0.5rem';nextBtn.textContent=s.current<s.questions.length-1?'Next question':'See results';nextBtn.onclick=function(){s.current++;renderQuizQ();};document.getElementById('quiz-main').appendChild(nextBtn);}
-function renderQuizScore(){var s=quizState;var pct=Math.round((s.score/s.questions.length)*100);if(typeof saveQuizBest==='function') saveQuizBest(s.type, pct);var msg=pct>=80?'Excellent work!':pct>=50?'Good effort — keep practising!':'Keep going — you\'ll get there!';document.getElementById('quiz-main').innerHTML='<div class="quiz-score"><div class="score-circle">'+pct+'%</div><h2>'+msg+'</h2><p>You got '+s.score+' out of '+s.questions.length+' correct.</p><div style="display:flex;gap:0.75rem;justify-content:center"><button class="quiz-btn" onclick="startQuiz(\''+s.type+'\')">Try again</button><button class="quiz-btn secondary" onclick="document.getElementById(\'quiz-start\').style.display=\'block\';document.getElementById(\'quiz-main\').style.display=\'none\'">Choose quiz type</button></div></div>';}
+var quizState = { questions: [], current: 0, score: 0, answered: false, type: '' };
+
+function buildLetterIdQuestions() {
+  var qs = [];
+  var pool = VOWELS.concat(CONSONANTS);
+  var shuffled = pool.sort(function() { return Math.random() - 0.5; }).slice(0, 10);
+  shuffled.forEach(function(l) {
+    var wrongs = pool.filter(function(x) { return x.t !== l.t; })
+                     .sort(function() { return Math.random() - 0.5; })
+                     .slice(0, 3);
+    var opts = [l.r].concat(wrongs.map(function(w) { return w.r; }))
+                    .sort(function() { return Math.random() - 0.5; });
+    qs.push({ type: 'mcq', prompt: 'What sound does this letter make?', big: l.t, answer: l.r, options: opts, isHintAnswer: true });
+  });
+  return qs;
+}
+
+function buildWordMatchQuestions() {
+  var pool = VOCAB.sort(function() { return Math.random() - 0.5; }).slice(0, 10);
+  return pool.map(function(v) {
+    var wrongs = VOCAB.filter(function(x) { return x.t !== v.t; })
+                      .sort(function() { return Math.random() - 0.5; })
+                      .slice(0, 3);
+    var opts = [v.e].concat(wrongs.map(function(w) { return w.e; }))
+                    .sort(function() { return Math.random() - 0.5; });
+    return { type: 'mcq', prompt: 'What does this Tamil word mean?', big: v.t, hint: v.r, answer: v.e, options: opts };
+  });
+}
+
+function buildPhraseFillQuestions() {
+  var pool = PHRASES.sort(function() { return Math.random() - 0.5; }).slice(0, 8);
+  return pool.map(function(p) {
+    var wrongs = PHRASES.filter(function(x) { return x.t !== p.t; })
+                        .sort(function() { return Math.random() - 0.5; })
+                        .slice(0, 3);
+    var opts = [p.e].concat(wrongs.map(function(w) { return w.e; }))
+                    .sort(function() { return Math.random() - 0.5; });
+    return { type: 'mcq', prompt: 'What does this phrase mean?', big: p.t, hint: p.r, answer: p.e, options: opts };
+  });
+}
+
+function buildMixedQuestions() {
+  return buildLetterIdQuestions().slice(0, 4)
+    .concat(buildWordMatchQuestions().slice(0, 4))
+    .concat(buildPhraseFillQuestions().slice(0, 4))
+    .sort(function() { return Math.random() - 0.5; });
+}
+
+function startQuiz(type) {
+  var qs = type === 'letter-id'   ? buildLetterIdQuestions()
+         : type === 'word-match'  ? buildWordMatchQuestions()
+         : type === 'phrase-fill' ? buildPhraseFillQuestions()
+         : buildMixedQuestions();
+  quizState = { questions: qs, current: 0, score: 0, answered: false, type: type };
+  document.getElementById('quiz-start').style.display = 'none';
+  document.getElementById('quiz-main').style.display = 'block';
+  renderQuizQ();
+}
+
+function renderQuizQ() {
+  var s = quizState;
+  if (s.current >= s.questions.length) { renderQuizScore(); return; }
+  var q = s.questions[s.current];
+  var dots = s.questions.map(function(_, i) {
+    return '<div class="quiz-prog-dot' + (i < s.current ? ' done' : i === s.current ? ' current' : '') + '"></div>';
+  }).join('');
+  var html = '<button class="quiz-back-btn" onclick="confirmQuitQuiz()">← Back</button>'
+    + '<div class="quiz-progress">' + dots + '</div>'
+    + '<div class="quiz-q">' + q.prompt + '</div>'
+    + '<div class="quiz-big-tamil">' + q.big + '</div>'
+    + (localStorage.getItem('tamil_quiz_hints') !== 'false' && q.hint && !q.isHintAnswer
+        ? '<div class="quiz-hint">' + q.hint + '</div>'
+        : '')
+    + '<div class="quiz-options">'
+    + q.options.map(function(o) {
+        return '<button class="quiz-opt" onclick="answerQuiz(this,\'' + o.replace(/'/g, "\\'") + '\')">' + o + '</button>';
+      }).join('')
+    + '</div>'
+    + '<div id="quiz-feedback" style="display:none"></div>';
+  document.getElementById('quiz-main').innerHTML = html;
+  s.answered = false;
+}
+
+function answerQuiz(btn, chosen) {
+  var s = quizState;
+  if (s.answered) return;
+  s.answered = true;
+  var q = s.questions[s.current];
+  var correct = chosen === q.answer;
+  document.querySelectorAll('.quiz-opt').forEach(function(b) { b.disabled = true; });
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) {
+    document.querySelectorAll('.quiz-opt').forEach(function(b) {
+      if (b.textContent === q.answer) b.classList.add('reveal');
+    });
+  }
+  if (correct) {
+    s.score++;
+    addXP(10);
+  }
+  var fb = document.getElementById('quiz-feedback');
+  fb.style.display = 'block';
+  fb.className = 'quiz-feedback ' + (correct ? 'correct' : 'wrong');
+  var speakBtn = '';
+  if (q.big) {
+    var safe = q.big.replace(/'/g, "\\'");
+    speakBtn = '<button class="speak-btn" style="position:static;margin-top:10px;" onclick="speakTamil(\'' + safe + '\',this)">'
+      + '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+      + '<path d="M5 10v4h3l4 3V7l-4 3H5z"/>'
+      + '<path d="M14 9a3 3 0 0 1 0 6"/>'
+      + '<path d="M17 7a6 6 0 0 1 0 10"/>'
+      + '</svg></button>';
+  }
+  fb.innerHTML = (correct ? 'Correct! Well done.' : 'Not quite — the answer is: ' + q.answer)
+    + '<br><br>Tamil: ' + (q.big || '') + speakBtn;
+  var nextBtn = document.createElement('button');
+  nextBtn.className = 'quiz-btn';
+  nextBtn.style.marginTop = '0.5rem';
+  nextBtn.textContent = s.current < s.questions.length - 1 ? 'Next question' : 'See results';
+  nextBtn.onclick = function() { s.current++; renderQuizQ(); };
+  document.getElementById('quiz-main').appendChild(nextBtn);
+}
+
+function renderQuizScore() {
+  var s = quizState;
+  var pct = Math.round((s.score / s.questions.length) * 100);
+  if (typeof saveQuizBest === 'function') saveQuizBest(s.type, pct);
+  var msg = pct >= 80 ? 'Excellent work!'
+          : pct >= 50 ? 'Good effort — keep practising!'
+          : 'Keep going — you\'ll get there!';
+  document.getElementById('quiz-main').innerHTML = '<div class="quiz-score">'
+    + '<div class="score-circle">' + pct + '%</div>'
+    + '<h2>' + msg + '</h2>'
+    + '<p>You got ' + s.score + ' out of ' + s.questions.length + ' correct.</p>'
+    + '<div style="display:flex;gap:0.75rem;justify-content:center">'
+    + '<button class="quiz-btn" onclick="startQuiz(\'' + s.type + '\')">Try again</button>'
+    + '<button class="quiz-btn secondary" onclick="document.getElementById(\'quiz-start\').style.display=\'block\';document.getElementById(\'quiz-main\').style.display=\'none\'">Choose quiz type</button>'
+    + '</div></div>';
+}
 
 function confirmQuitQuiz(){
   var overlay = document.createElement('div');
@@ -982,9 +1107,17 @@ function handleChatAttachment(input){
   });
 }
 
-function handleChatPaste(e){
-  var items=e.clipboardData&&e.clipboardData.items;if(!items)return;
-  for(var i=0;i<items.length;i++){if(items[i].type.indexOf('image')>=0){e.preventDefault();var file=items[i].getAsFile();if(file)handleChatAttachment({files:[file],value:''});return;}}
+function handleChatPaste(e) {
+  var items = e.clipboardData && e.clipboardData.items;
+  if (!items) return;
+  for (var i = 0; i < items.length; i++) {
+    if (items[i].type.indexOf('image') >= 0) {
+      e.preventDefault();
+      var file = items[i].getAsFile();
+      if (file) handleChatAttachment({ files: [file], value: '' });
+      return;
+    }
+  }
 }
 
 function renderAttachmentPreviews(){
@@ -1039,12 +1172,17 @@ function renderAttachmentPreviews(){
     `;
   }
 }
-function removeAttachment(i){chatAttachments.splice(i,1);renderAttachmentPreviews();}
 
-function sendChat(){
-  var input=document.getElementById('chat-input');var msg=input.value.trim();
-  if(!msg&&!chatAttachments.length)return;
-  var sendBtn=document.getElementById('chat-send');
+function removeAttachment(i){
+  chatAttachments.splice(i,1);
+  renderAttachmentPreviews();
+}
+
+function sendChat() {
+  var input = document.getElementById('chat-input');
+  var msg = input.value.trim();
+  if (!msg && !chatAttachments.length) return;
+  var sendBtn = document.getElementById('chat-send');
   var userContent=[];
   chatAttachments.forEach(function(a){
   if(a.type === 'image'){
@@ -1059,9 +1197,9 @@ function sendChat(){
     });
   }
 });
-  if(msg)userContent.push({type:'text',text:msg});
-  if(!userContent.length)return;
-  var userDisplayParts=[];
+  if (msg) userContent.push({ type: 'text', text: msg });
+  if (!userContent.length) return;
+  var userDisplayParts = [];
   userDisplayParts.push(`
     <div class="chat-upload-grid">
       ${chatAttachments.map(a=>{
@@ -1073,15 +1211,23 @@ function sendChat(){
       }).join('')}
     </div>
   `);
-  if(msg)userDisplayParts.push(msg.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'));
-  var userDiv=document.createElement('div');userDiv.className='chat-msg user';userDiv.innerHTML=userDisplayParts.join('');
+  if (msg) userDisplayParts.push(msg.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'));
+  var userDiv = document.createElement('div');
+  userDiv.className = 'chat-msg user';
+  userDiv.innerHTML = userDisplayParts.join('');
   document.getElementById('chat-msgs').appendChild(userDiv);
-  var historyContent=userContent.length===1&&userContent[0].type==='text'?userContent[0].text:userContent;
-  chatHistory.push({role:'user',content:historyContent});
-  input.value='';input.style.height='auto';chatAttachments=[];renderAttachmentPreviews();
-  sendBtn.disabled=true;
-  var typingEl=document.createElement('div');typingEl.className='chat-typing';typingEl.textContent='Thinking…';
-  document.getElementById('chat-msgs').appendChild(typingEl);scrollChat();
+  var historyContent = userContent.length === 1 && userContent[0].type === 'text' ? userContent[0].text : userContent;
+  chatHistory.push({ role: 'user', content: historyContent });
+  input.value = '';
+  input.style.height = 'auto';
+  chatAttachments = [];
+  renderAttachmentPreviews();
+  sendBtn.disabled = true;
+  var typingEl = document.createElement('div');
+  typingEl.className = 'chat-typing';
+  typingEl.textContent = 'Thinking…';
+  document.getElementById('chat-msgs').appendChild(typingEl);
+  scrollChat();
   fetch('https://tamil-backend.onrender.com/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chatHistory})})
   .then(function(r){if(!r.ok)return r.json().then(function(d){throw d;});return r.json();})
   .then(function(data){
@@ -1092,8 +1238,14 @@ function sendChat(){
       if(errStr.indexOf('image exceeds')>=0||errStr.indexOf('5 MB')>=0||errStr.indexOf('5242880')>=0)friendly='⚠️ That image is too large to process (even after compression). Please try a smaller image.';
       else if(errStr.indexOf('invalid_request')>=0)friendly='⚠️ The request was invalid — this image format may not be supported. Try a JPEG or PNG.';
       else if(errStr.indexOf('overloaded')>=0||errStr.indexOf('529')>=0)friendly='⚠️ The AI is busy right now. Please wait a moment and try again.';
-      appendChat('ai',friendly);chatHistory.pop();
-    } else {chatHistory.push({role:'assistant',content:data.reply});appendChat('ai',data.reply);addXP(2);if(typeof saveChatHistory==='function')saveChatHistory();}
+      appendChat('ai', friendly);
+      chatHistory.pop();
+    } else {
+      chatHistory.push({ role: 'assistant', content: data.reply });
+      appendChat('ai', data.reply);
+      addXP(2);
+      if (typeof saveChatHistory === 'function') saveChatHistory();
+    }
   })
   .catch(function(err){
     typingEl.remove();
