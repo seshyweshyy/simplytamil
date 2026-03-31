@@ -1013,28 +1013,79 @@ function sendChat() {
   .finally(function(){sendBtn.disabled=false;scrollChat();});
 }
 
-function appendChat(role,text){
-  var div=document.createElement('div');div.className='chat-msg '+role;
-  var lines=text.split('\n');
-  var htmlLines=lines.map(function(line){
-    var escaped=line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    var tamilRuns=[...line.matchAll(/[\u0B80-\u0BFF]+/g)];
-    if(!tamilRuns.length)return escaped;
-    var isBreakdown=/[=→]/.test(line);
-    if(isBreakdown){return escaped.replace(/([\u0B80-\u0BFF]+)/g,function(match){var safe=match.replace(/'/g,"\\'");return '<span style="color:var(--accent);font-family:\'Noto Sans Tamil\',sans-serif">'+match+'<button class="speak-btn" style="position:static;display:inline-flex;vertical-align:middle;margin-left:3px;width:22px;height:22px;border-radius:6px;" onclick="speakTamil(\''+safe+'\',this)">'+speakerSVG()+'</button></span>';});}
-    else{
-      var fullTamil=tamilRuns.map(function(m){return m[0];}).join(' ');var safe=fullTamil.replace(/'/g,"\\'");
-      var coloured=escaped.replace(/([\u0B80-\u0BFF]+)/g,function(match){return '<span style="color:var(--accent);font-family:\'Noto Sans Tamil\',sans-serif">'+match+'</span>';});
-      var lineIdx=lines.indexOf(line);var nextLine=lines[lineIdx+1]||'';
-      var isRoman=nextLine.trim().length>0&&!/[\u0B80-\u0BFF]/.test(nextLine)&&!/[=→]/.test(nextLine)&&!/^(if|note|use|for|this|the|a |in |to )/i.test(nextLine.trim());
-      var romanSub=isRoman?'<br><span style="font-size:0.78rem;color:var(--text2);font-style:italic;margin-left:2px">'+nextLine.trim().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span>':'';
-      if(isRoman)lines[lineIdx+1]='';
-      return coloured+'<button class="speak-btn" style="position:static;display:inline-flex;vertical-align:middle;margin-left:6px;width:22px;height:22px;border-radius:6px;" onclick="speakTamil(\''+safe+'\',this)">'+speakerSVG()+'</button>'+romanSub;
+function appendChat(role, text) {
+  var div = document.createElement('div');
+  div.className = 'chat-msg ' + role;
+
+  var lines = text.split('\n');
+  var htmlLines = lines.map(function(line, lineIdx) {
+    var escaped = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    var tamilRuns = [...line.matchAll(/[\u0B80-\u0BFF]+/g)];
+    if (!tamilRuns.length) return escaped;
+
+    var isBreakdown = /[=→]/.test(line);
+
+    // ── CONVERSATION MODE: lighter inline format ──────────────────
+    if (convModeActive && role === 'ai') {
+      if (isBreakdown) {
+        // Hide breakdown lines entirely in conv mode
+        return '';
+      }
+
+      // Detect inline romanisation pattern: Tamil (roman) or Tamil (roman) = meaning
+      // Replace (roman) with just the English in brackets, add romanisation as subtitle
+      var convLine = escaped;
+
+      // Colour Tamil script
+      convLine = convLine.replace(/([\u0B80-\u0BFF]+)/g, function(match) {
+        return '<span class="conv-tamil">' + match + '</span>';
+      });
+
+      // Find the full Tamil run for the speak button
+      var fullTamil = tamilRuns.map(function(m) { return m[0]; }).join(' ');
+      var safe = fullTamil.replace(/'/g, "\\'");
+
+      var speakBtn = '<button class="speak-btn" style="position:static;display:inline-flex;vertical-align:middle;margin-left:6px;width:22px;height:22px;border-radius:6px;" onclick="speakTamil(\'' + safe + '\',this)">' + speakerSVG() + '</button>';
+
+      return '<span class="conv-line">' + convLine + speakBtn + '</span>';
     }
+
+    // ── NORMAL TUTOR MODE: original format ───────────────────────
+    if (isBreakdown) {
+      return escaped.replace(/([\u0B80-\u0BFF]+)/g, function(match) {
+        var safe = match.replace(/'/g, "\\'");
+        return '<span style="color:var(--accent);font-family:\'Noto Sans Tamil\',sans-serif">' + match
+          + '<button class="speak-btn" style="position:static;display:inline-flex;vertical-align:middle;margin-left:3px;width:22px;height:22px;border-radius:6px;" onclick="speakTamil(\'' + safe + '\',this)">' + speakerSVG() + '</button></span>';
+      });
+    }
+
+    var fullTamil = tamilRuns.map(function(m) { return m[0]; }).join(' ');
+    var safe = fullTamil.replace(/'/g, "\\'");
+    var coloured = escaped.replace(/([\u0B80-\u0BFF]+)/g, function(match) {
+      return '<span style="color:var(--accent);font-family:\'Noto Sans Tamil\',sans-serif">' + match + '</span>';
+    });
+    var nextLine = lines[lineIdx + 1] || '';
+    var isRoman = nextLine.trim().length > 0
+      && !/[\u0B80-\u0BFF]/.test(nextLine)
+      && !/[=→]/.test(nextLine)
+      && !/^(if|note|use|for|this|the|a |in |to )/i.test(nextLine.trim());
+    var romanSub = isRoman
+      ? '<br><span style="font-size:0.78rem;color:var(--text2);font-style:italic;margin-left:2px">'
+        + nextLine.trim().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        + '</span>'
+      : '';
+    if (isRoman) lines[lineIdx + 1] = '';
+    return coloured
+      + '<button class="speak-btn" style="position:static;display:inline-flex;vertical-align:middle;margin-left:6px;width:22px;height:22px;border-radius:6px;" onclick="speakTamil(\'' + safe + '\',this)">' + speakerSVG() + '</button>'
+      + romanSub;
   });
-  div.innerHTML=htmlLines.join('<br>');
-  document.getElementById('chat-msgs').appendChild(div);scrollChat();
+
+  // Filter out blank lines (hidden breakdowns in conv mode)
+  div.innerHTML = htmlLines.filter(function(l) { return l !== ''; }).join('<br>');
+  document.getElementById('chat-msgs').appendChild(div);
+  scrollChat();
 }
+
 function scrollChat(){var c=document.getElementById('chat-msgs');c.scrollTop=c.scrollHeight;}
 function sendQuick(msg){document.getElementById('chat-input').value=msg;sendChat();}
 
@@ -1296,11 +1347,13 @@ var CONV_SCENARIOS = [
     </svg>`,
     title: 'At the Market',
     desc: 'Buy fruit and bargain with a vendor',
-    systemMsg: `You are a Tamil market vendor named Murugan. The student is practising conversational Tamil. 
-Speak mostly in simple Tamil (with romanisation in brackets after each Tamil word/phrase). 
+    systemMsg: `You are a Tamil market vendor named Murugan. The student is practising conversational Tamil.
+Speak in simple Tamil with the English meaning of each word in brackets immediately after it.
 Keep sentences short. Gently correct mistakes. Stay in character as a friendly vendor selling fruit.
 Start by greeting the customer and saying what you're selling today.
-Format each Tamil phrase like: நல்லா இருக்கீங்களா (nalla irukkingala)?`
+Format: write Tamil words with English meaning in brackets like வாங்க (come/welcome) என்ன (what) வேணும் (do you want)?
+On the next line write just the full romanisation like: vaanga enna venum?
+Do not use word-by-word breakdown format with = signs.`
   },
   {
     svg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1312,10 +1365,12 @@ Format each Tamil phrase like: நல்லா இருக்கீங்கள
     title: 'Meeting Someone',
     desc: 'Introduce yourself and make small talk',
     systemMsg: `You are a friendly Tamil person named Priya meeting someone new at a community event.
-Speak mostly in simple Tamil (with romanisation in brackets after each Tamil phrase).
-Keep sentences short and natural. Gently correct the student's mistakes in a friendly way.
+Speak in simple Tamil with the English meaning of each word in brackets immediately after it.
+Keep sentences short and natural. Gently correct mistakes in a friendly way.
 Start by greeting them and introducing yourself.
-Format each Tamil phrase like: என் பேரு பிரியா (en peru Priya).`
+Format: write Tamil words with English meaning in brackets like என் (my) பேரு (name) பிரியா (is Priya).
+On the next line write just the full romanisation like: en peru Priya.
+Do not use word-by-word breakdown format with = signs.`
   },
   {
     svg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1328,10 +1383,11 @@ Format each Tamil phrase like: என் பேரு பிரியா (en per
     title: 'Ordering Food',
     desc: 'Order a meal at a Tamil restaurant',
     systemMsg: `You are a waiter at a Tamil restaurant. The student is ordering food.
-Speak mostly in simple Tamil (with romanisation in brackets after each Tamil phrase).
-Describe today's specials, take their order, and ask follow-up questions.
-Keep sentences short. Correct mistakes gently.
-Format each Tamil phrase like: என்ன வேணும் (enna venum)?`
+Speak in simple Tamil with the English meaning of each word in brackets immediately after it.
+Describe today's specials, take their order, ask follow-up questions. Keep sentences short. Correct mistakes gently.
+Format: write Tamil words with English meaning in brackets like என்ன (what) வேணும் (do you want)?
+On the next line write just the full romanisation like: enna venum?
+Do not use word-by-word breakdown format with = signs.`
   },
   {
     svg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1341,9 +1397,11 @@ Format each Tamil phrase like: என்ன வேணும் (enna venum)?`
     title: 'Asking Directions',
     desc: 'Find your way around a Tamil town',
     systemMsg: `You are a local Tamil person on the street. The student needs to ask for directions.
-Speak mostly in simple Tamil (with romanisation in brackets after each Tamil phrase).
+Speak in simple Tamil with the English meaning of each word in brackets immediately after it.
 Give directions using simple landmarks. Correct mistakes gently and helpfully.
-Format each Tamil phrase like: நேரா போங்க (nera ponga).`
+Format: write Tamil words with English meaning in brackets like நேரா (straight) போங்க (go).
+On the next line write just the full romanisation like: nera ponga.
+Do not use word-by-word breakdown format with = signs.`
   },
   {
     svg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1352,10 +1410,11 @@ Format each Tamil phrase like: நேரா போங்க (nera ponga).`
     title: 'Phone Call',
     desc: 'Have a simple phone conversation',
     systemMsg: `You are calling the student on the phone. You are a Tamil friend named Karthik checking in.
-Speak mostly in simple Tamil (with romanisation in brackets after each Tamil phrase).
-Chat naturally — ask what they've been up to, make plans, etc.
-Keep it simple and warm. Correct mistakes gently.
-Format each Tamil phrase like: என்ன பண்ற (enna panra)?`
+Speak in simple Tamil with the English meaning of each word in brackets immediately after it.
+Chat naturally — ask what they've been up to, make plans. Keep it simple and warm. Correct mistakes gently.
+Format: write Tamil words with English meaning in brackets like என்ன (what) பண்ற (doing)?
+On the next line write just the full romanisation like: enna panra?
+Do not use word-by-word breakdown format with = signs.`
   },
   {
     svg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1364,10 +1423,11 @@ Format each Tamil phrase like: என்ன பண்ற (enna panra)?`
     title: 'At the Doctor',
     desc: 'Describe symptoms at a clinic',
     systemMsg: `You are a Tamil-speaking doctor at a clinic. The student is the patient.
-Speak mostly in simple Tamil (with romanisation in brackets after each Tamil phrase).
-Ask about symptoms, give simple advice. Keep sentences short and clear.
-Correct their Tamil gently.
-Format each Tamil phrase like: என்னாச்சு (ennaachu)?`
+Speak in simple Tamil with the English meaning of each word in brackets immediately after it.
+Ask about symptoms, give simple advice. Keep sentences short and clear. Correct mistakes gently.
+Format: write Tamil words with English meaning in brackets like என்னாச்சு (what happened)?
+On the next line write just the full romanisation like: ennaachu?
+Do not use word-by-word breakdown format with = signs.`
   }
 ];
 

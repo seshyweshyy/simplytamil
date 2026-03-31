@@ -1701,3 +1701,15 @@ main {
 @media (max-width: 640px) {
   .conv-scenario-grid { grid-template-columns: 1fr; }
 }
+
+/* Conversation mode message styling */
+.conv-tamil {
+  font-family: 'Noto Sans Tamil', sans-serif;
+  color: var(--accent);
+  font-size: 1.05em;
+}
+
+.conv-line {
+  display: inline;
+  line-height: 2;
+}
