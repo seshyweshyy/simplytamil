@@ -1289,14 +1289,67 @@ function showSection(id){
   document.querySelectorAll('.nav-tab').forEach(function(t){if(t.getAttribute('onclick').indexOf("'"+id+"'")>=0)t.classList.add('active');});
 }
 
-function speakerSVG(){return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10v4h3l4 3V7l-4 3H5z"/><path class="wave1" d="M16 9.5c0.8 0.8 0.8 3.5 0 5" style="opacity:0;transition:opacity 0.2s ease"/><path class="wave2" d="M18 7.5c1.8 1.8 1.8 7 0 9" style="opacity:0;transition:opacity 0.25s ease 0.07s"/></svg>';}
-function autoGrowTextarea(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,140)+'px';}
-function autoResizeTamilText(){document.querySelectorAll('.vocab-tamil').forEach(function(el){var maxSize=24,minSize=14;el.style.fontSize=maxSize+'px';while(el.scrollWidth>el.clientWidth&&maxSize>minSize){maxSize--;el.style.fontSize=maxSize+'px';}});}
-var pronunciationOverrides={'வெள்ளை':'வெள் ளை','வாழை':'வா ழை','காற்று':'கா ற்று','அ':'u','ஆ':'ah','இ':'i','ஈ':'ee','உ':'உ','ஊ':'ஊ','எ':'eh','ஏ':'ஏ','ஐ':'eye','ஒ':'oh','ஓ':'ooh','ஔ':'ஔ'};
-function fixTamilPronunciation(text){if(pronunciationOverrides[text])return pronunciationOverrides[text];return text.replace(/ள்ள/g,'ள் ள').replace(/ற்ற/g,'ற் ற').replace(/ழ/g,'ழ் ').replace(/ற/g,'ற் ').replace(/\s+/g,' ').trim();}
-function speakTamil(text,btn){if(!text)return;var processed=pronunciationOverrides[text]?pronunciationOverrides[text]:text.length<=2?text:fixTamilPronunciation(text);var utter=new SpeechSynthesisUtterance(processed);utter.lang='ta-IN';utter.rate=0.9;var voices=speechSynthesis.getVoices();var tamilVoice=voices.find(function(v){return v.lang==='ta-IN';});if(tamilVoice)utter.voice=tamilVoice;if(btn)btn.classList.add('speaking');utter.onend=function(){if(btn)btn.classList.remove('speaking');};utter.onerror=function(){if(btn)btn.classList.remove('speaking');};speechSynthesis.cancel();speechSynthesis.speak(utter);}
+function speakerSVG(){
+  return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 10v4h3l4 3V7l-4 3H5z"/><path class="wave1" d="M16 9.5c0.8 0.8 0.8 3.5 0 5" style="opacity:0;transition:opacity 0.2s ease"/><path class="wave2" d="M18 7.5c1.8 1.8 1.8 7 0 9" style="opacity:0;transition:opacity 0.25s ease 0.07s"/></svg>';
+}
+
+function autoGrowTextarea(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+}
+
+function autoResizeTamilText() {
+  document.querySelectorAll('.vocab-tamil').forEach(function(el) {
+    var maxSize = 24, minSize = 14;
+    el.style.fontSize = maxSize + 'px';
+    while (el.scrollWidth > el.clientWidth && maxSize > minSize) {
+      maxSize--;
+      el.style.fontSize = maxSize + 'px';
+    }
+  });
+}
+
+var pronunciationOverrides = {
+  'வெள்ளை': 'வெள் ளை',
+  'வாழை':   'வா ழை',
+  'காற்று':  'கா ற்று',
+  'அ': 'u',   'ஆ': 'ah',  'இ': 'i',
+  'ஈ': 'ee',  'உ': 'உ',   'ஊ': 'ஊ',
+  'எ': 'eh',  'ஏ': 'ஏ',   'ஐ': 'eye',
+  'ஒ': 'oh',  'ஓ': 'ooh', 'ஔ': 'ஔ'
+};
+
+function fixTamilPronunciation(text) {
+  if (pronunciationOverrides[text]) return pronunciationOverrides[text];
+  return text
+    .replace(/ள்ள/g, 'ள் ள')
+    .replace(/ற்ற/g, 'ற் ற')
+    .replace(/ழ/g,   'ழ் ')
+    .replace(/ற/g,   'ற் ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function speakTamil(text, btn) {
+  if (!text) return;
+  var processed = pronunciationOverrides[text] ? pronunciationOverrides[text]
+                : text.length <= 2             ? text
+                : fixTamilPronunciation(text);
+  var utter = new SpeechSynthesisUtterance(processed);
+  utter.lang = 'ta-IN';
+  utter.rate = 0.9;
+  var voices = speechSynthesis.getVoices();
+  var tamilVoice = voices.find(function(v) { return v.lang === 'ta-IN'; });
+  if (tamilVoice) utter.voice = tamilVoice;
+  if (btn) btn.classList.add('speaking');
+  utter.onend  = function() { if (btn) btn.classList.remove('speaking'); };
+  utter.onerror = function() { if (btn) btn.classList.remove('speaking'); };
+  speechSynthesis.cancel();
+  speechSynthesis.speak(utter);
+}
 window.speechSynthesis&&window.speechSynthesis.getVoices();
 renderLetters();
+
 function updateStreakDisplay() {
   var streak = parseInt(localStorage.getItem('tamil_streak') || '0');
   var chip = document.getElementById('nav-streak-chip');
