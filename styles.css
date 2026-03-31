@@ -1516,7 +1516,7 @@ main {
 .attach-btn svg {
   width: 20px;
   height: 20px;
-  stroke: var(--accent);
+  stroke: var(--text2);
   stroke-width: 2;
   stroke-linecap: round;
   transition: transform 0.25s ease;

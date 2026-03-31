@@ -735,11 +735,9 @@ var chatAttachments=[];
 (function buildAttachMenu(){
   var menu=document.getElementById('attach-menu');
   var fileIcon = `
-<svg viewBox="0 0 24 24" width="16" height="16" fill="none"
-stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
   <path d="M21.44 11.05l-8.49 8.49a5 5 0 0 1-7.07-7.07l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.2 9.19a2 2 0 1 1-2.83-2.83l8.49-8.48"/>
-</svg>
-`;
+</svg>`;
 
   var btn=document.createElement('button');
   btn.className='attach-menu-item';btn.setAttribute('role','menuitem');
