@@ -1026,11 +1026,37 @@ function appendChat(role, text) {
     var isBreakdown = /[=→]/.test(line);
 
     // ── CONVERSATION MODE: lighter inline format ──────────────────
+    // ── CONVERSATION MODE: Tamil (roman) then translation underneath ──
     if (convModeActive && role === 'ai') {
-      if (isBreakdown) {
-        // Hide breakdown lines entirely in conv mode
-        return '';
-      }
+      if (isBreakdown) return '';
+
+      // Check if next line is a plain English translation (no Tamil, no brackets)
+      var nextLine = lines[lineIdx + 1] || '';
+      var isTranslation = nextLine.trim().length > 0
+        && !/[\u0B80-\u0BFF]/.test(nextLine)
+        && !/[=→]/.test(nextLine)
+        && !/^\(/.test(nextLine.trim())
+        && !/^(if|note|use|for|this|the|a |in |to )/i.test(nextLine.trim());
+
+      // Colour Tamil script, leave (romanisation) as plain text
+      var convLine = escaped.replace(/([\u0B80-\u0BFF]+)/g, function(match) {
+        return '<span style="color:var(--accent);font-family:\'Noto Sans Tamil\',sans-serif">' + match + '</span>';
+      });
+
+      // Speak button fires on all Tamil in this line
+      var fullTamil = tamilRuns.map(function(m) { return m[0]; }).join(' ');
+      var safe = fullTamil.replace(/'/g, "\\'");
+      var speakBtn = '<button class="speak-btn" style="position:static;display:inline-flex;vertical-align:middle;margin-left:6px;width:22px;height:22px;border-radius:6px;" onclick="speakTamil(\'' + safe + '\',this)">' + speakerSVG() + '</button>';
+
+      var translationSub = isTranslation
+        ? '<br><span style="font-size:0.78rem;color:var(--text3);margin-left:2px">'
+          + nextLine.trim().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          + '</span>'
+        : '';
+
+      if (isTranslation) lines[lineIdx + 1] = '';
+
+      return convLine + speakBtn + translationSub;
 
       // Detect inline romanisation pattern: Tamil (roman) or Tamil (roman) = meaning
       // Replace (roman) with just the English in brackets, add romanisation as subtitle
@@ -1351,9 +1377,9 @@ var CONV_SCENARIOS = [
 Speak in simple Tamil with the English meaning of each word in brackets immediately after it.
 Keep sentences short. Gently correct mistakes. Stay in character as a friendly vendor selling fruit.
 Start by greeting the customer and saying what you're selling today.
-Format: write Tamil words with English meaning in brackets like வாங்க (come/welcome) என்ன (what) வேணும் (do you want)?
-On the next line write just the full romanisation like: vaanga enna venum?
-Do not use word-by-word breakdown format with = signs.`
+Format: write the full Tamil sentence first, then the full romanisation in brackets on the same line like: வாங்க வாங்க! (vaanga vaanga!)
+On the next line write just the English translation like: Welcome, welcome!
+Do not mix English meanings between Tamil words. Do not use = signs.`
   },
   {
     svg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1368,9 +1394,9 @@ Do not use word-by-word breakdown format with = signs.`
 Speak in simple Tamil with the English meaning of each word in brackets immediately after it.
 Keep sentences short and natural. Gently correct mistakes in a friendly way.
 Start by greeting them and introducing yourself.
-Format: write Tamil words with English meaning in brackets like என் (my) பேரு (name) பிரியா (is Priya).
-On the next line write just the full romanisation like: en peru Priya.
-Do not use word-by-word breakdown format with = signs.`
+Format: write the full Tamil sentence first, then the full romanisation in brackets on the same line like: வாங்க வாங்க! (vaanga vaanga!)
+On the next line write just the English translation like: Welcome, welcome!
+Do not mix English meanings between Tamil words. Do not use = signs.`
   },
   {
     svg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1385,9 +1411,9 @@ Do not use word-by-word breakdown format with = signs.`
     systemMsg: `You are a waiter at a Tamil restaurant. The student is ordering food.
 Speak in simple Tamil with the English meaning of each word in brackets immediately after it.
 Describe today's specials, take their order, ask follow-up questions. Keep sentences short. Correct mistakes gently.
-Format: write Tamil words with English meaning in brackets like என்ன (what) வேணும் (do you want)?
-On the next line write just the full romanisation like: enna venum?
-Do not use word-by-word breakdown format with = signs.`
+Format: write the full Tamil sentence first, then the full romanisation in brackets on the same line like: வாங்க வாங்க! (vaanga vaanga!)
+On the next line write just the English translation like: Welcome, welcome!
+Do not mix English meanings between Tamil words. Do not use = signs.`
   },
   {
     svg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1399,9 +1425,9 @@ Do not use word-by-word breakdown format with = signs.`
     systemMsg: `You are a local Tamil person on the street. The student needs to ask for directions.
 Speak in simple Tamil with the English meaning of each word in brackets immediately after it.
 Give directions using simple landmarks. Correct mistakes gently and helpfully.
-Format: write Tamil words with English meaning in brackets like நேரா (straight) போங்க (go).
-On the next line write just the full romanisation like: nera ponga.
-Do not use word-by-word breakdown format with = signs.`
+Format: write the full Tamil sentence first, then the full romanisation in brackets on the same line like: வாங்க வாங்க! (vaanga vaanga!)
+On the next line write just the English translation like: Welcome, welcome!
+Do not mix English meanings between Tamil words. Do not use = signs.`
   },
   {
     svg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1412,9 +1438,9 @@ Do not use word-by-word breakdown format with = signs.`
     systemMsg: `You are calling the student on the phone. You are a Tamil friend named Karthik checking in.
 Speak in simple Tamil with the English meaning of each word in brackets immediately after it.
 Chat naturally — ask what they've been up to, make plans. Keep it simple and warm. Correct mistakes gently.
-Format: write Tamil words with English meaning in brackets like என்ன (what) பண்ற (doing)?
-On the next line write just the full romanisation like: enna panra?
-Do not use word-by-word breakdown format with = signs.`
+Format: write the full Tamil sentence first, then the full romanisation in brackets on the same line like: வாங்க வாங்க! (vaanga vaanga!)
+On the next line write just the English translation like: Welcome, welcome!
+Do not mix English meanings between Tamil words. Do not use = signs.`
   },
   {
     svg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1425,9 +1451,9 @@ Do not use word-by-word breakdown format with = signs.`
     systemMsg: `You are a Tamil-speaking doctor at a clinic. The student is the patient.
 Speak in simple Tamil with the English meaning of each word in brackets immediately after it.
 Ask about symptoms, give simple advice. Keep sentences short and clear. Correct mistakes gently.
-Format: write Tamil words with English meaning in brackets like என்னாச்சு (what happened)?
-On the next line write just the full romanisation like: ennaachu?
-Do not use word-by-word breakdown format with = signs.`
+Format: write the full Tamil sentence first, then the full romanisation in brackets on the same line like: வாங்க வாங்க! (vaanga vaanga!)
+On the next line write just the English translation like: Welcome, welcome!
+Do not mix English meanings between Tamil words. Do not use = signs.`
   }
 ];
 
