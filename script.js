@@ -1001,6 +1001,12 @@ function sendChat() {
       appendChat('ai', data.reply);
       addXP(2);
       if (typeof saveChatHistory === 'function') saveChatHistory();
+      // Also save to localStorage as fallback
+      try {
+        localStorage.setItem('tamil_chat_history', JSON.stringify(
+          chatHistory.slice(-40) // keep last 40 turns max
+        ));
+      } catch(e) {}
     }
   })
   .catch(function(err){
@@ -1569,8 +1575,47 @@ function endConvMode() {
   document.getElementById('chat-input').placeholder = 'Ask your Tamil tutor anything…';
 }
 
-// Clear any stale conv mode state on load
+// On load: exit conv mode cleanly, then show history + divider
 convModeActive = false;
+chatHistory = [];
 var staleBar = document.getElementById('conv-mode-bar');
 if (staleBar) staleBar.remove();
 updateConvModeBtn();
+
+// Restore saved chat history as bubbles above a divider
+(function restoreAndDivide() {
+  var msgsEl = document.getElementById('chat-msgs');
+  msgsEl.innerHTML = '';
+
+  // Try to load saved history (from auth.js or localStorage fallback)
+  var saved = [];
+  try {
+    var raw = localStorage.getItem('tamil_chat_history');
+    if (raw) saved = JSON.parse(raw);
+  } catch(e) { saved = []; }
+
+  if (saved.length) {
+    // Render old messages as proper bubbles
+    saved.forEach(function(msg) {
+      if (typeof msg.content === 'string') {
+        appendChat(msg.role === 'user' ? 'user' : 'ai', msg.content);
+      }
+    });
+
+    // Divider
+    var divider = document.createElement('div');
+    divider.style.cssText = 'display:flex;align-items:center;gap:0.75rem;margin:1rem 0;opacity:0.5';
+    divider.innerHTML = '<div style="flex:1;height:1px;background:var(--border)"></div>'
+      + '<span style="font-size:0.7rem;color:var(--text3);white-space:nowrap">New session</span>'
+      + '<div style="flex:1;height:1px;background:var(--border)"></div>';
+    msgsEl.appendChild(divider);
+  }
+
+  // Welcome message for new session
+  var welcome = document.createElement('div');
+  welcome.className = 'chat-msg ai';
+  welcome.textContent = 'வணக்கம்! (Vanakkam!) 👋 Welcome back. Ask me anything about Tamil, or pick up where you left off.';
+  msgsEl.appendChild(welcome);
+
+  scrollChat();
+})();
