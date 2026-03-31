@@ -628,7 +628,7 @@ function renderQuizQ() {
     + '<div class="quiz-q">' + q.prompt + '</div>'
     + '<div class="quiz-big-tamil">' + q.big + '</div>'
     + (localStorage.getItem('tamil_quiz_hints') !== 'false' && q.hint && !q.isHintAnswer
-        ? '<div class="quiz-hint">' + q.hint + '</div>'
+        ? '<div class="quiz-hint">'+q.hint+'</div>'
         : '')
     + '<div class="quiz-options">'
     + q.options.map(function(o) {
@@ -1220,7 +1220,7 @@ async function buildAIQuestions(){
         role:'user',
         content:`Generate 5 multiple choice quiz questions about Tamil ${topic}. 
 Return ONLY valid JSON in this exact format, no other text:
-[{"prompt":"question text","big":"Tamil word or letter","sub":"romanisation","answer":"correct answer","options":["option1","option2","option3","option4"]}]
+[{"prompt":"question text","big":"Tamil word or letter","hint":"romanisation","answer":"correct answer","options":["option1","option2","option3","option4"]}]
 Make sure options contains exactly 4 items and answer is one of them.`
       }]})
     });
@@ -1229,7 +1229,7 @@ Make sure options contains exactly 4 items and answer is one of them.`
     var text = data.reply.replace(/```json|```/g,'').trim();
     var questions = JSON.parse(text);
     return questions.map(function(q){
-      return {type:'mcq',prompt:q.prompt,big:q.big||'',sub:q.sub||'',answer:q.answer,options:q.options};
+      return {type:'mcq',prompt:q.prompt,big:q.big||'',hint:q.hint||'',answer:q.answer,options:q.options};
     });
   } catch(e) {
     typingEl.remove();
