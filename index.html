@@ -201,11 +201,26 @@
     <div id="quiz-start">
       <div class="section-header"><h2><span style="color:var(--accent)">Quiz</span> Yourself</h2><p>Choose a quiz type to get started.</p></div>
       <div class="quiz-type-select">
-        <div class="quiz-type-card" onclick="startQuiz('letter-id')"><h4>Letter ID</h4><p>See a Tamil letter, choose what it sounds like</p></div>
-        <div class="quiz-type-card" onclick="startQuiz('word-match')"><h4>Word Match</h4><p>Match Tamil words to their English meaning</p></div>
-        <div class="quiz-type-card" onclick="startQuiz('phrase-fill')"><h4>Phrase Fill</h4><p>Complete the phrase in Tamil or English</p></div>
-        <div class="quiz-type-card" onclick="startQuiz('mixed')"><h4>Mixed Review</h4><p>Random questions across all categories</p></div>
-        <div class="quiz-type-card" onclick="startAIQuiz()"><h4>✨ AI Quiz</h4><p>Freshly generated questions — different every time</p></div>
+        <div class="quiz-type-card" onclick="startQuiz('letter-id')">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:0.5rem"><rect x="3" y="3" width="18" height="18" rx="3"/><text x="12" y="16" font-family="Noto Sans Tamil,sans-serif" font-size="10" fill="var(--accent)" stroke="none" text-anchor="middle">அ</text></svg>
+          <h4>Letter ID</h4><p>See a Tamil letter, choose what it sounds like</p>
+        </div>
+        <div class="quiz-type-card" onclick="startQuiz('word-match')">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:0.5rem"><path d="M3 6h8M3 12h8M3 18h8"/><path d="M16 6h5M16 12h5M16 18h5"/><path d="M11 9l2 3-2 3"/></svg>
+          <h4>Word Match</h4><p>Match Tamil words to their English meaning</p>
+        </div>
+        <div class="quiz-type-card" onclick="startQuiz('phrase-fill')">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:0.5rem"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M9 10h6M9 14h3"/></svg>
+          <h4>Phrase Fill</h4><p>Complete the phrase in Tamil or English</p>
+        </div>
+        <div class="quiz-type-card" onclick="startQuiz('mixed')">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:0.5rem"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
+          <h4>Mixed Review</h4><p>Random questions across all categories</p>
+        </div>
+        <div class="quiz-type-card" onclick="startAIQuiz()">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:0.5rem"><path d="M13 2L4 14h7l-2 8 9-12h-7l2-8z"/></svg>
+          <h4>AI Quiz</h4><p>Freshly generated questions — different every time</p>
+        </div>
       </div>
     </div>
     <div id="quiz-main" style="display:none"></div>
