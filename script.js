@@ -602,7 +602,11 @@ function buildMixedQuestions() {
   return buildLetterIdQuestions().slice(0, 4)
     .concat(buildWordMatchQuestions().slice(0, 4))
     .concat(buildPhraseFillQuestions().slice(0, 4))
-    .sort(function() { return Math.random() - 0.5; });
+    .sort(function() { return Math.random() - 0.5; })
+    .map(function(q) {
+      if (q.isHintAnswer) return q; // keep letter ID as MCQ always
+      return Object.assign({}, q, { inputType: Math.random() < 0.3 ? 'text' : 'mcq' });
+    });
 }
 
 function startQuiz(type) {
@@ -1275,4 +1279,208 @@ async function startAIQuiz(){
   var qs = await buildAIQuestions();
   quizState={questions:qs,current:0,score:0,answered:false,type:'ai'};
   renderQuizQ();
+}
+
+/* =====================================================
+   CONVERSATION MODE
+   ===================================================== */
+var convModeActive = false;
+var convScenarioLabel = '';
+
+var CONV_SCENARIOS = [
+  {
+    svg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <path d="M16 10a4 4 0 0 1-8 0"/>
+    </svg>`,
+    title: 'At the Market',
+    desc: 'Buy fruit and bargain with a vendor',
+    systemMsg: `You are a Tamil market vendor named Murugan. The student is practising conversational Tamil. 
+Speak mostly in simple Tamil (with romanisation in brackets after each Tamil word/phrase). 
+Keep sentences short. Gently correct mistakes. Stay in character as a friendly vendor selling fruit.
+Start by greeting the customer and saying what you're selling today.
+Format each Tamil phrase like: நல்லா இருக்கீங்களா (nalla irukkingala)?`
+  },
+  {
+    svg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+      <circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>`,
+    title: 'Meeting Someone',
+    desc: 'Introduce yourself and make small talk',
+    systemMsg: `You are a friendly Tamil person named Priya meeting someone new at a community event.
+Speak mostly in simple Tamil (with romanisation in brackets after each Tamil phrase).
+Keep sentences short and natural. Gently correct the student's mistakes in a friendly way.
+Start by greeting them and introducing yourself.
+Format each Tamil phrase like: என் பேரு பிரியா (en peru Priya).`
+  },
+  {
+    svg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+      <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+      <line x1="6" y1="1" x2="6" y2="4"/>
+      <line x1="10" y1="1" x2="10" y2="4"/>
+      <line x1="14" y1="1" x2="14" y2="4"/>
+    </svg>`,
+    title: 'Ordering Food',
+    desc: 'Order a meal at a Tamil restaurant',
+    systemMsg: `You are a waiter at a Tamil restaurant. The student is ordering food.
+Speak mostly in simple Tamil (with romanisation in brackets after each Tamil phrase).
+Describe today's specials, take their order, and ask follow-up questions.
+Keep sentences short. Correct mistakes gently.
+Format each Tamil phrase like: என்ன வேணும் (enna venum)?`
+  },
+  {
+    svg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+    </svg>`,
+    title: 'Asking Directions',
+    desc: 'Find your way around a Tamil town',
+    systemMsg: `You are a local Tamil person on the street. The student needs to ask for directions.
+Speak mostly in simple Tamil (with romanisation in brackets after each Tamil phrase).
+Give directions using simple landmarks. Correct mistakes gently and helpfully.
+Format each Tamil phrase like: நேரா போங்க (nera ponga).`
+  },
+  {
+    svg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l.82-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+    </svg>`,
+    title: 'Phone Call',
+    desc: 'Have a simple phone conversation',
+    systemMsg: `You are calling the student on the phone. You are a Tamil friend named Karthik checking in.
+Speak mostly in simple Tamil (with romanisation in brackets after each Tamil phrase).
+Chat naturally — ask what they've been up to, make plans, etc.
+Keep it simple and warm. Correct mistakes gently.
+Format each Tamil phrase like: என்ன பண்ற (enna panra)?`
+  },
+  {
+    svg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+    </svg>`,
+    title: 'At the Doctor',
+    desc: 'Describe symptoms at a clinic',
+    systemMsg: `You are a Tamil-speaking doctor at a clinic. The student is the patient.
+Speak mostly in simple Tamil (with romanisation in brackets after each Tamil phrase).
+Ask about symptoms, give simple advice. Keep sentences short and clear.
+Correct their Tamil gently.
+Format each Tamil phrase like: என்னாச்சு (ennaachu)?`
+  }
+];
+
+function openConvModePanel() {
+  var overlay = document.createElement('div');
+  overlay.className = 'conv-mode-overlay';
+  overlay.id = 'conv-mode-overlay';
+  overlay.innerHTML = `
+    <div class="conv-mode-panel">
+      <h3>Conversation Mode</h3>
+      <p>Pick a scenario and practise your Tamil in a real conversation. The AI will play a character and respond in Tamil — you reply in Tamil too!</p>
+      <div class="conv-scenario-grid">
+        ${CONV_SCENARIOS.map(function(s, i) {
+          return `<div class="conv-scenario-card" onclick="startConvMode(${i})">
+            <div class="scenario-icon">${s.svg}</div>
+            <h4>${s.title}</h4>
+            <p>${s.desc}</p>
+          </div>`;
+        }).join('')}
+      </div>
+      <button class="conv-cancel-btn" onclick="closeConvModePanel()">Cancel</button>
+    </div>
+  `;
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeConvModePanel();
+  });
+  document.body.appendChild(overlay);
+}
+
+function closeConvModePanel() {
+  var el = document.getElementById('conv-mode-overlay');
+  if (el) el.remove();
+}
+
+function startConvMode(scenarioIndex) {
+  closeConvModePanel();
+  var scenario = CONV_SCENARIOS[scenarioIndex];
+  convModeActive = true;
+  convScenarioLabel = scenario.title;
+
+  // Reset chat
+  chatHistory = [];
+  document.getElementById('chat-msgs').innerHTML = '';
+
+  // Inject scenario system message as a hidden first exchange
+  // We do this by adding a user-turn that sets context, then let the AI open
+  chatHistory.push({
+    role: 'user',
+    content: '__CONV_MODE_START__: ' + scenario.systemMsg + ' Begin now — open the conversation naturally in Tamil.'
+  });
+
+  showConvModeBar();
+
+  // Get opening line from AI
+  var sendBtn = document.getElementById('chat-send');
+  sendBtn.disabled = true;
+  var typingEl = document.createElement('div');
+  typingEl.className = 'chat-typing';
+  typingEl.textContent = 'Starting conversation…';
+  document.getElementById('chat-msgs').appendChild(typingEl);
+  scrollChat();
+
+  fetch('https://tamil-backend.onrender.com/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages: chatHistory })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    typingEl.remove();
+    if (data.reply) {
+      chatHistory.push({ role: 'assistant', content: data.reply });
+      appendChat('ai', data.reply);
+    }
+  })
+  .catch(function() {
+    typingEl.remove();
+    appendChat('ai', '⚠️ Could not start conversation. Please try again.');
+    endConvMode();
+  })
+  .finally(function() { sendBtn.disabled = false; scrollChat(); });
+}
+
+function showConvModeBar() {
+  var existing = document.getElementById('conv-mode-bar');
+  if (existing) existing.remove();
+
+  var scenario = CONV_SCENARIOS.find(function(s) { return s.title === convScenarioLabel; });
+  var iconHtml = scenario
+    ? `<span style="display:inline-flex;align-items:center;opacity:0.8">${scenario.svg.replace('width="28" height="28"','width="16" height="16"')}</span>`
+    : '';
+
+  var bar = document.createElement('div');
+  bar.className = 'conv-mode-bar';
+  bar.id = 'conv-mode-bar';
+  bar.innerHTML = `<span style="display:flex;align-items:center;gap:8px">${iconHtml}<strong>${convScenarioLabel}</strong> — Conversation Mode active. Reply in Tamil!</span>
+    <button class="conv-mode-end-btn" onclick="endConvMode()">End</button>`;
+
+  var chatMsgs = document.getElementById('chat-msgs');
+  chatMsgs.parentNode.insertBefore(bar, chatMsgs);
+}
+
+function endConvMode() {
+  convModeActive = false;
+  convScenarioLabel = '';
+  var bar = document.getElementById('conv-mode-bar');
+  if (bar) bar.remove();
+
+  // Reset to normal tutor state
+  chatHistory = [];
+  document.getElementById('chat-msgs').innerHTML =
+    '<div class="chat-msg ai">வணக்கம்! (Vanakkam!) 👋 I\'m your Tamil tutor. You can ask about letters, words, grammar rules, pronunciation tips, or just practice a conversation. What would you like to explore today?</div>';
+
+  // Update placeholder
+  document.getElementById('chat-input').placeholder = 'Ask your Tamil tutor anything…';
 }

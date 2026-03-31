@@ -234,10 +234,15 @@
       <p style="font-size:0.82rem">Powered by Claude — ask anything about Tamil language, script, pronunciation or grammar.<br><i>Responses can take up to 30 seconds.</i></p>
     </div>
     <div class="quick-prompts">
+      <button class="quick-prompt-btn" style="border-color:var(--teal);color:var(--teal);display:inline-flex;align-items:center;gap:6px" onclick="openConvModePanel()">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        Conversation Mode
+      </button>
       <button class="quick-prompt-btn" onclick="sendQuick('How do I pronounce ழ?')">How to pronounce ழ?</button>
       <button class="quick-prompt-btn" onclick="sendQuick('Explain the Tamil verb conjugation system')">Verb conjugation</button>
       <button class="quick-prompt-btn" onclick="sendQuick('What is the difference between formal and informal Tamil?')">Formal vs informal</button>
-      <button class="quick-prompt-btn" onclick="sendQuick('Teach me how to count to 100 in Tamil')">Count to 100</button>
       <button class="quick-prompt-btn" onclick="sendQuick('Give me 5 common Tamil idioms with meanings')">Tamil idioms</button>
       <button class="quick-prompt-btn" onclick="sendQuick('How do postpositions work in Tamil?')">Postpositions</button>
     </div>
