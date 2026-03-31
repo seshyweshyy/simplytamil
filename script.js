@@ -1575,5 +1575,3 @@ updateConvModeBtn();
 
 document.getElementById('chat-msgs').innerHTML =
   '<div class="chat-msg ai">வணக்கம்! (Vanakkam!) 👋 I\'m your Tamil tutor. You can ask about letters, words, grammar rules, pronunciation tips, or just practice a conversation. What would you like to explore today?</div>';
-
-localStorage.removeItem('tamil_chat_history');
