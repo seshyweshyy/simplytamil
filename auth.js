@@ -319,7 +319,6 @@ async function saveCloudProgress() {
     streak:         parseInt(localStorage.getItem('tamil_streak')         || '0'),
     lastActive:     localStorage.getItem('tamil_last_active')             || '',
     displayName:    _currentUser.displayName || '',
-    chatHistory: localStorage.getItem('tamil_save_chat') === 'false' ? [] : JSON.parse(localStorage.getItem('tamil_chat_history') || '[]'),
     photoData: localStorage.getItem('tamil_photo_data') || '',
     updatedAt:      firebase.firestore.FieldValue.serverTimestamp()
   };
@@ -338,11 +337,7 @@ async function loadCloudProgress() {
   setLS('tamil_quiz_best',      d.quizBest);
   setLS('tamil_streak',         d.streak);
   setLS('tamil_last_active',    d.lastActive);
-  if (d.chatHistory) {
-    localStorage.setItem('tamil_chat_history', JSON.stringify(d.chatHistory));
-  }
   if (d.photoData !== undefined) localStorage.setItem('tamil_photo_data', d.photoData);
-  if (typeof loadChatHistory === 'function') loadChatHistory();
 
   // Push into live globals defined in script.js
   if (typeof XP !== 'undefined') {
@@ -422,48 +417,6 @@ async function handleGoogleSignIn() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   CHAT HISTORY SAVE / LOAD
-   ═══════════════════════════════════════════════════════════════ */
-function saveChatHistory() {
-  if (localStorage.getItem('tamil_save_chat') === 'false') return;
-  const MAX_MSGS = 20;
-  const msgs = chatHistory.slice(-MAX_MSGS);
-  localStorage.setItem('tamil_chat_history', JSON.stringify(msgs));
-  if (_currentUser) saveCloudProgress();
-}
-
-function loadChatHistory() {
-  const saved = localStorage.getItem('tamil_chat_history');
-  if (!saved) return;
-  try {
-    const msgs = JSON.parse(saved);
-    if (!msgs.length) return;
-    chatHistory = msgs;
-    // Re-render saved messages in the UI
-    const container = document.getElementById('chat-msgs');
-    // Clear default welcome message
-    container.innerHTML = '';
-    msgs.forEach(m => {
-      if (typeof m.content === 'string') {
-        appendChat(m.role, m.content);
-      }
-    });
-  } catch(e) { console.error('Chat history load failed', e); }
-}
-
-function toggleChatHistorySetting(btn) {
-  const current = localStorage.getItem('tamil_save_chat') !== 'false';
-  const newVal = !current;
-  localStorage.setItem('tamil_save_chat', newVal ? 'true' : 'false');
-  btn.textContent = newVal ? 'On' : 'Off';
-  btn.classList.toggle('off', !newVal);
-  if (!newVal) {
-    // clear saved history when turning off
-    localStorage.removeItem('tamil_chat_history');
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════
    PROFILE SETTINGS
    ═══════════════════════════════════════════════════════════════ */
 function openProfileSettings() {
@@ -504,16 +457,6 @@ function openProfileSettings() {
           value="${name}"
           placeholder="Your name"
           maxlength="32">
-      </div>
-
-      <div class="ps-toggle-row">
-        <div class="ps-toggle-info">
-          <span class="ps-toggle-label">Save chat history</span>
-          <span class="ps-toggle-sub">Syncs your last 20 tutor messages across devices</span>
-        </div>
-        <button class="ps-toggle-btn" id="ps-chat-toggle" onclick="toggleChatHistorySetting(this)">
-          ${localStorage.getItem('tamil_save_chat') === 'false' ? 'Off' : 'On'}
-        </button>
       </div>
 
       <div class="ps-toggle-row">
